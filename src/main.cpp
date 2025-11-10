@@ -6,7 +6,7 @@
 #define WIN_WIDTH   1600
 #define WIN_HEIGHT  900
 #define filename    "sprites/Unyu.png"
-#define FONT_FILEPATH   "fonts/dm-serif-text-latin-ext-400-normal.ttf"
+#define FONT_FILEPATH   "fonts/dm-serif-text-latin-400-normal.ttf"
 
 int main(){
     sf::RenderWindow w(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Unyu");
@@ -31,9 +31,9 @@ int main(){
     TextBox tb = TextBox(
         sf::Vector2f(WIN_WIDTH/2, WIN_HEIGHT/8), 
         sf::Vector2f(WIN_WIDTH/2, WIN_HEIGHT-WIN_HEIGHT/16), 
-        "nyah",
+        "Unyu",
         font,
-        50
+        32
     );
 
 

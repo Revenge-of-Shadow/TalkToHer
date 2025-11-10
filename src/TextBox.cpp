@@ -1,9 +1,8 @@
 #include "TextBox.hpp"
-#include <SFML/System/Vector2.hpp>
 
 
 TextBox::TextBox():offset(0), str(""){}
-TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font font, int fontSize){
+TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font& font, int fontSize){
     str = str;
     offset = 0;
     fontSize = fontSize;
@@ -19,9 +18,11 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font 
     rect.setOutlineThickness(outline_thickness);
 
     text = sf::Text(str, font, fontSize);
-    // text.setOrigin(size.x/2, 0);
+    text.setOrigin(text.getLocalBounds().getSize().x/2,
+                   text.getLocalBounds().getSize().y/2);
+
     text.setPosition(pos);
-    text.setFillColor(sf::Color::Cyan);
+    text.setFillColor(sf::Color::White);
 }
 
 void TextBox::setString(std::string str){
