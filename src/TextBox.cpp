@@ -16,20 +16,33 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font&
     rect.setFillColor(sf::Color::Black);
     rect.setOutlineColor(sf::Color::White);
     rect.setOutlineThickness(outline_thickness);
-
-    text = sf::Text(str, font, fontSize);
-    text.setOrigin(text.getLocalBounds().getSize().x/2,
-                   text.getLocalBounds().getSize().y/2);
-
-    text.setPosition(pos);
-    text.setFillColor(sf::Color::White);
+    
+    text = sf::Text("", font, fontSize);
+    setString(str);
 }
 
 void TextBox::setString(std::string str){
     str = str;
+    text.setString(str);
+
+    //  Top left corner.
+    text.setOrigin(0,0);
+    //  Position it at the top left of the rectangle.
+    text.setPosition(sf::Vector2f(
+        rect.getPosition().x-rect.getSize().x/2,
+        rect.getPosition().y-rect.getSize().y/2
+    ));
+    text.setFillColor(sf::Color::White);
 }
 std::string TextBox::getString(){
     return str;
+}
+
+int TextBox::getWidthInChars(){
+    return (int)rect.getSize().x/text.getCharacterSize();
+}
+int TextBox::getHeightInChars(){
+    return (int)rect.getSize().y/text.getCharacterSize();
 }
 
 void TextBox::scrollUp(short lines){
@@ -40,10 +53,6 @@ void TextBox::scrollDown(short lines){
     offset+=lines;
 }
 
-// void TextBox::setFont(sf::Font font){
-//     font = font;
-// }
-//
 void TextBox::draw(sf::RenderTarget &target){
     target.draw(rect);
     target.draw(text);

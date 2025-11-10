@@ -20,14 +20,12 @@ public:
     void setString(std::string text);
     std::string getString();
 
+    int getWidthInChars();
+    int getHeightInChars();
+
     void scrollUp(short  lines);
     void scrollDown(short  lines);
 
-    // void setFont(sf::Font);
-    // sf::Font getFont();
-    //  sf::Rectangle
-    // void setSize(const sf::Vector2f &size);
-    // const sf::Vector2f& getSize() const;
     
 
     void draw(sf::RenderTarget& target);

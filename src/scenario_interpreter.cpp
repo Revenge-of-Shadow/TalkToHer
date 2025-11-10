@@ -1,5 +1,4 @@
-#include "TextBox.h"
-#include <SFML/Graphics/RenderTarget.hpp>
+#include "TextBox.hpp"
 #include <vector>
 
 class Character{};
@@ -7,7 +6,7 @@ class Sound{
     //  start thread
 };
 
-class Scenario{
+class Script{
     const char* filepath;
     //  fileptr to read it?
     //  some sort of index?
@@ -24,7 +23,7 @@ class Scenario{
 
     void loadSprite(const char * charname, const char* spritetitle);
  public:
-    Scenario(const char* filepath, sf::RenderTarget& target):filepath(filepath), target(target){}
+    Script(const char* filepath, sf::RenderTarget& target):filepath(filepath), target(target){}
     // void showNextLine(TextBox& tb);
     // void showPrevLine(TextBox& tb);
     int getCurrentIndex();

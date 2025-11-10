@@ -2,11 +2,15 @@
 #include <SFML/System/Vector2.hpp>
 #include <cstdlib>
 #include <iostream>
+#include <iterator>
+#include <ostream>
+#include <string>
 
 #define WIN_WIDTH   1600
 #define WIN_HEIGHT  900
 #define filename    "sprites/Unyu.png"
 #define FONT_FILEPATH   "fonts/dm-serif-text-latin-400-normal.ttf"
+#define FONT_SIZE   32
 
 int main(){
     sf::RenderWindow w(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Unyu");
@@ -18,8 +22,8 @@ int main(){
 
     sf::Sprite s;
     s.setTexture(t);
-    s.setOrigin(t.getSize().x/2, t.getSize().y);
-    s.setPosition(sf::Vector2f(WIN_WIDTH/2, WIN_HEIGHT));
+    s.setOrigin(t.getSize().x/2.f, t.getSize().y);
+    s.setPosition(sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT));
 
 
     sf::Font font;
@@ -29,15 +33,31 @@ int main(){
     }
 
     TextBox tb = TextBox(
-        sf::Vector2f(WIN_WIDTH/2, WIN_HEIGHT/8), 
-        sf::Vector2f(WIN_WIDTH/2, WIN_HEIGHT-WIN_HEIGHT/16), 
+        sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT/8.f), 
+        sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT-WIN_HEIGHT/16.f), 
         "Unyu",
         font,
-        32
+        FONT_SIZE
     );
 
-
+    sf::RectangleShape textFrame = sf::RectangleShape();
+    textFrame.setSize(sf::Vector2f(
+        tb.getWidthInChars()*FONT_SIZE,
+        tb.getHeightInChars()*FONT_SIZE 
+    ));
+    textFrame.setOrigin(0,0);
+    textFrame.setPosition(sf::Vector2f(
+        tb.text.getPosition()
+    ));
+    textFrame.setFillColor(sf::Color::Transparent);
+    textFrame.setOutlineColor(sf::Color::Magenta);
+    textFrame.setOutlineThickness(2.f);
     
+    std::string txt = "";
+    for(int i = 0; i < tb.getWidthInChars(); ++i)
+        txt+="E";
+    tb.setString(txt);  //  Sacrebleu. Then it must be the height.
+
     
     while(w.isOpen()){
         sf::Event event;
@@ -50,6 +70,7 @@ int main(){
         // t.update(w);
         w.draw(s);
         tb.draw(w);
+        w.draw(textFrame);
         w.display();
     }
     
