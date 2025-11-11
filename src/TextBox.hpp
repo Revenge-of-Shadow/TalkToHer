@@ -10,8 +10,8 @@ class TextBox{
     int fontSize;
 
 protected:
-    float getStrOffLimits();
     void setText();
+
 public:
     sf::RectangleShape rect;
     sf::Font font;
@@ -27,8 +27,8 @@ public:
     int getWidthInChars();
     int getHeightInChars();
 
-    void scrollUp();
-    void scrollDown();
+    bool scrollUp();
+    bool scrollDown();
 
     
 

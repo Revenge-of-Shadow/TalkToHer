@@ -23,19 +23,15 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font&
     setString(line);
 }
 
-//  Call only after the text was set. (inside and after setText)
-float TextBox::getStrOffLimits(){
-    return text.getLocalBounds().width/rect.getLocalBounds().width;
-}
 void TextBox::setText(){//  Does not change line.
     shownString = line;
     text.setString(shownString);
 
-    float strOffLimits = getStrOffLimits();
+    float strOffLimits = text.getLocalBounds().width/rect.getLocalBounds().width;
 
     if(strOffLimits <= 1.f) return; //  No checks needed.
 
-    int lineLen = shownString.length()/strOffLimits;    //  Line that would fit.
+    int lineLen = shownString.length()/strOffLimits; //  Line that would fit.
     //  An algorithm that fits the given string into the rectangle.
     //  First, offset. If needed.
     if(offset){
@@ -44,7 +40,7 @@ void TextBox::setText(){//  Does not change line.
             shownString = shownString.substr(
                 offset*lineLen, //  Start from SAFE offset.
                 shownString.length() - offset*lineLen
-            )+'\n';
+            );
         else
             shownString = "";
 
@@ -99,17 +95,21 @@ int TextBox::getHeightInChars(){
     return (int)rect.getSize().y/text.getCharacterSize();
 }
 
-void TextBox::scrollUp(){
+bool TextBox::scrollUp(){
     if(offset > 0){
         --offset;
         setText();
+        return true;
     }
+    return false;
 }
-void TextBox::scrollDown(){
-    if(shownString.length() < line.length()){
+bool TextBox::scrollDown(){
+    if(shownString.find('\n') != std::string::npos){
         ++offset;
         setText();
+        return true;
     }
+    return false;
 }
 
 void TextBox::draw(sf::RenderTarget &target){

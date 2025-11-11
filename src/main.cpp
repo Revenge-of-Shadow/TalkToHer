@@ -44,8 +44,12 @@ int main(){
     for(int i = 0; i < 120; ++i)
         txt+=('E'+i%3);
     tb.setString(txt);
-    tb.scrollDown();
-    tb.scrollUp();
+    std::cout<<'\n'<<tb.scrollDown();
+    std::cout<<'\n'<<tb.scrollDown();
+    std::cout<<'\n'<<tb.scrollDown();
+    std::cout<<'\n'<<tb.scrollUp();
+    std::cout<<'\n'<<tb.scrollUp();
+    std::cout<<'\n'<<tb.scrollUp();
 
     
     while(w.isOpen()){
