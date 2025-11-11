@@ -1,10 +1,5 @@
+#include "libs.hpp"
 #include "TextBox.hpp"
-#include <SFML/System/Vector2.hpp>
-#include <cstdlib>
-#include <iostream>
-#include <iterator>
-#include <ostream>
-#include <string>
 
 #define WIN_WIDTH   1600
 #define WIN_HEIGHT  900

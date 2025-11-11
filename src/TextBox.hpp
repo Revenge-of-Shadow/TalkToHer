@@ -1,7 +1,7 @@
 #ifndef TEXTBOX_H
 #define TEXTBOX_H
 
-#include <SFML/Graphics.hpp>
+#include "libs.hpp"
 
 class TextBox{
     std::string line;    //  I HAVE TO MAKE SURE IT HAS NO LINE BREAKS.
