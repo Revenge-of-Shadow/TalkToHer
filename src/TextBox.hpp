@@ -4,10 +4,14 @@
 #include <SFML/Graphics.hpp>
 
 class TextBox{
-    std::string str;
+    std::string line;    //  I HAVE TO MAKE SURE IT HAS NO LINE BREAKS.
+    std::string shownString;
     short offset;
     int fontSize;
 
+protected:
+    float getStrOffLimits();
+    void setText();
 public:
     sf::RectangleShape rect;
     sf::Font font;
@@ -23,8 +27,8 @@ public:
     int getWidthInChars();
     int getHeightInChars();
 
-    void scrollUp(short  lines);
-    void scrollDown(short  lines);
+    void scrollUp();
+    void scrollDown();
 
     
 

@@ -1,9 +1,11 @@
 #include "TextBox.hpp"
+#include <iostream>
+#include <string>
+#include <tuple>
 
-
-TextBox::TextBox():offset(0), str(""){}
+TextBox::TextBox():offset(0), line(""){}
 TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font& font, int fontSize){
-    str = str;
+    line = str;
     offset = 0;
     fontSize = fontSize;
     font = font;
@@ -18,12 +20,64 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font&
     rect.setOutlineThickness(outline_thickness);
     
     text = sf::Text("", font, fontSize);
-    setString(str);
+    setString(line);
 }
 
+//  Call only after the text was set. (inside and after setText)
+float TextBox::getStrOffLimits(){
+    return text.getLocalBounds().width/rect.getLocalBounds().width;
+}
+void TextBox::setText(){//  Does not change line.
+    shownString = line;
+    text.setString(shownString);
+
+    float strOffLimits = getStrOffLimits();
+
+    if(strOffLimits <= 1.f) return; //  No checks needed.
+
+    int lineLen = shownString.length()/strOffLimits;    //  Line that would fit.
+    //  An algorithm that fits the given string into the rectangle.
+    //  First, offset. If needed.
+    if(offset){
+        //  Cut off the offset part.
+        if(shownString.length() > offset*lineLen)
+            shownString = shownString.substr(
+                offset*lineLen, //  Start from SAFE offset.
+                shownString.length() - offset*lineLen
+            )+'\n';
+        else
+            shownString = "";
+
+        strOffLimits -= offset;
+    }
+    //  Then check again, seeing if offset did the job or not yet.
+    if(strOffLimits > 1.f){
+        //  Break string into lines.
+        std::string leftoverStr = shownString;
+        shownString = "";
+
+        for(int i = 0; ; ++i){
+            //  When height is out, it cuts off, not finishing the shown string.
+            if((text.getCharacterSize()*(1+text.getLineSpacing()))*(i) 
+                > rect.getLocalBounds().height)
+                break;
+            if(i >= strOffLimits-1.f){
+                shownString += leftoverStr;
+                break;
+            }
+
+            shownString += leftoverStr.substr(0, lineLen)+'\n';
+            leftoverStr = leftoverStr.substr(
+                lineLen, leftoverStr.length() - lineLen);
+        }
+        //  Now shownString is divided by line breaks.
+    }
+    text.setString(shownString);
+}
 void TextBox::setString(std::string str){
-    str = str;
-    text.setString(str);
+    line = str;
+ 
+    setText();
 
     //  Top left corner.
     text.setOrigin(0,0);
@@ -34,8 +88,8 @@ void TextBox::setString(std::string str){
     ));
     text.setFillColor(sf::Color::White);
 }
-std::string TextBox::getString(){
-    return str;
+std::string TextBox::getString(){   //  Give what is stored, not what is shown.
+    return line;
 }
 
 int TextBox::getWidthInChars(){
@@ -45,12 +99,17 @@ int TextBox::getHeightInChars(){
     return (int)rect.getSize().y/text.getCharacterSize();
 }
 
-void TextBox::scrollUp(short lines){
-    offset = offset-lines < 0? 0 : offset-lines;
+void TextBox::scrollUp(){
+    if(offset > 0){
+        --offset;
+        setText();
+    }
 }
-void TextBox::scrollDown(short lines){
-    //  Out of bounds check needed.
-    offset+=lines;
+void TextBox::scrollDown(){
+    if(shownString.length() < line.length()){
+        ++offset;
+        setText();
+    }
 }
 
 void TextBox::draw(sf::RenderTarget &target){

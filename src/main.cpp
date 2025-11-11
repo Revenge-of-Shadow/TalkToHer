@@ -40,23 +40,12 @@ int main(){
         FONT_SIZE
     );
 
-    sf::RectangleShape textFrame = sf::RectangleShape();
-    textFrame.setSize(sf::Vector2f(
-        tb.getWidthInChars()*FONT_SIZE,
-        tb.getHeightInChars()*FONT_SIZE 
-    ));
-    textFrame.setOrigin(0,0);
-    textFrame.setPosition(sf::Vector2f(
-        tb.text.getPosition()
-    ));
-    textFrame.setFillColor(sf::Color::Transparent);
-    textFrame.setOutlineColor(sf::Color::Magenta);
-    textFrame.setOutlineThickness(2.f);
-    
     std::string txt = "";
-    for(int i = 0; i < tb.getWidthInChars(); ++i)
-        txt+="E";
-    tb.setString(txt);  //  Sacrebleu. Then it must be the height.
+    for(int i = 0; i < 120; ++i)
+        txt+=('E'+i%3);
+    tb.setString(txt);
+    tb.scrollDown();
+    tb.scrollUp();
 
     
     while(w.isOpen()){
@@ -70,7 +59,6 @@ int main(){
         // t.update(w);
         w.draw(s);
         tb.draw(w);
-        w.draw(textFrame);
         w.display();
     }
     
