@@ -11,38 +11,42 @@
 */
 #include "libs.hpp"
 #include "Character.hpp"
+#include "Sound.hpp"
+#include "TextBox.hpp"
+#include <fstream>
+#include <istream>
 #include <string>
-
-class Sound{
-    bool isLooping;
-public:
-    Sound();
-    void play();
-    void stop();
-};
 
 class Scenario{
     std::string filepath;
     std::string title;  //  Extracted from file.
     std::string line;
+    int lineindex;
+    std::ifstream filestr;
     sf::RenderTarget& target;
-    std::vector<Character>  characters;
+    TextBox textbox;
+    
+    SimpleList<Character> characters;
+    SimpleList<Sound> loopingSounds;
+    Character getCharByName(std::string name);
 
     std::string truncLine(std::string command); //  Remove / or //.
     void processCommand(std::string command);
-    void processText(std::string text);
 
-    void loadSprite(std::string charname, std::string spritetitle);
+    void loadSprite(std::string charname, std::string spritename);
  public:
-    Scenario(std::string filepath, sf::RenderTarget& target):filepath(filepath), target(target){}
-    // void showNextLine(TextBox& tb);
-    // void showPrevLine(TextBox& tb);
+    Scenario(std::string path, sf::RenderTarget& target, TextBox tb):
+        filepath(path), target(target), textbox(tb){}
+
+    std::string readCurrentLine();
     int getCurrentIndex();
+    std::string getCurrentLine();
     void showCurrentLine();
-    void toNextLine();
-    void toPrevLine();
+    bool toNextLine();
+    bool toPrevLine();
     void playSound(std::string filename);
-    void loopSound(std::string filename, int pos = 1);
+    void loopSound(std::string filename);
+    int getLoopingSoundIndexByFilename(std::string filename);   //  Do I need this?
     void stopSound(int pos = 0);
 
     //  Simple string checks.
