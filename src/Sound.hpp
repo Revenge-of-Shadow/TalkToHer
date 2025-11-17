@@ -1,10 +1,12 @@
+#ifndef SOUND_H
+#define SOUND_H
 #include "libs.hpp"
 
 class Sound{
     std::string filename;
     bool isLooping;
 
-    void loadFromFile();
+    void loadFromFile(){};
 public:
     Sound(bool isLooping = false):isLooping(isLooping){
         loadFromFile();
@@ -29,4 +31,4 @@ public:
     void stop(){
     };
 };
-
+#endif

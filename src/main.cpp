@@ -1,5 +1,7 @@
 #include "libs.hpp"
 #include "TextBox.hpp"
+#include "Scenario.hpp"
+#include <SFML/Window/Keyboard.hpp>
 
 #define WIN_WIDTH   1600
 #define WIN_HEIGHT  900
@@ -35,17 +37,7 @@ int main(){
         FONT_SIZE
     );
 
-    std::string txt = "";
-    for(int i = 0; i < 120; ++i)
-        txt+=('E'+i%3);
-    tb.setString(txt);
-    std::cout<<'\n'<<tb.scrollDown();
-    std::cout<<'\n'<<tb.scrollDown();
-    std::cout<<'\n'<<tb.scrollDown();
-    std::cout<<'\n'<<tb.scrollUp();
-    std::cout<<'\n'<<tb.scrollUp();
-    std::cout<<'\n'<<tb.scrollUp();
-
+    Scenario sc = Scenario("scenes/test/", w, tb);
     
     while(w.isOpen()){
         sf::Event event;
@@ -53,6 +45,26 @@ int main(){
             if(event.type == sf::Event::Closed)
                 w.close();
             }
+
+        //  Checks for pressed keys.
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            tb.scrollUp();
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            tb.scrollDown();
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+            sc.toPrevLine();
+            std::cout<<sc.getCurrentLine()<<std::endl;
+            sc.showCurrentLine();
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+            sc.toNextLine();
+            std::cout<<sc.getCurrentLine()<<std::endl;
+            sc.showCurrentLine();
+        }
+            
+        //  Checks for pressed keys end.
+
         
         w.clear();
         // t.update(w);
