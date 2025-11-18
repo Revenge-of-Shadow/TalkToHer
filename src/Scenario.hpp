@@ -26,8 +26,6 @@ class Scenario {
     int lineindex;
     SimpleList<std::string> lines;    //  This is... BAD. But, like, reliable.
     std::ifstream filestr;
-    sf::RenderTarget &target;
-    TextBox textbox;
 
     SimpleList<Character> characters;
     SimpleList<Sound> loopingSounds;
@@ -39,11 +37,10 @@ class Scenario {
     void loadSprite(std::string charname, std::string spritename);
 
 public:
-      Scenario(std::string path, sf::RenderTarget &target, TextBox tb);
+      Scenario(std::string path);
 
       int getCurrentIndex();
       std::string getCurrentLine();
-      void showCurrentLine();
       bool toNextLine();
       bool toPrevLine();
       void playSound(std::string filename);

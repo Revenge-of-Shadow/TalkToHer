@@ -18,8 +18,8 @@ void Scenario::processCommand(std::string command) {
 
 void loadSprite(std::string charname, std::string spritename) {}
 
-Scenario::Scenario(std::string path, sf::RenderTarget &target, TextBox tb)
-        : filepath(path), target(target), textbox(tb) {
+Scenario::Scenario(std::string path)
+        : filepath(path) {
 
     filestr.open(path + title_suffix + postfix);
     std::getline(filestr, title);
@@ -34,12 +34,10 @@ Scenario::Scenario(std::string path, sf::RenderTarget &target, TextBox tb)
     }
     //  Closed automatically.
     lineindex = 0;
-    Scenario::showCurrentLine();    //  Is this call okay?
 }
 
 int Scenario::getCurrentIndex() { return lineindex; }
 std::string Scenario::getCurrentLine() { return lines.peek(lineindex); }
-void Scenario::showCurrentLine() { textbox.setString(Scenario::getCurrentLine()); }
 bool Scenario::toNextLine() {
     if(lineindex < lines.getSize()-1){
         ++lineindex;

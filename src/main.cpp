@@ -11,6 +11,7 @@
 
 int main(){
     sf::RenderWindow w(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Unyu");
+    w.setVerticalSyncEnabled(true);
 
     sf::Texture t;
 
@@ -37,7 +38,7 @@ int main(){
         FONT_SIZE
     );
 
-    Scenario sc = Scenario("scenes/test/", w, tb);
+    Scenario sc = Scenario("scenes/test/");
     
     while(w.isOpen()){
         sf::Event event;
@@ -55,12 +56,12 @@ int main(){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
             sc.toPrevLine();
             std::cout<<sc.getCurrentLine()<<std::endl;
-            sc.showCurrentLine();
+            tb.setString(sc.getCurrentLine());
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
             sc.toNextLine();
             std::cout<<sc.getCurrentLine()<<std::endl;
-            sc.showCurrentLine();
+            tb.setString(sc.getCurrentLine());
         }
             
         //  Checks for pressed keys end.
