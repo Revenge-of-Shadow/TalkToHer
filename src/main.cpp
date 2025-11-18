@@ -1,13 +1,16 @@
 #include "libs.hpp"
 #include "TextBox.hpp"
 #include "Scenario.hpp"
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/System/Sleep.hpp>
+#include <SFML/System/Time.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
 #define WIN_WIDTH   1600
 #define WIN_HEIGHT  900
 #define filename    "sprites/Unyu.png"
 #define FONT_FILEPATH   "fonts/dm-serif-text-latin-400-normal.ttf"
-#define FONT_SIZE   32
+#define FONT_SIZE   24
 
 int main(){
     sf::RenderWindow w(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Unyu");
@@ -45,32 +48,32 @@ int main(){
         while(w.pollEvent(event)){
             if(event.type == sf::Event::Closed)
                 w.close();
+            //  Checks for pressed keys.
+            if(event.type == sf::Event::KeyPressed){
+                switch (event.key.code) {
+                    case sf::Keyboard::Up:
+                        tb.scrollUp();
+                        break;
+                    case sf::Keyboard::Down:
+                        tb.scrollDown();
+                        break;
+                    case sf::Keyboard::Left:
+                        sc.toPrevLine();
+                        tb.setString(sc.getCurrentLine());
+                        break;
+                    case sf::Keyboard::Right:
+                        sc.toNextLine();
+                        tb.setString(sc.getCurrentLine());
+                        break;
+                }
             }
-
-        //  Checks for pressed keys.
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            tb.scrollUp();
-        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            tb.scrollDown();
-
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-            sc.toPrevLine();
-            std::cout<<sc.getCurrentLine()<<std::endl;
-            tb.setString(sc.getCurrentLine());
+            //  Checks for pressed keys end.
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-            sc.toNextLine();
-            std::cout<<sc.getCurrentLine()<<std::endl;
-            tb.setString(sc.getCurrentLine());
-        }
-            
-        //  Checks for pressed keys end.
 
         
         w.clear();
-        // t.update(w);
         w.draw(s);
-        tb.draw(w);
+        tb.draw(w); 
         w.display();
     }
     

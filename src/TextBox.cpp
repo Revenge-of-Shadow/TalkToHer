@@ -1,7 +1,4 @@
 #include "TextBox.hpp"
-#include <iostream>
-#include <string>
-#include <tuple>
 
 TextBox::TextBox():offset(0), line(""){}
 TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font& font, int fontSize){
