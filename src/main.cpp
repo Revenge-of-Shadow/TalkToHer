@@ -53,10 +53,12 @@ int main(){
                     case sf::Keyboard::Down:
                         tb.scrollDown();
                         break;
-                    case sf::Keyboard::Left:    //  Roll back to the last text.
-                        while(sc.toPrevLine() 
-                            && (sc.isCurrLineCommand() 
-                            || sc.isCurrLineComment()))
+                    case sf::Keyboard::Left: 
+                        //  Roll back to the last text.
+                        while(sc.toPrevLine() && !sc.isCurrLineDisplayable())
+                        {}
+                        //  But roll forth if it is the first line and a comment...
+                        while(!sc.isCurrLineDisplayable() && sc.toNextLine())
                         {}
                         tb.setString(sc.getCurrentLineTrunc());
                         break;
@@ -67,6 +69,9 @@ int main(){
                                 sc.processCommand(sc.getCurrentLine());
                             else break;
                         }
+                        //  But roll back if it is the last line and a comment...
+                        while(!sc.isCurrLineDisplayable() && sc.toPrevLine())
+                        {}
                         tb.setString(sc.getCurrentLineTrunc());
                         break;
                 }

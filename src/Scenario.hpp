@@ -14,6 +14,7 @@
 #include "TextBox.hpp"
 #include "libs.hpp"
 
+
 class Scenario {
     const char *title_suffix = "title";
     const char *script_suffix = "script";
@@ -53,5 +54,6 @@ public:
     //  Simple string checks.
     bool isCurrLineCommand();
     bool isCurrLineComment();
+    bool isCurrLineDisplayable();
 };
 #endif

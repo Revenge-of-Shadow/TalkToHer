@@ -1,4 +1,5 @@
 #include "Scenario.hpp"
+#include <SFML/System/Time.hpp>
 #include <string>
 
 Character Scenario::getCharByName(std::string name) {
@@ -60,6 +61,12 @@ void Scenario::processCommand(std::string command) {
     // playSound(nya.mp3);
     std::string com = truncCommand(truncComment(command));
     std::cout<<"Processing command: "<< com <<std::endl;
+
+    std::string commandName = com.substr(0, com.find('('));
+    std::string commandArg = com.substr(com.find('(')+1, com.find_last_of(')'));
+
+    if(commandName == "sleep")
+        sf::sleep(sf::milliseconds(strtof(commandArg.c_str(), NULL)));
 }
 
 void Scenario::playSound(std::string filename) {
@@ -84,5 +91,10 @@ bool Scenario::isCurrLineComment() {
     return Scenario::getCurrentLine().length() > 2 
         && Scenario::getCurrentLine().at(0) == '/' 
         && Scenario::getCurrentLine().at(1) == '/';
+}
+bool Scenario::isCurrLineDisplayable(){
+    return !Scenario::getCurrentLineTrunc().empty()
+        && !Scenario::isCurrLineCommand() 
+        && !Scenario::isCurrLineComment();
 }
 
