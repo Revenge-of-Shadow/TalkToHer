@@ -1,4 +1,5 @@
 #include "Scenario.hpp"
+#include <string>
 
 Character Scenario::getCharByName(std::string name) {
     for (int i = 0; i < characters.getSize(); ++i)
@@ -7,14 +8,13 @@ Character Scenario::getCharByName(std::string name) {
     throw;
 }
 
-std::string Scenario::truncLine(std::string command) {
-    return command.substr(command.find('/'));
+std::string Scenario::truncCommand(std::string command) { //   For /commands
+    return command.substr(command.find('/')+1);
 }
-void Scenario::processCommand(std::string command) {
-  // char(Cat).loadSprite(cat_closedeyes.png);
-  // background.loadSprite(room.png);
-  // playSound(nya.mp3);
+std::string Scenario::truncComment(std::string text){   //  For text with //comm
+    return text.substr(0, text.find("//"));
 }
+
 
 void loadSprite(std::string charname, std::string spritename) {}
 
@@ -38,6 +38,7 @@ Scenario::Scenario(std::string path)
 
 int Scenario::getCurrentIndex() { return lineindex; }
 std::string Scenario::getCurrentLine() { return lines.peek(lineindex); }
+std::string Scenario::getCurrentLineTrunc() { return truncComment(lines.peek(lineindex)); }
 bool Scenario::toNextLine() {
     if(lineindex < lines.getSize()-1){
         ++lineindex;
@@ -51,6 +52,14 @@ bool Scenario::toPrevLine() {
         return true;
     }
     return false;
+}
+
+void Scenario::processCommand(std::string command) {
+    // char(Cat).loadSprite(cat_closedeyes.png);
+    // background.loadSprite(room.png);
+    // playSound(nya.mp3);
+    std::string com = truncCommand(truncComment(command));
+    std::cout<<"Processing command: "<< com <<std::endl;
 }
 
 void Scenario::playSound(std::string filename) {

@@ -1,10 +1,6 @@
 #include "libs.hpp"
 #include "TextBox.hpp"
 #include "Scenario.hpp"
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/System/Sleep.hpp>
-#include <SFML/System/Time.hpp>
-#include <SFML/Window/Keyboard.hpp>
 
 #define WIN_WIDTH   1600
 #define WIN_HEIGHT  900
@@ -57,13 +53,21 @@ int main(){
                     case sf::Keyboard::Down:
                         tb.scrollDown();
                         break;
-                    case sf::Keyboard::Left:
-                        sc.toPrevLine();
-                        tb.setString(sc.getCurrentLine());
+                    case sf::Keyboard::Left:    //  Roll back to the last text.
+                        while(sc.toPrevLine() 
+                            && (sc.isCurrLineCommand() 
+                            || sc.isCurrLineComment()))
+                        {}
+                        tb.setString(sc.getCurrentLineTrunc());
                         break;
-                    case sf::Keyboard::Right:
-                        sc.toNextLine();
-                        tb.setString(sc.getCurrentLine());
+                    case sf::Keyboard::Right:   //  Process commands and show text.
+                        while(sc.toNextLine()){
+                            if(sc.isCurrLineComment())  continue;
+                            if(sc.isCurrLineCommand())
+                                sc.processCommand(sc.getCurrentLine());
+                            else break;
+                        }
+                        tb.setString(sc.getCurrentLineTrunc());
                         break;
                 }
             }

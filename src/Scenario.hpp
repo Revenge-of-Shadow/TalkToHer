@@ -31,25 +31,27 @@ class Scenario {
     SimpleList<Sound> loopingSounds;
     Character getCharByName(std::string name);
 
-    std::string truncLine(std::string command); //  Remove / or //.
-    void processCommand(std::string command);
+    std::string truncCommand(std::string command);  //  Remove / from front.
+    std::string truncComment(std::string text);     //  Remove // from back.
 
     void loadSprite(std::string charname, std::string spritename);
 
 public:
-      Scenario(std::string path);
+    Scenario(std::string path);
 
-      int getCurrentIndex();
-      std::string getCurrentLine();
-      bool toNextLine();
-      bool toPrevLine();
-      void playSound(std::string filename);
-      void loopSound(std::string filename);
-      int getLoopingSoundIndexByFilename(std::string filename); //  Do I need this?
-      void stopSound(int index = 0);
+    int getCurrentIndex();
+    std::string getCurrentLine();
+    std::string getCurrentLineTrunc();  //  Without commentary.
+    bool toNextLine();
+    bool toPrevLine();
+    void processCommand(std::string command);
+    void playSound(std::string filename);
+    void loopSound(std::string filename);
+    int getLoopingSoundIndexByFilename(std::string filename); //  Do I need this?
+    void stopSound(int index = 0);
 
-      //  Simple string checks.
-      bool isCurrLineCommand();
-      bool isCurrLineComment();
+    //  Simple string checks.
+    bool isCurrLineCommand();
+    bool isCurrLineComment();
 };
 #endif
