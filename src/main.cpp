@@ -22,7 +22,7 @@ int main(){
     s.setOrigin(t.getSize().x/2.f, t.getSize().y);
     s.setPosition(sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT));
 
-
+    //              MOVE FONT TO TEXTBOX! Init it with filepath.
     sf::Font font;
     if(!font.loadFromFile(FONT_FILEPATH)){
         std::cout<<"Font file not found."<<std::endl;
@@ -37,7 +37,7 @@ int main(){
         FONT_SIZE
     );
 
-    Scenario sc = Scenario("scenes/test/");
+    Scenario sc = Scenario("scenes"+kPathSepartor+"test"+kPathSepartor);
     
     while(w.isOpen()){
         sf::Event event;

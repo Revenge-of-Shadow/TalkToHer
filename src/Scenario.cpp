@@ -1,6 +1,4 @@
 #include "Scenario.hpp"
-#include <SFML/System/Time.hpp>
-#include <string>
 
 Character Scenario::getCharByName(std::string name) {
     for (int i = 0; i < characters.getSize(); ++i)
@@ -18,17 +16,17 @@ std::string Scenario::truncComment(std::string text){   //  For text with //comm
 
 
 void loadSprite(std::string charname, std::string spritename) {}
+void loadBackground(std::string spritename) {}
 
 Scenario::Scenario(std::string path)
         : filepath(path) {
 
-    filestr.open(path + title_suffix + postfix);
+    filestr.open(path + title_suffix);
     std::getline(filestr, title);
     filestr.close();
     
     std::string line;
-    filestr.open(path + script_suffix + postfix);
-        std::cout<<path + script_suffix + postfix<<std::endl;
+    filestr.open(path + script_suffix);
     
     while(filestr.is_open() && getline(filestr, line)){ //  Lags guaranteed.
         lines.add(line);
@@ -62,11 +60,45 @@ void Scenario::processCommand(std::string command) {
     std::string com = truncCommand(truncComment(command));
     std::cout<<"Processing command: "<< com <<std::endl;
 
-    std::string commandName = com.substr(0, com.find('('));
-    std::string commandArg = com.substr(com.find('(')+1, com.find_last_of(')'));
+    //  Formatting.
+    std::string commandArg = 
+        com.substr(com.find_last_of('(')+1);
+    commandArg = commandArg.substr(0, commandArg.find_last_of(')'));
+    std::string commandBody = com.substr(0, com.find_last_of('('));
+    std::string commandObject = 
+        commandBody.find('.') == std::string::npos? "" 
+        : commandBody.substr(0, commandBody.find('.')); // NO NESTING
+    std::string commandAction = 
+        commandBody.find('.') == std::string::npos? commandBody
+        : commandBody.substr(commandBody.find('.')+1);
+    std::cout<<"Command: "<<com<<std::endl;
+    std::cout<<"Body: "<<commandBody<<"\t"<<"Arg: "<<commandArg<<std::endl;
+    std::cout<<"Object: "<<commandObject<<"\t"<<"Action: "<<commandAction<<std::endl;
 
-    if(commandName == "sleep")
+     if(commandArg[0] == '\"' && commandArg[commandArg.length()-1] == '\"')
+        commandArg = commandArg.substr(1, commandArg.length()-1);
+    //  Formatting end.
+
+    //  Parsing.
+    if(commandAction == "sleep")
         sf::sleep(sf::milliseconds(strtof(commandArg.c_str(), NULL)));
+    if(commandAction.substr(commandAction.find('.')+1) == "loadSprite"){
+        if(commandAction.substr(0, commandAction.find('.')) == "background"){
+            // loadBackground(commandArg);
+        }
+/*        else if(commandAction.substr(0, commandAction.find('(')) == "char"){
+            std::string charName = commandAction.substr(
+                commandAction.
+            try {
+                Character ch = getCharByName(commandArg);
+            } catch (int n) {
+                ch = Character()
+            }
+        }
+*/
+    }
+    //  Parsing end.
+           
 }
 
 void Scenario::playSound(std::string filename) {
@@ -83,18 +115,18 @@ void Scenario::stopSound(int index) {
 }
 
 bool Scenario::isCurrLineCommand() {
-    return Scenario::getCurrentLine().length() > 2 
-        && Scenario::getCurrentLine().at(0) == '/' 
-        && Scenario::getCurrentLine().at(1) != '/';
+    return getCurrentLine().length() > 2 
+        && getCurrentLine().at(0) == '/' 
+        && getCurrentLine().at(1) != '/';
 }
 bool Scenario::isCurrLineComment() {
-    return Scenario::getCurrentLine().length() > 2 
-        && Scenario::getCurrentLine().at(0) == '/' 
-        && Scenario::getCurrentLine().at(1) == '/';
+    return getCurrentLine().length() > 2 
+        && getCurrentLine().at(0) == '/' 
+        && getCurrentLine().at(1) == '/';
 }
 bool Scenario::isCurrLineDisplayable(){
-    return !Scenario::getCurrentLineTrunc().empty()
-        && !Scenario::isCurrLineCommand() 
-        && !Scenario::isCurrLineComment();
+    return !getCurrentLineTrunc().empty()
+        && !isCurrLineCommand() 
+        && !isCurrLineComment();
 }
 

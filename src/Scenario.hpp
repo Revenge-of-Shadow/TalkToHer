@@ -16,10 +16,9 @@
 
 
 class Scenario {
-    const char *title_suffix = "title";
-    const char *script_suffix = "script";
-    const char *options_suffix = "options";
-    const char *postfix = ".txt";
+    const std::string title_suffix = "title.txt";
+    const std::string script_suffix = "script.txt";
+    const std::string options_suffix = "options.txt";
 
     std::string filepath;
     std::ifstream filestream;
@@ -36,6 +35,7 @@ class Scenario {
     std::string truncComment(std::string text);     //  Remove // from back.
 
     void loadSprite(std::string charname, std::string spritename);
+    void loadBackground(std::string spritename);
 
 public:
     Scenario(std::string path);
