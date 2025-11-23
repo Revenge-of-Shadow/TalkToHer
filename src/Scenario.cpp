@@ -1,4 +1,5 @@
 #include "Scenario.hpp"
+#include "libs.hpp"
 
 Character Scenario::getCharByName(std::string name) {
     for (int i = 0; i < characters.getSize(); ++i)
@@ -19,14 +20,14 @@ void loadSprite(std::string charname, std::string spritename) {}
 void loadBackground(std::string spritename) {}
 
 Scenario::Scenario(std::string path)
-        : filepath(path) {
+    :filepath(scenario_folder_suffix + kPathSepartor + path + kPathSepartor){
 
-    filestr.open(path + title_suffix);
+    filestr.open(filepath + title_suffix);
     std::getline(filestr, title);
     filestr.close();
     
     std::string line;
-    filestr.open(path + script_suffix);
+    filestr.open(filepath + script_suffix);
     
     while(filestr.is_open() && getline(filestr, line)){ //  Lags guaranteed.
         lines.add(line);
@@ -53,6 +54,15 @@ bool Scenario::toPrevLine() {
     return false;
 }
 
+std::string getArgumentOut(std::string source){
+    std::string commandArg = 
+        source.substr(source.find_last_of('(')+1);
+    commandArg = commandArg.substr(0, commandArg.find_last_of(')'));
+    if(commandArg[0] == '\"' && commandArg[commandArg.length()-1] == '\"')
+        commandArg = commandArg.substr(1, commandArg.length()-1);
+    return commandArg;
+}
+
 void Scenario::processCommand(std::string command) {
     // char(Cat).loadSprite(cat_closedeyes.png);
     // background.loadSprite(room.png);
@@ -61,9 +71,7 @@ void Scenario::processCommand(std::string command) {
     std::cout<<"Processing command: "<< com <<std::endl;
 
     //  Formatting.
-    std::string commandArg = 
-        com.substr(com.find_last_of('(')+1);
-    commandArg = commandArg.substr(0, commandArg.find_last_of(')'));
+    std::string commandArg = getArgumentOut(com);
     std::string commandBody = com.substr(0, com.find_last_of('('));
     std::string commandObject = 
         commandBody.find('.') == std::string::npos? "" 
@@ -75,27 +83,43 @@ void Scenario::processCommand(std::string command) {
     std::cout<<"Body: "<<commandBody<<"\t"<<"Arg: "<<commandArg<<std::endl;
     std::cout<<"Object: "<<commandObject<<"\t"<<"Action: "<<commandAction<<std::endl;
 
-     if(commandArg[0] == '\"' && commandArg[commandArg.length()-1] == '\"')
-        commandArg = commandArg.substr(1, commandArg.length()-1);
     //  Formatting end.
 
     //  Parsing.
     if(commandAction == "sleep")
         sf::sleep(sf::milliseconds(strtof(commandArg.c_str(), NULL)));
-    if(commandAction.substr(commandAction.find('.')+1) == "loadSprite"){
-        if(commandAction.substr(0, commandAction.find('.')) == "background"){
+    if(commandAction == "loadBackground"){
             // loadBackground(commandArg);
+    }
+    //  char(charName)
+    else if(commandAction == "char"){// Initialization only.
+            Character ch = Character(commandArg);
+            characters.add(ch);
+    }
+    else if(commandObject.substr(0, commandObject.find('(')) == "char"){
+        std::string charName = getArgumentOut(commandObject);
+        Character ch;
+        try {
+            ch = getCharByName(charName);
+        } catch (int n) {
+            ch = Character(charName, commandArg);
+            characters.add(ch);
         }
-/*        else if(commandAction.substr(0, commandAction.find('(')) == "char"){
-            std::string charName = commandAction.substr(
-                commandAction.
-            try {
-                Character ch = getCharByName(commandArg);
-            } catch (int n) {
-                ch = Character()
-            }
+        if(commandAction == "loadSprite"){
+            ch.loadSprite(commandArg);
         }
-*/
+        else if(commandAction == "setPos"){
+            ch.setPosition(sf::Vector2f(
+                strtof(commandArg.substr(0, commandArg.find(',')).c_str(), NULL),
+                strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)
+            ));
+        }
+        else if(commandAction == "move"){
+            ch.move(sf::Vector2f(
+                strtof(commandArg.substr(0, commandArg.find(',')).c_str(), NULL),
+                strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)
+            ));
+        }
     }
     //  Parsing end.
            

@@ -16,6 +16,7 @@
 
 
 class Scenario {
+    const std::string scenario_folder_suffix = "scenarios";
     const std::string title_suffix = "title.txt";
     const std::string script_suffix = "script.txt";
     const std::string options_suffix = "options.txt";
@@ -38,6 +39,7 @@ class Scenario {
     void loadBackground(std::string spritename);
 
 public:
+    //  "test" leads to opening "scenarios/test/script.txt"
     Scenario(std::string path);
 
     int getCurrentIndex();

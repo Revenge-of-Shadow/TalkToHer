@@ -1,17 +1,18 @@
 //  Supposedly "scenes/scene01.txt".
-/background.load(room)//  "backgrounds/room.png"
-/cat.setPos(30%, 20%)//  30% off left corner, 20% off bottom: she is slightly
+/loadBackground(room.png)//  "backgrounds/room.png"
+/char(cat)//Initialize her.
+/char(cat).setPos(30%, 20%)//  30% off left corner, 20% off bottom: she is slightly
 //  left off the centre, her legs are partly hidden.
-/cat.loadSprite(sleepy)//"sprites/cat/sleepy.png"
+/char(cat).loadSprite(sleepy.png)//"sprites/cat/sleepy.png"
 Text.
 Line of text.
-/cat.playSound("first_line.mp3")//  Asynchronous!
+/char(cat).playSound("first_line.mp3")//  Asynchronous!
 First line of cat.//  Following commands shall activate after this is visible.
-/cat.darken()
+/char(cat).darken()
 /sleep(1000)
-/cat.moveLeft()
+/char(cat).moveLeft()
 /sleep(1000)
-/cat.moveRight()
+/char(cat).moveRight()
 /sleep(1000)
 Second line of cat.//  This shall be seen after the first line is forced away.
 //  Commands may run until they are completed or until

@@ -10,18 +10,25 @@ class Character: public sf::Drawable{
     std::string name;
     sf::Vector2f position;
     sf::Sprite sprite;    
+    bool loadSpriteFromPath(std::string filepath){return false;};
 public:
     Character(){};
-    Character(std::string name, std::string sprite_filename)
+    Character(std::string name)
         :name(name){
-        loadSprite(sprite_folder_suffix + kPathSepartor 
-                   + name + kPathSepartor 
-                   + sprite_filename);
-                  };
+    };
+    Character(std::string name, std::string sprite_name)
+        :name(name){
+        loadSprite(sprite_name);
+    };
 
     void setName(std::string name){ name=name; };
-    bool loadSprite(std::string filepath){return false;};
     void setPosition(sf::Vector2f pos){};
+    bool loadSprite(std::string sprite_name){
+        return loadSpriteFromPath(
+                     sprite_folder_suffix + kPathSepartor 
+                   + name + kPathSepartor 
+                   + sprite_name);
+    };
 
     std::string getName(){return name;};
     sf::Sprite getSprite(){return sprite;};

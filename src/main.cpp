@@ -37,7 +37,7 @@ int main(){
         FONT_SIZE
     );
 
-    Scenario sc = Scenario("scenes"+kPathSepartor+"test"+kPathSepartor);
+    Scenario sc = Scenario("test");
     
     while(w.isOpen()){
         sf::Event event;
