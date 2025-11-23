@@ -1,6 +1,8 @@
+#include "Character.hpp"
 #include "libs.hpp"
 #include "TextBox.hpp"
 #include "Scenario.hpp"
+#include <SFML/Graphics/RenderStates.hpp>
 
 #define WIN_WIDTH   1600
 #define WIN_HEIGHT  900
@@ -12,15 +14,16 @@ int main(){
     sf::RenderWindow w(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Unyu");
     w.setVerticalSyncEnabled(true);
 
-    sf::Texture t;
-
-    if(!t.loadFromFile(filename))
-        return EXIT_FAILURE;
-
-    sf::Sprite s;
-    s.setTexture(t);
-    s.setOrigin(t.getSize().x/2.f, t.getSize().y);
-    s.setPosition(sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT));
+    // sf::Texture t;
+    //
+    // if(!t.loadFromFile(filename))
+    //     return EXIT_FAILURE;
+    //
+    // sf::Sprite s;
+    // s.setTexture(t);
+    // s.setOrigin(t.getSize().x/2.f, t.getSize().y);
+    Character unyu("Unyu", "Unyu.png");
+    unyu.setPosition(sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT));
 
 
     TextBox tb = TextBox(
@@ -59,8 +62,9 @@ int main(){
                     case sf::Keyboard::Right:   //  Process commands and show text.
                         while(sc.toNextLine()){
                             if(sc.isCurrLineComment())  continue;
-                            if(sc.isCurrLineCommand())
-                                sc.processCommand(sc.getCurrentLine());
+                            if(sc.isCurrLineCommand())continue;
+
+                                // sc.processCommand(sc.getCurrentLine());
                             else break;
                         }
                         //  But roll back if it is the last line and a comment...
@@ -75,7 +79,7 @@ int main(){
 
         
         w.clear();
-        w.draw(s);
+        w.draw(unyu);
         tb.draw(w); 
         w.display();
     }

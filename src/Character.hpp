@@ -10,7 +10,14 @@ class Character: public sf::Drawable{
     std::string name;
     sf::Vector2f position;
     sf::Sprite sprite;    
-    bool loadSpriteFromPath(std::string filepath){return false;};
+    sf::Texture texture;
+    bool loadSpriteFromPath(std::string filepath){
+        if(!texture.loadFromFile(filepath)) return false;
+        sprite.setTexture(texture);
+        sprite.setOrigin(texture.getSize().x/2.f, texture.getSize().y);
+
+        return true;
+    };
 public:
     Character(){};
     Character(std::string name)
@@ -22,7 +29,7 @@ public:
     };
 
     void setName(std::string name){ name=name; };
-    void setPosition(sf::Vector2f pos){};
+    void setPosition(sf::Vector2f pos){ position = pos; sprite.setPosition(pos);};
     bool loadSprite(std::string sprite_name){
         return loadSpriteFromPath(
                      sprite_folder_suffix + kPathSepartor 
@@ -37,7 +44,9 @@ public:
     void move(sf::Vector2f mov){ position+=mov; };
     void brightness(float val){};
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{};
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
+        target.draw(sprite);
+    };
 
     Character& operator=(const Character& other){
         if(this != &other){
