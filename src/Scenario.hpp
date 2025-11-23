@@ -13,14 +13,10 @@
 #include "Sound.hpp"
 #include "TextBox.hpp"
 #include "libs.hpp"
+#include "defaults.h"
 
 
 class Scenario {
-    const std::string scenario_folder_suffix = "scenarios";
-    const std::string title_suffix = "title.txt";
-    const std::string script_suffix = "script.txt";
-    const std::string options_suffix = "options.txt";
-
     std::string filepath;
     std::ifstream filestream;
     std::string title; //  Extracted from file.

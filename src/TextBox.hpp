@@ -18,7 +18,8 @@ public:
     sf::Text text;
 
     TextBox();
-    TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font& font, int fontSize);
+    TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontname, int fontSize);
+    bool loadFont(std::string fontname);
     void setString(std::string text);
     std::string getString();
 

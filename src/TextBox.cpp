@@ -1,11 +1,11 @@
 #include "TextBox.hpp"
 
 TextBox::TextBox():offset(0), line(""){}
-TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, sf::Font& font, int fontSize){
+TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontname, int fontSize){
     line = str;
     offset = 0;
     fontSize = fontSize;
-    font = font;
+    font.loadFromFile(fontname);
     double outline_thickness = pos.x/pos.y;
     size = sf::Vector2f(size.x - outline_thickness*2, size.y - outline_thickness*2);
 

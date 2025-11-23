@@ -22,18 +22,12 @@ int main(){
     s.setOrigin(t.getSize().x/2.f, t.getSize().y);
     s.setPosition(sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT));
 
-    //              MOVE FONT TO TEXTBOX! Init it with filepath.
-    sf::Font font;
-    if(!font.loadFromFile(FONT_FILEPATH)){
-        std::cout<<"Font file not found."<<std::endl;
-        return EXIT_FAILURE;
-    }
 
     TextBox tb = TextBox(
         sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT/8.f), 
         sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT-WIN_HEIGHT/16.f), 
         "Unyu",
-        font,
+        FONT_FILEPATH,
         FONT_SIZE
     );
 

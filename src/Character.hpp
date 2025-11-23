@@ -1,10 +1,10 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 #include "libs.hpp"
+#include "defaults.h"
 
 
 class Character: public sf::Drawable{
-    const std::string sprite_folder_suffix = "sprites";
 
     //  Character sprite must have origin at the bottom center.
     std::string name;
