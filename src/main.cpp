@@ -1,24 +1,17 @@
-#include "Character.hpp"
 #include "libs.hpp"
+#include "defaults.h"
+#include "DrawableObject.hpp"
 #include "TextBox.hpp"
 #include "Scenario.hpp"
-#include <SFML/System/Sleep.hpp>
-#include <SFML/System/Time.hpp>
-#include <SFML/Window/Keyboard.hpp>
 
-#define WIN_WIDTH   1600
-#define WIN_HEIGHT  900
-#define filename    "sprites/Unyu.png"
-#define FONTNAME "dm-serif-text-latin-400-normal.ttf"
-#define FONT_SIZE   24
 
 int main(){
-    sf::RenderWindow w(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Unyu");
+    sf::RenderWindow w(sf::VideoMode(windowSize.x, windowSize.y), "Unyu");
     w.setVerticalSyncEnabled(true);
 
     TextBox tb = TextBox(
-        sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT/8.f), 
-        sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT-WIN_HEIGHT/16.f), 
+        sf::Vector2f(windowSize.x/2.f, windowSize.y/8.f), 
+        sf::Vector2f(windowSize.x/2.f, windowSize.y-windowSize.y/16.f), 
         "",
         FONTNAME,
         FONT_SIZE
@@ -26,7 +19,8 @@ int main(){
 
     SimpleList<std::string> commandQueue;
     Scenario sc = Scenario("test");
-    
+    sf::Sprite bg;
+
     while(w.isOpen()){
         sf::Event event;
         while(w.pollEvent(event)){
@@ -72,6 +66,9 @@ int main(){
         if(commandQueue.getSize())  sc.processCommand(commandQueue.pop(0));
         
         w.clear();
+        if(sc.isBackgroundSet()){
+            w.draw(sc.getBackground());
+        }
         for(int i = 0; i<sc.getCharsSize(); ++i)
             w.draw(sc.getChar(i));
         tb.draw(w); 

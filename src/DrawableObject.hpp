@@ -1,13 +1,12 @@
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef DRAWABLEOBJECT_H
+#define DRAWABLEOBJECT_H
 #include "libs.hpp"
 #include "defaults.h"
-#include <SFML/Graphics/CircleShape.hpp>
 
 
-class Character: public sf::Drawable{
+class DrawableObject: public sf::Drawable{
 
-    //  Character sprite must have origin at the bottom center.
+    //  DrawableObject sprite must have origin at the bottom center.
     std::string name;
     sf::Vector2f position;
     sf::Sprite sprite;    
@@ -20,11 +19,11 @@ class Character: public sf::Drawable{
         return true;
     };
 public:
-    Character(){};
-    Character(std::string name)
+    DrawableObject(){};
+    DrawableObject(std::string name)
         :name(name){
     };
-    Character(std::string name, std::string sprite_name)
+    DrawableObject(std::string name, std::string sprite_name)
         :name(name){
         loadSprite(sprite_name);
     };
@@ -54,7 +53,7 @@ public:
         target.draw(sprite);
     };
 
-    Character& operator=(const Character& other){
+    DrawableObject& operator=(const DrawableObject& other){
         if(this != &other){
             name = other.name;
             position = other.position;
@@ -62,7 +61,7 @@ public:
         }
         return *this;
     }
-    Character* operator*(){
+    DrawableObject* operator*(){
         return this;
     }
     

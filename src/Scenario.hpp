@@ -9,7 +9,7 @@
  *      read the options and allow the choice.
  *
  */
-#include "Character.hpp"
+#include "DrawableObject.hpp"
 #include "Sound.hpp"
 #include "TextBox.hpp"
 #include "libs.hpp"
@@ -24,22 +24,29 @@ class Scenario {
     SimpleList<std::string> lines;    //  This is... BAD. But, like, reliable.
     std::ifstream filestr;
 
-    SimpleList<Character> characters;
+
+    sf::Texture backgroundTexture;
+    DrawableObject background;
+    SimpleList<DrawableObject> characters;
     SimpleList<Sound> loopingSounds;
+    
+    bool backgroundSet; //  For drawing check.
 
     int getCharIndexByName(std::string name);
-    Character getCharByName(std::string name);
+    DrawableObject getCharByName(std::string name);
 
     std::string truncCommand(std::string command);  //  Remove / from front.
     std::string truncComment(std::string text);     //  Remove // from back.
 
-    void loadSprite(std::string charname, std::string spritename);
     void loadBackground(std::string spritename);
-    Character* getCharPtr(int index); // For altering from inside of Scenario.
+    void toggleBackground();    //  Just disable via bool.
+    DrawableObject* getCharPtr(int index); // For altering from inside of Scenario.
 
 public:
     int getCharsSize();   //  For drawing.
-    Character getChar(int index);   //  Read-only.
+    DrawableObject getChar(int index);   //  Read-only.
+    bool isBackgroundSet();//  For drawing check.
+    DrawableObject getBackground();// Read-only.
     //  "test" leads to opening "scenarios/test/script.txt"
     Scenario(std::string path);
 

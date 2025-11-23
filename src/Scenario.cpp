@@ -1,6 +1,8 @@
 #include "Scenario.hpp"
+#include "DrawableObject.hpp"
 #include "libs.hpp"
-Character Scenario::getCharByName(std::string name) {
+#include <SFML/Graphics/Sprite.hpp>
+DrawableObject Scenario::getCharByName(std::string name) {
     for (int i = 0; i < characters.getSize(); ++i){
         if (characters.peek(i).getName().compare(name) == 0)
             return characters.peek(i);
@@ -21,17 +23,24 @@ std::string Scenario::truncComment(std::string text){   //  For text with //comm
     return text.substr(0, text.find("//"));
 }
 
-void loadSprite(std::string charname, std::string spritename) {}
-void loadBackground(std::string spritename) {}
+void Scenario::loadBackground(std::string spritename) {
+    background.setName("background");
+    background.loadSprite(spritename);
+    backgroundSet = true;
+}
+void Scenario::toggleBackground() { backgroundSet = !backgroundSet; }
 
-Character* Scenario::getCharPtr(int index){ return characters.getPtr(index);}
+DrawableObject* Scenario::getCharPtr(int index){ return characters.getPtr(index);}
 
 int Scenario::getCharsSize(){ return characters.getSize(); }
-Character Scenario::getChar(int index){ return characters.peek(index); }
+DrawableObject Scenario::getChar(int index){ return characters.peek(index); }
+bool Scenario::isBackgroundSet(){ return backgroundSet; }
+DrawableObject Scenario::getBackground(){ return background; }
 
 
 Scenario::Scenario(std::string path)
-    :filepath(scenario_folder_suffix + kPathSepartor + path + kPathSepartor){
+    :filepath(scenario_folder_suffix + kPathSepartor + path + kPathSepartor),
+    backgroundSet(false){
 
     filestr.open(filepath + title_suffix);
     std::getline(filestr, title);
@@ -99,20 +108,32 @@ void Scenario::processCommand(std::string command) {
     //  Parsing.
     if(commandAction == "sleep")
         sf::sleep(sf::milliseconds(strtof(commandArg.c_str(), NULL)));
-    if(commandAction == "loadBackground"){
-            // loadBackground(commandArg);
+
+    if(commandObject == "background"){
+        if(commandAction == "loadSprite"){
+            loadBackground(commandArg);
+        }
+        else if(commandAction == "setPosition"){
+            background.setPosition(sf::Vector2f(
+                strtof(commandArg.substr(0, commandArg.find(',')).c_str(), NULL),
+                strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)
+            ));
+        }
+        else if(commandAction == "toggle"){
+            toggleBackground();
+        }
     }
-    //  char(charName)
+    ////  char(charName)
     else if(commandAction == "char"){// Initialization only.
-        characters.add(Character(commandArg));
+        characters.add(DrawableObject(commandArg));
     }
     else if(commandObject.substr(0, commandObject.find('(')) == "char"){
         std::string charName = getArgumentOut(commandObject);
-        Character* ch = getCharPtr(getCharIndexByName(charName));
+        DrawableObject* ch = getCharPtr(getCharIndexByName(charName));
         if(commandAction == "loadSprite"){
             (*ch).loadSprite(commandArg);
         }
-        else if(commandAction == "setPos"){
+        else if(commandAction == "setPosition"){
             (*ch).setPosition(sf::Vector2f(
                 strtof(commandArg.substr(0, commandArg.find(',')).c_str(), NULL),
                 strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)

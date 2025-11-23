@@ -1,7 +1,9 @@
 //  Just... please. Let it be a commentary line. For code's sake.
+/background.loadSprite(bg.png)
+/background.setPosition(800,900)
 /char(Unyu)
 /char(Unyu).loadSprite(Unyu.png)
-/char(Unyu).setPos(800,900)
+/char(Unyu).setPosition(800,900)
 Text.
 Line of text.
 //char(Unyu).darken()

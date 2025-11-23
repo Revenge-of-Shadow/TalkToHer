@@ -4,8 +4,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>225</x>
-      <y>360</y>
+      <x>261</x>
+      <y>387</y>
       <w>189</w>
       <h>243</h>
     </coordinates>
@@ -33,8 +33,8 @@ void draw(sf::RenderTarget&amp;);
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>414</y>
+      <x>36</x>
+      <y>441</y>
       <w>135</w>
       <h>27</h>
     </coordinates>
@@ -45,8 +45,8 @@ void draw(sf::RenderTarget&amp;);
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>450</y>
+      <x>36</x>
+      <y>477</y>
       <w>135</w>
       <h>27</h>
     </coordinates>
@@ -57,8 +57,8 @@ void draw(sf::RenderTarget&amp;);
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>495</y>
+      <x>36</x>
+      <y>522</y>
       <w>135</w>
       <h>27</h>
     </coordinates>
@@ -69,8 +69,8 @@ void draw(sf::RenderTarget&amp;);
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>126</x>
-      <y>423</y>
+      <x>162</x>
+      <y>450</y>
       <w>117</w>
       <h>45</h>
     </coordinates>
@@ -80,8 +80,8 @@ void draw(sf::RenderTarget&amp;);
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>126</x>
-      <y>459</y>
+      <x>162</x>
+      <y>486</y>
       <w>117</w>
       <h>27</h>
     </coordinates>
@@ -91,8 +91,8 @@ void draw(sf::RenderTarget&amp;);
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>126</x>
-      <y>477</y>
+      <x>162</x>
+      <y>504</y>
       <w>117</w>
       <h>45</h>
     </coordinates>
@@ -102,8 +102,8 @@ void draw(sf::RenderTarget&amp;);
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>486</x>
-      <y>171</y>
+      <x>522</x>
+      <y>198</y>
       <w>189</w>
       <h>171</h>
     </coordinates>
@@ -116,8 +116,8 @@ void draw(sf::RenderTarget&amp;);
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>306</x>
-      <y>198</y>
+      <x>342</x>
+      <y>225</y>
       <w>198</w>
       <h>180</h>
     </coordinates>
@@ -127,8 +127,8 @@ void draw(sf::RenderTarget&amp;);
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>720</x>
-      <y>360</y>
+      <x>756</x>
+      <y>387</y>
       <w>189</w>
       <h>171</h>
     </coordinates>
@@ -141,8 +141,8 @@ parseLine()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>666</x>
-      <y>216</y>
+      <x>702</x>
+      <y>243</y>
       <w>171</w>
       <h>162</h>
     </coordinates>
@@ -152,8 +152,8 @@ parseLine()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>405</x>
-      <y>360</y>
+      <x>441</x>
+      <y>387</y>
       <w>333</w>
       <h>27</h>
     </coordinates>
@@ -163,8 +163,8 @@ parseLine()</panel_attributes>
   <element>
     <id>Text</id>
     <coordinates>
-      <x>414</x>
-      <y>369</y>
+      <x>450</x>
+      <y>396</y>
       <w>315</w>
       <h>63</h>
     </coordinates>
@@ -174,12 +174,12 @@ parseLine()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>927</x>
-      <y>144</y>
+      <x>963</x>
+      <y>171</y>
       <w>189</w>
       <h>261</h>
     </coordinates>
-    <panel_attributes>Character:Drawable
+    <panel_attributes>DrawableObject:Drawable
 --
 - std::string name;
 - sf::Vector2f position;
@@ -204,8 +204,8 @@ parseLine()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>927</x>
-      <y>423</y>
+      <x>963</x>
+      <y>450</y>
       <w>189</w>
       <h>171</h>
     </coordinates>
@@ -220,8 +220,8 @@ parseLine()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1188</x>
-      <y>135</y>
+      <x>1224</x>
+      <y>162</y>
       <w>180</w>
       <h>396</h>
     </coordinates>
@@ -230,9 +230,13 @@ parseLine()</panel_attributes>
 sleep(int)
 loadBackground(string)
 
+background.loadSprite(string)
+background.setPosition(float, float)
+background.toggle()
+
 char(string)
 char(string).loadSprite(string)
-char(string).setPos(float, float)
+char(string).setPosition(float, float)
 char(string).move(float, float)
 char(string).remove()
 
