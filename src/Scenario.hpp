@@ -35,10 +35,11 @@ class Scenario {
 
     void loadSprite(std::string charname, std::string spritename);
     void loadBackground(std::string spritename);
+    Character* getCharPtr(int index); // For altering from inside of Scenario.
 
 public:
     int getCharsSize();   //  For drawing.
-    Character* getCharByIndex(int index);
+    Character getChar(int index);   //  Read-only.
     //  "test" leads to opening "scenarios/test/script.txt"
     Scenario(std::string path);
 

@@ -1,16 +1,16 @@
 //  Just... please. Let it be a commentary line. For code's sake.
 /char(Unyu)
 /char(Unyu).loadSprite(Unyu.png)
-//char(Unyu).setPos(800,900)
+/char(Unyu).setPos(800,900)
 Text.
 Line of text.
-//char(cat).darken()
+//char(Unyu).darken()
 /sleep(1000)
-//char(cat).moveLeft()
+/char(Unyu).move(400, 0)
 /sleep(1000)
-//char(cat).moveRight()
+/char(Unyu).move(-400, 0)
 /sleep(1000)
-Second line of cat.//  This shall be seen after the first line is forced away.
+Second line of Unyu.//  This shall be seen after the first line is forced away.
 //  Commands may run until they are completed or until
 //  this line disappears.
 //moveToScene(scene02)

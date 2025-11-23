@@ -1,9 +1,5 @@
 #include "Scenario.hpp"
 #include "libs.hpp"
-
-int Scenario::getCharsSize(){ return characters.getSize(); }
-Character* Scenario::getCharByIndex(int index){ return characters.getPtr(index);}
-
 Character Scenario::getCharByName(std::string name) {
     for (int i = 0; i < characters.getSize(); ++i){
         if (characters.peek(i).getName().compare(name) == 0)
@@ -27,6 +23,12 @@ std::string Scenario::truncComment(std::string text){   //  For text with //comm
 
 void loadSprite(std::string charname, std::string spritename) {}
 void loadBackground(std::string spritename) {}
+
+Character* Scenario::getCharPtr(int index){ return characters.getPtr(index);}
+
+int Scenario::getCharsSize(){ return characters.getSize(); }
+Character Scenario::getChar(int index){ return characters.peek(index); }
+
 
 Scenario::Scenario(std::string path)
     :filepath(scenario_folder_suffix + kPathSepartor + path + kPathSepartor){
@@ -102,24 +104,22 @@ void Scenario::processCommand(std::string command) {
     }
     //  char(charName)
     else if(commandAction == "char"){// Initialization only.
-        Character ch = Character(commandArg);
-        characters.add(ch);
+        characters.add(Character(commandArg));
     }
     else if(commandObject.substr(0, commandObject.find('(')) == "char"){
         std::string charName = getArgumentOut(commandObject);
-        Character ch;
-        ch = getCharByName(charName);
+        Character* ch = getCharPtr(getCharIndexByName(charName));
         if(commandAction == "loadSprite"){
-            ch.loadSprite(commandArg);
+            (*ch).loadSprite(commandArg);
         }
         else if(commandAction == "setPos"){
-            ch.setPosition(sf::Vector2f(
+            (*ch).setPosition(sf::Vector2f(
                 strtof(commandArg.substr(0, commandArg.find(',')).c_str(), NULL),
                 strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)
             ));
         }
         else if(commandAction == "move"){
-            ch.move(sf::Vector2f(
+            (*ch).move(sf::Vector2f(
                 strtof(commandArg.substr(0, commandArg.find(',')).c_str(), NULL),
                 strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)
             ));

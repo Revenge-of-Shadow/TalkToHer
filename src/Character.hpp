@@ -2,6 +2,7 @@
 #define CHARACTER_H
 #include "libs.hpp"
 #include "defaults.h"
+#include <SFML/Graphics/CircleShape.hpp>
 
 
 class Character: public sf::Drawable{
@@ -28,8 +29,11 @@ public:
         loadSprite(sprite_name);
     };
 
-    void setName(std::string name){ name=name; };
-    void setPosition(sf::Vector2f pos){ position = pos; sprite.setPosition(pos);};
+    void setName(std::string name){ name=name; };// Kind of does not work.
+    void setPosition(sf::Vector2f pos){
+        position = pos;  
+        sprite.setPosition(position);
+    };
     bool loadSprite(std::string sprite_name){
         return loadSpriteFromPath(
                      sprite_folder_suffix + kPathSepartor 
@@ -39,7 +43,7 @@ public:
 
     std::string getName(){return name;};
     sf::Sprite getSprite(){return sprite;};
-    sf::Vector2f getPosition(){return position;};
+    sf::Vector2f getPosition()const{return position;};
 
     void move(sf::Vector2f mov){ position+=mov; };
     void brightness(float val){};
@@ -48,7 +52,6 @@ public:
     //  for it.
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
         target.draw(sprite);
-        std::cout<<"But why?"<<std::endl;
     };
 
     Character& operator=(const Character& other){
@@ -58,6 +61,9 @@ public:
             sprite = other.sprite;
         }
         return *this;
+    }
+    Character* operator*(){
+        return this;
     }
     
 };

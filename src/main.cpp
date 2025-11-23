@@ -70,7 +70,7 @@ int main(){
         
         w.clear();
         for(int i = 0; i<sc.getCharsSize(); ++i)
-            w.draw((*sc.getCharByIndex(i)));
+            w.draw(sc.getChar(i));
         tb.draw(w); 
         w.display();
     }
