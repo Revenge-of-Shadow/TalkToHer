@@ -44,8 +44,11 @@ public:
     void move(sf::Vector2f mov){ position+=mov; };
     void brightness(float val){};
 
+    //  Could probably add a boolean for not drawing hidden, but I see no need
+    //  for it.
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
         target.draw(sprite);
+        std::cout<<"But why?"<<std::endl;
     };
 
     Character& operator=(const Character& other){

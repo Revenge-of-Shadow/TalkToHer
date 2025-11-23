@@ -234,6 +234,7 @@ char(string)
 char(string).loadSprite(string)
 char(string).setPos(float, float)
 char(string).move(float, float)
+char(string).remove()
 
 </panel_attributes>
     <additional_attributes/>

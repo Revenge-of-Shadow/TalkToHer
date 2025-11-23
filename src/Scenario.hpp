@@ -26,6 +26,8 @@ class Scenario {
 
     SimpleList<Character> characters;
     SimpleList<Sound> loopingSounds;
+
+    int getCharIndexByName(std::string name);
     Character getCharByName(std::string name);
 
     std::string truncCommand(std::string command);  //  Remove / from front.
@@ -35,6 +37,8 @@ class Scenario {
     void loadBackground(std::string spritename);
 
 public:
+    int getCharsSize();   //  For drawing.
+    Character* getCharByIndex(int index);
     //  "test" leads to opening "scenarios/test/script.txt"
     Scenario(std::string path);
 

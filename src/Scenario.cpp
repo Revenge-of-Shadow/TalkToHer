@@ -1,10 +1,20 @@
 #include "Scenario.hpp"
 #include "libs.hpp"
 
+int Scenario::getCharsSize(){ return characters.getSize(); }
+Character* Scenario::getCharByIndex(int index){ return characters.getPtr(index);}
+
 Character Scenario::getCharByName(std::string name) {
-    for (int i = 0; i < characters.getSize(); ++i)
+    for (int i = 0; i < characters.getSize(); ++i){
         if (characters.peek(i).getName().compare(name) == 0)
             return characters.peek(i);
+    }
+    throw;
+}
+int Scenario::getCharIndexByName(std::string name) {
+    for (int i = 0; i < characters.getSize(); ++i)
+        if (characters.peek(i).getName().compare(name) == 0)
+            return i;
     throw;
 }
 
@@ -14,7 +24,6 @@ std::string Scenario::truncCommand(std::string command) { //   For /commands
 std::string Scenario::truncComment(std::string text){   //  For text with //comm
     return text.substr(0, text.find("//"));
 }
-
 
 void loadSprite(std::string charname, std::string spritename) {}
 void loadBackground(std::string spritename) {}
@@ -79,9 +88,9 @@ void Scenario::processCommand(std::string command) {
     std::string commandAction = 
         commandBody.find('.') == std::string::npos? commandBody
         : commandBody.substr(commandBody.find('.')+1);
-    std::cout<<"Command: "<<com<<std::endl;
-    std::cout<<"Body: "<<commandBody<<"\t"<<"Arg: "<<commandArg<<std::endl;
-    std::cout<<"Object: "<<commandObject<<"\t"<<"Action: "<<commandAction<<std::endl;
+    std::cout<<"\tCommand: "<<com<<std::endl;
+    std::cout<<"\tBody: "<<commandBody<<"\t"<<"Arg: "<<commandArg<<std::endl;
+    std::cout<<"\tObject: "<<commandObject<<"\t"<<"Action: "<<commandAction<<std::endl;
 
     //  Formatting end.
 
@@ -93,18 +102,13 @@ void Scenario::processCommand(std::string command) {
     }
     //  char(charName)
     else if(commandAction == "char"){// Initialization only.
-            Character ch = Character(commandArg);
-            characters.add(ch);
+        Character ch = Character(commandArg);
+        characters.add(ch);
     }
     else if(commandObject.substr(0, commandObject.find('(')) == "char"){
         std::string charName = getArgumentOut(commandObject);
         Character ch;
-        try {
-            ch = getCharByName(charName);
-        } catch (int n) {
-            ch = Character(charName, commandArg);
-            characters.add(ch);
-        }
+        ch = getCharByName(charName);
         if(commandAction == "loadSprite"){
             ch.loadSprite(commandArg);
         }
@@ -120,6 +124,10 @@ void Scenario::processCommand(std::string command) {
                 strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)
             ));
         }
+        else if(commandAction == "remove"){
+            characters.pop(getCharIndexByName(charName));
+        }
+
     }
     //  Parsing end.
            

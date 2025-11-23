@@ -1,21 +1,17 @@
-//  Supposedly "scenes/scene01.txt".
-/loadBackground(room.png)//  "backgrounds/room.png"
-/char(cat)//Initialize her.
-/char(cat).setPos(30%, 20%)//  30% off left corner, 20% off bottom: she is slightly
-//  left off the centre, her legs are partly hidden.
-/char(cat).loadSprite(sleepy.png)//"sprites/cat/sleepy.png"
+//  Just... please. Let it be a commentary line. For code's sake.
+/char(Unyu)
+/char(Unyu).loadSprite(Unyu.png)
+//char(Unyu).setPos(800,900)
 Text.
 Line of text.
-/char(cat).playSound("first_line.mp3")//  Asynchronous!
-First line of cat.//  Following commands shall activate after this is visible.
-/char(cat).darken()
+//char(cat).darken()
 /sleep(1000)
-/char(cat).moveLeft()
+//char(cat).moveLeft()
 /sleep(1000)
-/char(cat).moveRight()
+//char(cat).moveRight()
 /sleep(1000)
 Second line of cat.//  This shall be seen after the first line is forced away.
 //  Commands may run until they are completed or until
 //  this line disappears.
-/moveToScene(scene02)
+//moveToScene(scene02)
 //  End of scene.

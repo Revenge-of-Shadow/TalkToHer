@@ -21,6 +21,7 @@ public:
   }
 
   T peek(int index) { return elements[index]; }
+  T* getPtr(int index){ return &elements[index]; }
   T pop(int index) {
     T popped;
     T *newElements = new T[size - 1];
