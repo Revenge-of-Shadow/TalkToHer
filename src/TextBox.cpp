@@ -5,7 +5,7 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::stri
     line = str;
     offset = 0;
     fontSize = fontSize;
-    font.loadFromFile(fontname);
+    font.loadFromFile(font_folder_suffix + kPathSepartor + fontname);
     double outline_thickness = pos.x/pos.y;
     size = sf::Vector2f(size.x - outline_thickness*2, size.y - outline_thickness*2);
 

@@ -10,6 +10,7 @@ const std::string kPathSepartor = "\\";
 
 const std::string kPathSepartor = "/";
 
+const std::string font_folder_suffix = "fonts";
 const std::string scenario_folder_suffix = "scenarios";
 const std::string title_suffix = "title.txt";
 const std::string script_suffix = "script.txt";

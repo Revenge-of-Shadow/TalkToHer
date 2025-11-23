@@ -2,6 +2,7 @@
 #define TEXTBOX_H
 
 #include "libs.hpp"
+#include "defaults.h"
 
 class TextBox{
     std::string line;

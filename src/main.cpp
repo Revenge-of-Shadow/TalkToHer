@@ -5,7 +5,7 @@
 #define WIN_WIDTH   1600
 #define WIN_HEIGHT  900
 #define filename    "sprites/Unyu.png"
-#define FONT_FILEPATH   "fonts/dm-serif-text-latin-400-normal.ttf"
+#define FONTNAME "dm-serif-text-latin-400-normal.ttf"
 #define FONT_SIZE   24
 
 int main(){
@@ -27,7 +27,7 @@ int main(){
         sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT/8.f), 
         sf::Vector2f(WIN_WIDTH/2.f, WIN_HEIGHT-WIN_HEIGHT/16.f), 
         "Unyu",
-        FONT_FILEPATH,
+        FONTNAME,
         FONT_SIZE
     );
 
