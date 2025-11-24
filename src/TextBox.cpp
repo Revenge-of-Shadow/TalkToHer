@@ -12,11 +12,12 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::stri
     rect = sf::RectangleShape(size);
     rect.setOrigin(size.x/2, size.y/2);
     rect.setPosition(pos);
-    rect.setFillColor(sf::Color::Black);
-    rect.setOutlineColor(sf::Color::White);
-    rect.setOutlineThickness(outline_thickness);
+    setFillColor(sf::Color::Black);
+    setOutlineColor(sf::Color::White);
+    setOutlineThickness(outline_thickness);
     
     text = sf::Text("", font, fontSize);
+    setTextFillColor(sf::Color::White);
     setString(line);
 }
 

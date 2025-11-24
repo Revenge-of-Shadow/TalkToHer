@@ -12,6 +12,7 @@ const std::string kPathSepartor = "\\";
 #define FONTNAME "dm-serif-text-latin-400-normal.ttf"
 
 const std::string kPathSepartor = "/";
+const std::string optionsSeparator = ":";
 
 const std::string font_folder_suffix = "fonts";
 const std::string scenario_folder_suffix = "scenarios";

@@ -1,7 +1,8 @@
 #include "Scenario.hpp"
 #include "DrawableObject.hpp"
 #include "libs.hpp"
-#include <SFML/Graphics/Sprite.hpp>
+#include <string>
+
 DrawableObject Scenario::getCharByName(std::string name) {
     for (int i = 0; i < characters.getSize(); ++i){
         if (characters.peek(i).getName().compare(name) == 0)
@@ -36,6 +37,20 @@ int Scenario::getCharsSize(){ return characters.getSize(); }
 DrawableObject Scenario::getChar(int index){ return characters.peek(index); }
 bool Scenario::isBackgroundSet(){ return backgroundSet; }
 DrawableObject Scenario::getBackground(){ return background; }
+SimpleList<Option> Scenario::getOptions(){ 
+    SimpleList<Option> options;
+
+    filestr.open(filepath + options_suffix);
+    std::string read_line;
+    while(std::getline(filestr, read_line)){
+        options.add(Option(
+            read_line.substr(0, read_line.find(optionsSeparator)),
+            read_line.substr(read_line.find(optionsSeparator)+1)
+        ));
+    }
+    
+    return options;
+}
 
 
 Scenario::Scenario(std::string path)
@@ -61,6 +76,7 @@ Scenario* Scenario::operator*(){
 }
 
 int Scenario::getCurrentIndex() { return lineindex; }
+int Scenario::getLines() { return lines.getSize(); }
 std::string Scenario::getCurrentLine() { return lines.peek(lineindex); }
 std::string Scenario::getCurrentLineTrunc() { return truncComment(lines.peek(lineindex)); }
 bool Scenario::toNextLine() {
@@ -152,10 +168,8 @@ void Scenario::processCommand(std::string command) {
         else if(commandAction == "remove"){
             characters.pop(getCharIndexByName(charName));
         }
-
     }
     //  Parsing end.
-           
 }
 
 void Scenario::playSound(std::string filename) {

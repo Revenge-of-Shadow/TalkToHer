@@ -9,11 +9,13 @@
  *      read the options and allow the choice.
  *
  */
+#include "libs.hpp"
+#include "defaults.h"
 #include "DrawableObject.hpp"
 #include "Sound.hpp"
 #include "TextBox.hpp"
-#include "libs.hpp"
-#include "defaults.h"
+#include "Option.hpp"
+
 
 
 class Scenario {
@@ -47,11 +49,13 @@ public:
     DrawableObject getChar(int index);   //  Read-only.
     bool isBackgroundSet();//  For drawing check.
     DrawableObject getBackground();// Read-only.
+    SimpleList<Option> getOptions();
     //  "test" leads to opening "scenarios/test/script.txt"
     Scenario(std::string path);
     Scenario* operator*();
 
     int getCurrentIndex();
+    int getLines();
     std::string getCurrentLine();
     std::string getCurrentLineTrunc();  //  Without commentary.
     bool toNextLine();

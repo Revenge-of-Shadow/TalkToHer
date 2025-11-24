@@ -1,0 +1,40 @@
+Processing command: background.loadSprite(bg.png)
+	Command: background.loadSprite(bg.png)
+	Body: background.loadSprite	Arg: bg.png
+	Object: background	Action: loadSprite
+Processing command: background.setPosition(800,900)
+	Command: background.setPosition(800,900)
+	Body: background.setPosition	Arg: 800,900
+	Object: background	Action: setPosition
+Processing command: char(Unyu)
+	Command: char(Unyu)
+	Body: char	Arg: Unyu
+	Object: 	Action: char
+Processing command: char(Unyu).loadSprite(Unyu.png)
+	Command: char(Unyu).loadSprite(Unyu.png)
+	Body: char(Unyu).loadSprite	Arg: Unyu.png
+	Object: char(Unyu)	Action: loadSprite
+Processing command: char(Unyu).setPosition(800,900)
+	Command: char(Unyu).setPosition(800,900)
+	Body: char(Unyu).setPosition	Arg: 800,900
+	Object: char(Unyu)	Action: setPosition
+Processing command: sleep(1000)
+	Command: sleep(1000)
+	Body: sleep	Arg: 1000
+	Object: 	Action: sleep
+Processing command: char(Unyu).move(400, 0)
+	Command: char(Unyu).move(400, 0)
+	Body: char(Unyu).move	Arg: 400, 0
+	Object: char(Unyu)	Action: move
+Processing command: sleep(1000)
+	Command: sleep(1000)
+	Body: sleep	Arg: 1000
+	Object: 	Action: sleep
+Processing command: char(Unyu).move(-400, 0)
+	Command: char(Unyu).move(-400, 0)
+	Body: char(Unyu).move	Arg: -400, 0
+	Object: char(Unyu)	Action: move
+Processing command: sleep(1000)
+	Command: sleep(1000)
+	Body: sleep	Arg: 1000
+	Object: 	Action: sleep

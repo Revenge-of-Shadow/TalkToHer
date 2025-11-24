@@ -1,0 +1,1 @@
+This must mark the beginning of the new scenario. Background must be nil. All srites must be gone.

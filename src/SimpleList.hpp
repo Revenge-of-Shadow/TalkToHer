@@ -39,4 +39,5 @@ public:
 
     return popped;
   }
+  SimpleList* operator*(){ return this; }
 };
