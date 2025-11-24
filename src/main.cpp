@@ -4,6 +4,14 @@
 #include "TextBox.hpp"
 #include "Scenario.hpp"
 
+void tryPrevLine(Scenario* sc){
+    //  Roll back to the last text.
+    while((*sc).toPrevLine() && !(*sc).isCurrLineDisplayable())
+    {}
+    //  But roll forth if it is the first line and a comment...
+    while(!(*sc).isCurrLineDisplayable() && (*sc).toNextLine())
+    {}
+}
 
 int main(){
     sf::RenderWindow w(sf::VideoMode(windowSize.x, windowSize.y), "Unyu");
@@ -36,12 +44,7 @@ int main(){
                         tb.scrollDown();
                         break;
                     case sf::Keyboard::Left: 
-                        //  Roll back to the last text.
-                        while(sc.toPrevLine() && !sc.isCurrLineDisplayable())
-                        {}
-                        //  But roll forth if it is the first line and a comment...
-                        while(!sc.isCurrLineDisplayable() && sc.toNextLine())
-                        {}
+                        tryPrevLine(&sc);
                         tb.setString(sc.getCurrentLineTrunc());
                         break;
                     case sf::Keyboard::Enter:

@@ -49,6 +49,7 @@ public:
     DrawableObject getBackground();// Read-only.
     //  "test" leads to opening "scenarios/test/script.txt"
     Scenario(std::string path);
+    Scenario* operator*();
 
     int getCurrentIndex();
     std::string getCurrentLine();

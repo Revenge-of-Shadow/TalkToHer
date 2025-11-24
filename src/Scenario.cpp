@@ -56,6 +56,10 @@ Scenario::Scenario(std::string path)
     lineindex = 0;
 }
 
+Scenario* Scenario::operator*(){
+    return this;
+}
+
 int Scenario::getCurrentIndex() { return lineindex; }
 std::string Scenario::getCurrentLine() { return lines.peek(lineindex); }
 std::string Scenario::getCurrentLineTrunc() { return truncComment(lines.peek(lineindex)); }
