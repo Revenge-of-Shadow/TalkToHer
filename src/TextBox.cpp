@@ -20,6 +20,29 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::stri
     setString(line);
 }
 
+bool TextBox::scrollUp(){
+    if(offset > 0){
+        --offset;
+        setText();
+        return true;
+    }
+    return false;
+}
+bool TextBox::scrollDown(){
+    if(shownString.find('\n') != std::string::npos){
+        ++offset;
+        setText();
+        return true;
+    }
+    return false;
+}
+
+void TextBox::draw(sf::RenderTarget &target){
+    target.draw(rect);
+    target.draw(text);
+}
+
+
 void TextBox::setText(){//  Does not change line.
     shownString = line;
     text.setString(shownString);
@@ -85,31 +108,23 @@ std::string TextBox::getString(){   //  Give what is stored, not what is shown.
     return line;
 }
 
+void TextBox::setFillColor(sf::Color color){rect.setFillColor(color);}
+sf::Color TextBox::getFillColor(){ return rect.getFillColor(); }
+void TextBox::setOutlineColor(sf::Color color){rect.setOutlineColor(color);}
+sf::Color TextBox::getOutlineColor(){ return rect.getOutlineColor(); }
+void TextBox::setOutlineThickness(float thickness){ rect.setOutlineThickness(thickness);}
+float TextBox::getOutlineThickness(){ return rect.getOutlineThickness(); }
+
+void TextBox::setTextFillColor(sf::Color color){text.setFillColor(color);}
+sf::Color TextBox::getTextFillColor(){ return text.getFillColor(); }
+void TextBox::setTextOutlineColor(sf::Color color){text.setOutlineColor(color);}
+sf::Color TextBox::getTextOutlineColor(){ return text.getOutlineColor(); }
+void TextBox::setTextOutlineThickness(float thickness){ text.setOutlineThickness(thickness);}
+float TextBox::getTextOutlineThickness(){ return text.getOutlineThickness(); }
+
 int TextBox::getWidthInChars(){
     return (int)rect.getSize().x/text.getCharacterSize();
 }
 int TextBox::getHeightInChars(){
     return (int)rect.getSize().y/text.getCharacterSize();
-}
-
-bool TextBox::scrollUp(){
-    if(offset > 0){
-        --offset;
-        setText();
-        return true;
-    }
-    return false;
-}
-bool TextBox::scrollDown(){
-    if(shownString.find('\n') != std::string::npos){
-        ++offset;
-        setText();
-        return true;
-    }
-    return false;
-}
-
-void TextBox::draw(sf::RenderTarget &target){
-    target.draw(rect);
-    target.draw(text);
 }

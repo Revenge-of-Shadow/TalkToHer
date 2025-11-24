@@ -21,15 +21,31 @@ public:
     TextBox();
     TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontname, int fontSize);
     bool loadFont(std::string fontname);
-    void setString(std::string text);
-    std::string getString();
-
-    int getWidthInChars();
-    int getHeightInChars();
 
     bool scrollUp();
     bool scrollDown();
 
     void draw(sf::RenderTarget& target);
+
+
+    void setString(std::string text);
+    std::string getString();
+
+    void setFillColor(sf::Color);
+    sf::Color getFillColor();
+    void setOutlineColor(sf::Color);
+    sf::Color getOutlineColor();
+    void setOutlineThickness(float);
+    float getOutlineThickness();
+
+    void setTextFillColor(sf::Color);
+    sf::Color getTextFillColor();
+    void setTextOutlineColor(sf::Color);
+    sf::Color getTextOutlineColor();
+    void setTextOutlineThickness(float);
+    float getTextOutlineThickness();
+
+    int getWidthInChars();
+    int getHeightInChars();
 };
 #endif
