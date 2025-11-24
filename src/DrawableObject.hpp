@@ -28,7 +28,7 @@ public:
         loadSprite(sprite_name);
     };
 
-    void setName(std::string name){ name=name; };// Kind of does not work.
+    void setName(std::string object_name){ name=object_name; };
     void setPosition(sf::Vector2f pos){
         position = pos;  
         sprite.setPosition(position);
