@@ -3,7 +3,7 @@ template <typename T> class SimpleList {
     T *elements;
 
 
-    void reserve(int size){
+    void reserve(int size){ //  After it the array must always be full.
         this->size = size;
         elements = new T[size];
     }
@@ -27,6 +27,7 @@ public:
 
     T operator[](int index) const {return elements[index]; }
     T peek(int index) const { return elements[index]; }
+    T last() const { return elements[size-1]; }
     T* getPtr(int index){ return &elements[index]; }
     T pop(int index) {
         T popped;

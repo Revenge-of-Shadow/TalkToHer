@@ -24,6 +24,9 @@ void tryNextLine(Scenario *sc, SimpleList<std::string> *commandQueue){
     //  But roll back if it is the last line and a comment...
     while(!(*sc).isCurrLineDisplayable() && (*sc).toPrevLine()){}
 }
+void tryCurrLine(Scenario *sc, SimpleList<std::string> *commandQueue){
+    if(!(*sc).isCurrLineDisplayable()) tryNextLine(sc, commandQueue);
+}
 
 //  Open it; Try to read... If is not readable, keep listing.
 //  Scenatio(path); sc.isCurrLineDisplayable(); tryNextLine();
@@ -49,6 +52,8 @@ int main(){
     SimpleList<Option> options;
     int chosenOption = 0;
     SimpleList<TextBox> optionBoxes;
+    tryCurrLine(&sc, &commandQueue);
+    tb.setString(sc.getCurrentLineTrunc());
 
     while(w.isOpen()){
         sf::Event event;
@@ -73,7 +78,6 @@ int main(){
                             case sf::Keyboard::Right://  Process commands and show text.
                                 if(sc.getCurrentIndex() == sc.getLines()-1){
                                     options = sc.getOptions();
-                                    std::cout<<"BECOME "<<options.getSize()<<std::endl;
                                     for(int i = 0; i<options.getSize(); ++i){
                                         optionBoxes.add(
                                             TextBox(
@@ -88,6 +92,7 @@ int main(){
                                                 FONTNAME,
                                                 FONT_SIZE,
                                                 true));                   
+                                        optionBoxes.last().setString("E");
                                     }
                                     state = State::Options;
                                 }
@@ -105,11 +110,11 @@ int main(){
                                 state = State::Menu;
                                 break;
                             case 1:
-                                std::cout<<options.peek(0).getPath()<<"\t<-"<<std::endl;
-                                std::cout<<options.peek(0).getText()<<"\t<-"<<std::endl;
                                 if((*options.getPtr(0)).getText().empty()){
                                     sc=Scenario(options.peek(0).getPath());
                                     state = State::Script;
+                                    tryCurrLine(&sc, &commandQueue);
+                                    tb.setString(sc.getCurrentLineTrunc());
                                 }
                                 break;
                             default:

@@ -43,15 +43,12 @@ SimpleList<Option> Scenario::getOptions(){
     filestr.open(filepath + options_suffix);
     std::string read_line;
     while(std::getline(filestr, read_line)){
-        std::cout<<">"<<read_line<<"<"<<std::endl;
         if(read_line.empty()) break;
         int found = read_line.find(optionsSeparator);
         if(found == read_line.npos){
-            std::cout<<"WHAT"<<std::endl;
             options.add(Option(read_line, ""));
         }
         else{
-            std::cout<<"IN HELL"<<std::endl;
                 options.add(Option(
                 read_line.substr(found), 
                 read_line.substr(found+1, read_line.length()-found)));
@@ -59,7 +56,6 @@ SimpleList<Option> Scenario::getOptions(){
     }
     filestr.close();
     
-    std::cout<<"HOW DOES "<<options.getSize()<<std::endl;
     return options;
 }
 
