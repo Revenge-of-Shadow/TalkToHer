@@ -33,6 +33,8 @@ public:
         target.draw(rect);
         target.draw(text);
     }
+    void choose();
+    void unchoose();
     TextBox& operator=(const TextBox& other);
 
 

@@ -3,7 +3,6 @@
 #include "DrawableObject.hpp"
 #include "TextBox.hpp"
 #include "Scenario.hpp"
-#include <SFML/System/Vector2.hpp>
 
 enum class State {Script, Options, Menu, Settings};
 
@@ -26,6 +25,30 @@ void tryNextLine(Scenario *sc, SimpleList<std::string> *commandQueue){
 }
 void tryCurrLine(Scenario *sc, SimpleList<std::string> *commandQueue){
     if(!(*sc).isCurrLineDisplayable()) tryNextLine(sc, commandQueue);
+}
+
+void listOptions(const SimpleList<Option> &options, SimpleList<TextBox> &boxes){
+    for(int i = 0; i<options.getSize(); ++i){
+        TextBox optionBox(
+            sf::Vector2f(
+                windowSize.x/2.f,
+                FONT_SIZE*3),
+            sf::Vector2f(windowSize.x/2, 
+                         windowSize.y/3+(FONT_SIZE*4)*
+                         (-float(options.getSize()/2 + options.getSize()%2)+0.5+i)),
+            options.peek(i).getText(),
+            FONTNAME,
+            FONT_SIZE,
+            true);                   
+        boxes.add(optionBox);
+    }
+}
+
+void loadScenario(Scenario& sc, SimpleList<std::string> &commandQueue,
+                  TextBox &tb, std::string path){
+    sc=Scenario(path);
+    tryCurrLine(&sc, &commandQueue);
+    tb.setString(sc.getCurrentLineTrunc());
 }
 
 //  Open it; Try to read... If is not readable, keep listing.
@@ -73,28 +96,24 @@ int main(){
                                 tb.setString(sc.getCurrentLineTrunc());
                                 break;
                             case sf::Keyboard::Enter:
-                            case sf::Keyboard::Right://  Process commands and show text.
+                            case sf::Keyboard::Right:
                                 if(sc.getCurrentIndex() == sc.getLines()-1){
                                     options = sc.getOptions();
-                                    for(int i = 0; i<options.getSize(); ++i){
-                                        TextBox optionBox(
-                                                sf::Vector2f(
-                                                    tb.rect.getSize().x*1.25f,
-                                                    FONT_SIZE*3),
-                                                sf::Vector2f(windowSize.x/2, 
-                                                             windowSize.y/2+(FONT_SIZE*3)*
-                                                             (-float(options.getSize()/2 + options.getSize()%2)+0.5+i)),
-                                                (options.peek(i).getText().empty()? 
-                                                "..." : options.peek(i).getText()),
-                                                FONTNAME,
-                                                FONT_SIZE,
-                                                true);                   
-                                        std::cout<<optionBox.getString()<<std::endl;
-                                        optionBoxes.add(optionBox);
+                                    switch(options.getSize()){
+                                        case 0:
+                                            state = State::Menu;
+                                            break;
+                                        case 1:
+                                            loadScenario(sc, commandQueue, tb,
+                                                         options.last().getPath());
+                                            break;
+                                        default:
+                                            listOptions(options, optionBoxes); 
+                                            state = State::Options;
+                                            break;
                                     }
-                                    state = State::Options;
                                 }
-                                else{
+                                else{//  Process commands and show text.
                                     tryNextLine(&sc, &commandQueue);
                                     tb.setString(sc.getCurrentLineTrunc());
                                 }
@@ -102,40 +121,30 @@ int main(){
                         }
                         break;
                     case State::Options:
-                        switch(options.getSize()){
-                            case 0:
-                                state = State::Menu;
+                        //  options controls
+                        switch (event.key.code) {
+                            case sf::Keyboard::Up:
+                                optionBoxes[chosenOption].unchoose();
+                                chosenOption == 0? 
+                                    chosenOption = options.getSize()-1
+                                    : --chosenOption;
+                                optionBoxes[chosenOption].choose();
                                 break;
-                            case 1:
-                                if((*options.getPtr(0)).getText().empty()){
-                                    sc=Scenario(options.peek(0).getPath());
-                                    state = State::Script;
-                                    tryCurrLine(&sc, &commandQueue);
-                                    tb.setString(sc.getCurrentLineTrunc());
-                                }
+                            case sf::Keyboard::Down:
+                                optionBoxes[chosenOption].unchoose();
+                                chosenOption == options.getSize()-1?
+                                    chosenOption = 0
+                                    : ++chosenOption;
+                                optionBoxes[chosenOption].choose();
                                 break;
-                            default:
-                                //  options controls
-                                switch (event.key.code) {
-                                    case sf::Keyboard::Up:
-                                        chosenOption == 0? 
-                                            chosenOption = options.getSize()-1
-                                            : --chosenOption;
-                                        break;
-                                    case sf::Keyboard::Down:
-                                        chosenOption == options.getSize()-1?
-                                            chosenOption = 0
-                                            : ++chosenOption;
-                                        break;
-                                    case sf::Keyboard::Enter:
-                                    case sf::Keyboard::Right:
-                                        sc = Scenario(options.peek(0).getPath());
-                                        state = State::Script;
-                                        break;
-                                    case sf::Keyboard::Left:
-                                        state = State::Script;
-                                        break;
-                                }
+                            case sf::Keyboard::Enter:
+                            case sf::Keyboard::Right:
+                                loadScenario(sc, commandQueue, tb,
+                                             options[chosenOption].getPath());
+                                state = State::Script;
+                                break;
+                            case sf::Keyboard::Left:
+                                state = State::Script;
                                 break;
                         }
                         break;

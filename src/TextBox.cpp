@@ -43,6 +43,13 @@ bool TextBox::scrollDown(){
     return false;
 }
 
+void TextBox::choose(){
+    rect.setSize(sf::Vector2f(rect.getSize().x*1.25, rect.getSize().y));
+}
+void TextBox::unchoose(){
+    rect.setSize(sf::Vector2f(rect.getSize().x/1.25, rect.getSize().y));
+}
+
 TextBox& TextBox::operator=(const TextBox& other){
     if(this != &other){
         line = other.line;
