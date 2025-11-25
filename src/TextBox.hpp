@@ -20,6 +20,8 @@ public:
 
     TextBox();
     TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontname, int fontSize);
+    TextBox* operator*();
+
     bool loadFont(std::string fontname);
 
     bool scrollUp();

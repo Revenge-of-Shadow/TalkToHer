@@ -1,7 +1,6 @@
 #include "Scenario.hpp"
 #include "DrawableObject.hpp"
 #include "libs.hpp"
-#include <string>
 
 DrawableObject Scenario::getCharByName(std::string name) {
     for (int i = 0; i < characters.getSize(); ++i){
@@ -40,14 +39,21 @@ DrawableObject Scenario::getBackground(){ return background; }
 SimpleList<Option> Scenario::getOptions(){ 
     SimpleList<Option> options;
 
+    std::cout<<filepath + options_suffix<<std::endl;
     filestr.open(filepath + options_suffix);
     std::string read_line;
     while(std::getline(filestr, read_line)){
-        options.add(Option(
-            read_line.substr(0, read_line.find(optionsSeparator)),
-            read_line.substr(read_line.find(optionsSeparator)+1)
-        ));
+        auto found = read_line.find(optionsSeparator);
+        if(found == std::string::npos){
+            options.add(Option(read_line, ""));
+        }
+        else{
+            options.add(Option(
+                read_line.substr(found), 
+                read_line.substr(found+1, read_line.length()-found)));
+        }
     }
+    filestr.close();
     
     return options;
 }
@@ -67,7 +73,7 @@ Scenario::Scenario(std::string path)
     while(filestr.is_open() && getline(filestr, line)){ //  Lags guaranteed.
         lines.add(line);
     }
-    //  Closed automatically.
+    filestr.close();
     lineindex = 0;
 }
 

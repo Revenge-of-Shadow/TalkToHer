@@ -21,6 +21,8 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::stri
     setString(line);
 }
 
+TextBox* TextBox::operator*(){ return this; }
+
 bool TextBox::scrollUp(){
     if(offset > 0){
         --offset;

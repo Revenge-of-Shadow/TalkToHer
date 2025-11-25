@@ -47,6 +47,7 @@ int main(){
     State state = State::Script;
     SimpleList<Option> options;
     int chosenOption = 0;
+    SimpleList<TextBox> optionBoxes;
 
     while(w.isOpen()){
         sf::Event event;
@@ -72,20 +73,38 @@ int main(){
                                 if(sc.getCurrentIndex() == sc.getLines()-1){
                                     state = State::Options;
                                     options = sc.getOptions();
+                                    for(int i = 0; i<options.getSize(); ++i){
+                                        optionBoxes.add(
+                                            TextBox(
+                                                sf::Vector2f(
+                                                    tb.rect.getSize().x*1.25f,
+                                                    FONT_SIZE*2),
+                                                sf::Vector2f(windowSize.x/2, 
+                                                             windowSize.y/2+(FONT_SIZE*3)*
+                                                             (-float(options.getSize()/2 + options.getSize()%2)+0.5+i)),
+                                                options.peek(i).getText().empty()? 
+                                                "..." : options.peek(i).getText(),
+                                                FONTNAME,
+                                                FONT_SIZE));                   
+                                    }
                                 }
-                                tryNextLine(&sc, &commandQueue);
-                                tb.setString(sc.getCurrentLineTrunc());
+                                else{
+                                    tryNextLine(&sc, &commandQueue);
+                                    tb.setString(sc.getCurrentLineTrunc());
+                                }
                                 break;
                         }
                         break;
                     case State::Options:
+                        std::cout<<"options: "<<options.getSize()<<std::endl;
                         switch(options.getSize()){
                             case 0:
                                 state = State::Menu;
                                 break;
                             case 1:
-                                if(options.peek(0).getText() == ""){
-                                    sc=Scenario(options.peek(0).getPath());
+                                if(options.peek(0).getText().empty()){
+                                    std::cout<<"New path:"<<options.peek(0).getPath()<<std::endl;
+                                    // sc=Scenario(options.peek(0).getPath());
                                     state = State::Script;
                                 }
                                 break;
@@ -104,6 +123,7 @@ int main(){
                                         break;
                                     case sf::Keyboard::Enter:
                                     case sf::Keyboard::Right:
+                                        std::cout<<"Wait! Do not go!"<<std::endl;
                                         sc = Scenario(options.peek(0).getPath());
                                         state = State::Script;
                                         break;
@@ -143,21 +163,11 @@ int main(){
                 for(int i = 0; i<sc.getCharsSize(); ++i)
                     w.draw(sc.getChar(i));
                 tb.draw(w);
+                std::cout<<"-1"<<std::endl;
 
-                //  Center the choiceboxes. I refuse to elaborate.
+                //  Center the optionboxes. I refuse to elaborate.
                 for(int i = 0; i < options.getSize(); ++i){
-                    TextBox choiceBox = TextBox(
-                        sf::Vector2f(
-                            i == chosenOption? 
-                                tb.rect.getSize().x : tb.rect.getSize().x*1.25f,
-                            FONT_SIZE*2),
-                        sf::Vector2f(windowSize.x/2, 
-                            windowSize.y/2+(FONT_SIZE*3)*
-                            (-float(options.getSize()/2 + options.getSize()%2)+0.5+i)),
-                        options.peek(i).getText() == ""? "..." : options.peek(i).getText(),
-                        FONTNAME,
-                        FONT_SIZE);
-                    choiceBox.draw(w);
+                    (*optionBoxes.getPtr(i)).draw(w);
                 }
                 break;
             case State::Menu:

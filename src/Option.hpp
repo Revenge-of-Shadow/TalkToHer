@@ -8,7 +8,7 @@ class Option{
     std::string path;
 public:
     Option(){}
-    Option(std::string text, std::string path):text(text), path(path){}
+    Option(std::string path, std::string text):text(text), path(path){}
     std::string getText(){ return text; }
     std::string getPath(){ return path; }
 };
