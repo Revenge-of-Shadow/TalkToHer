@@ -3,6 +3,7 @@
 #include "DrawableObject.hpp"
 #include "TextBox.hpp"
 #include "Scenario.hpp"
+#include <SFML/System/Vector2.hpp>
 
 enum class State {Script, Options, Menu, Settings};
 
@@ -71,7 +72,6 @@ int main(){
                             case sf::Keyboard::Enter:
                             case sf::Keyboard::Right://  Process commands and show text.
                                 if(sc.getCurrentIndex() == sc.getLines()-1){
-                                    state = State::Options;
                                     options = sc.getOptions();
                                     for(int i = 0; i<options.getSize(); ++i){
                                         optionBoxes.add(
@@ -82,11 +82,12 @@ int main(){
                                                 sf::Vector2f(windowSize.x/2, 
                                                              windowSize.y/2+(FONT_SIZE*3)*
                                                              (-float(options.getSize()/2 + options.getSize()%2)+0.5+i)),
-                                                options.peek(i).getText().empty()? 
-                                                "..." : options.peek(i).getText(),
+                                                (options.peek(i).getText().empty()? 
+                                                "..." : options.peek(i).getText()),
                                                 FONTNAME,
                                                 FONT_SIZE));                   
                                     }
+                                    state = State::Options;
                                 }
                                 else{
                                     tryNextLine(&sc, &commandQueue);
@@ -96,15 +97,16 @@ int main(){
                         }
                         break;
                     case State::Options:
-                        std::cout<<"options: "<<options.getSize()<<std::endl;
+                        std::cout<<options.getSize()<<std::endl;
                         switch(options.getSize()){
                             case 0:
                                 state = State::Menu;
                                 break;
                             case 1:
-                                if(options.peek(0).getText().empty()){
-                                    std::cout<<"New path:"<<options.peek(0).getPath()<<std::endl;
-                                    // sc=Scenario(options.peek(0).getPath());
+                                std::cout<<options.peek(0).getPath()<<"\t<-"<<std::endl;
+                                std::cout<<options.peek(0).getText()<<"\t<-"<<std::endl;
+                                if((*options.getPtr(0)).getText().empty()){
+                                    sc=Scenario(options.peek(0).getPath());
                                     state = State::Script;
                                 }
                                 break;
@@ -123,7 +125,6 @@ int main(){
                                         break;
                                     case sf::Keyboard::Enter:
                                     case sf::Keyboard::Right:
-                                        std::cout<<"Wait! Do not go!"<<std::endl;
                                         sc = Scenario(options.peek(0).getPath());
                                         state = State::Script;
                                         break;
@@ -163,7 +164,6 @@ int main(){
                 for(int i = 0; i<sc.getCharsSize(); ++i)
                     w.draw(sc.getChar(i));
                 tb.draw(w);
-                std::cout<<"-1"<<std::endl;
 
                 //  Center the optionboxes. I refuse to elaborate.
                 for(int i = 0; i < options.getSize(); ++i){
@@ -171,6 +171,16 @@ int main(){
                 }
                 break;
             case State::Menu:
+                {   //  switch is evil. I am devious.
+                    TextBox placeHolder(
+                        sf::Vector2f(windowSize.x/2, windowSize.y/2),
+                        sf::Vector2f(windowSize.x/2, windowSize.y/2),
+                        "Nothing.",
+                        FONTNAME,
+                        FONT_SIZE*4,
+                        true);
+                    placeHolder.draw(w);
+                }
                 break;
             case State::Settings:
                 break;

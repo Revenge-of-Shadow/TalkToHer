@@ -39,16 +39,16 @@ DrawableObject Scenario::getBackground(){ return background; }
 SimpleList<Option> Scenario::getOptions(){ 
     SimpleList<Option> options;
 
-    std::cout<<filepath + options_suffix<<std::endl;
     filestr.open(filepath + options_suffix);
     std::string read_line;
     while(std::getline(filestr, read_line)){
-        auto found = read_line.find(optionsSeparator);
-        if(found == std::string::npos){
+        if(read_line.empty()) break;
+        int found = read_line.find(optionsSeparator);
+        if(found == read_line.npos){
             options.add(Option(read_line, ""));
         }
         else{
-            options.add(Option(
+                options.add(Option(
                 read_line.substr(found), 
                 read_line.substr(found+1, read_line.length()-found)));
         }

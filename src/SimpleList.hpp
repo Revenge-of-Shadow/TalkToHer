@@ -2,11 +2,18 @@ template <typename T> class SimpleList {
   int size;
   T *elements;
 
+    void erase(){
+        delete[] elements;
+        size = 0;
+    }
+    void reserve(int size){
+        elements = new T[size];
+    }
 public:
   SimpleList() : size(0), elements(nullptr) {}
   ~SimpleList() { delete[] elements; }
 
-  int getSize() { return size; }
+  int getSize() const { return size; }
 
   int add(T element) {
     T *newElements = new T[size + 1];
@@ -20,7 +27,8 @@ public:
     return ++size;
   }
 
-  T peek(int index) { return elements[index]; }
+  T operator[](int index) const {return elements[index]; }
+  T peek(int index) const { return elements[index]; }
   T* getPtr(int index){ return &elements[index]; }
   T pop(int index) {
     T popped;
@@ -40,4 +48,13 @@ public:
     return popped;
   }
   SimpleList* operator*(){ return this; }
+    SimpleList<T>& operator=(const SimpleList<T>& other){
+        if(this != &other){
+            erase();
+            reserve(other.getSize());
+            for(int i = 0; i < other.getSize(); ++i)
+                elements[i] = other.peek(i);
+        }
+        return *this;
+    }
 };

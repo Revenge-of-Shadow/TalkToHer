@@ -17,9 +17,10 @@ public:
     sf::RectangleShape rect;
     sf::Font font;
     sf::Text text;
+    bool centeredText;
 
     TextBox();
-    TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontname, int fontSize);
+    TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontname, int fontSize, bool centeredText = false);
     TextBox* operator*();
 
     bool loadFont(std::string fontname);
@@ -32,6 +33,7 @@ public:
 
     void setString(std::string text);
     std::string getString();
+    void centerText();
 
     void setFillColor(sf::Color);
     sf::Color getFillColor();

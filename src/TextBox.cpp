@@ -1,13 +1,14 @@
 #include "TextBox.hpp"
 
 TextBox::TextBox():offset(0), line(""){}
-TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontname, int fontSize){
+TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontname, int fontSize, bool centeredText){
     line = str;
     offset = 0;
     fontSize = fontSize;
     font.loadFromFile(font_folder_suffix + kPathSepartor + fontname);
     double outline_thickness = pos.x/pos.y;
     size = sf::Vector2f(size.x - outline_thickness*2, size.y - outline_thickness*2);
+    this->centeredText = centeredText;
 
     rect = sf::RectangleShape(size);
     rect.setOrigin(size.x/2, size.y/2);
@@ -19,6 +20,8 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::stri
     text = sf::Text("", font, fontSize);
     setTextFillColor(sf::Color::White);
     setString(line);
+
+
 }
 
 TextBox* TextBox::operator*(){ return this; }
@@ -106,9 +109,18 @@ void TextBox::setString(std::string str){
         rect.getPosition().y-rect.getSize().y/2
     ));
     text.setFillColor(sf::Color::White);
+
+    if(centeredText)
+        centerText();
 }
 std::string TextBox::getString(){   //  Give what is stored, not what is shown.
     return line;
+}
+void TextBox::centerText(){
+    text.setPosition(sf::Vector2f(
+        rect.getPosition().x - text.getLocalBounds().width/2,
+        rect.getPosition().y - text.getLocalBounds().height/2
+    ));
 }
 
 void TextBox::setFillColor(sf::Color color){rect.setFillColor(color);}

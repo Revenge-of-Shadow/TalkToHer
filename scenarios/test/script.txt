@@ -7,9 +7,11 @@
 Text.
 Line of text.
 //char(Unyu).darken()
-/sleep(1000)
+/sleep(100)
 /char(Unyu).move(400, 0)
-/sleep(1000)
-/char(Unyu).move(-400, 0)
-/sleep(1000)
+/sleep(100)
+/char(Unyu).move(-800, 0)
+/sleep(100)
+/char(Unyu).move(400, 0)
+/sleep(100)
 Second line of Unyu.//  This shall be seen after the first line is forced away.
