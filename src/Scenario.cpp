@@ -49,13 +49,13 @@ SimpleList<Option> Scenario::getOptions(){
             options.add(Option(read_line, ""));
         }
         else{
-                options.add(Option(
+            options.add(Option(
                 read_line.substr(found), 
                 read_line.substr(found+1, read_line.length()-found)));
         }
     }
     filestr.close();
-    
+
     return options;
 }
 
@@ -111,9 +111,6 @@ std::string getArgumentOut(std::string source){
 }
 
 void Scenario::processCommand(std::string command) {
-    // char(Cat).loadSprite(cat_closedeyes.png);
-    // background.loadSprite(room.png);
-    // playSound(nya.mp3);
     std::string com = truncCommand(truncComment(command));
     std::cout<<"Processing command: "<< com <<std::endl;
 
@@ -126,9 +123,6 @@ void Scenario::processCommand(std::string command) {
     std::string commandAction = 
         commandBody.find('.') == std::string::npos? commandBody
         : commandBody.substr(commandBody.find('.')+1);
-    std::cout<<"\tCommand: "<<com<<std::endl;
-    std::cout<<"\tBody: "<<commandBody<<"\t"<<"Arg: "<<commandArg<<std::endl;
-    std::cout<<"\tObject: "<<commandObject<<"\t"<<"Action: "<<commandAction<<std::endl;
 
     //  Formatting end.
 

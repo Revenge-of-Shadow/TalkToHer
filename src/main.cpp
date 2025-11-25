@@ -42,8 +42,6 @@ int main(){
         FONTNAME,
         FONT_SIZE
     );
-    tb.setFillColor(sf::Color(0,0,0, 0x7F));
-    tb.setOutlineColor(sf::Color(0xFF, 0xFF, 0xFF, 0x7F));
 
     SimpleList<std::string> commandQueue;
     Scenario sc = Scenario("test");
@@ -79,11 +77,10 @@ int main(){
                                 if(sc.getCurrentIndex() == sc.getLines()-1){
                                     options = sc.getOptions();
                                     for(int i = 0; i<options.getSize(); ++i){
-                                        optionBoxes.add(
-                                            TextBox(
+                                        TextBox optionBox(
                                                 sf::Vector2f(
                                                     tb.rect.getSize().x*1.25f,
-                                                    FONT_SIZE*2),
+                                                    FONT_SIZE*3),
                                                 sf::Vector2f(windowSize.x/2, 
                                                              windowSize.y/2+(FONT_SIZE*3)*
                                                              (-float(options.getSize()/2 + options.getSize()%2)+0.5+i)),
@@ -91,8 +88,9 @@ int main(){
                                                 "..." : options.peek(i).getText()),
                                                 FONTNAME,
                                                 FONT_SIZE,
-                                                true));                   
-                                        optionBoxes.last().setString("E");
+                                                true);                   
+                                        std::cout<<optionBox.getString()<<std::endl;
+                                        optionBoxes.add(optionBox);
                                     }
                                     state = State::Options;
                                 }
@@ -104,7 +102,6 @@ int main(){
                         }
                         break;
                     case State::Options:
-                        std::cout<<options.getSize()<<std::endl;
                         switch(options.getSize()){
                             case 0:
                                 state = State::Menu;
@@ -162,7 +159,7 @@ int main(){
                 }
                 for(int i = 0; i<sc.getCharsSize(); ++i)
                     w.draw(sc.getChar(i));
-                tb.draw(w); 
+                w.draw(tb); 
                 break;
             case State::Options:    //  Keep the script; draw over it.
                 if(sc.isBackgroundSet()){
@@ -170,11 +167,11 @@ int main(){
                 }
                 for(int i = 0; i<sc.getCharsSize(); ++i)
                     w.draw(sc.getChar(i));
-                tb.draw(w);
+                w.draw(tb);
 
                 //  Center the optionboxes. I refuse to elaborate.
                 for(int i = 0; i < options.getSize(); ++i){
-                    (*optionBoxes.getPtr(i)).draw(w);
+                    w.draw(optionBoxes[i]);
                 }
                 break;
             case State::Menu:
@@ -186,13 +183,12 @@ int main(){
                         FONTNAME,
                         FONT_SIZE*4,
                         true);
-                    placeHolder.draw(w);
+                    w.draw(placeHolder);
                 }
                 break;
             case State::Settings:
                 break;
         }
-
         w.display();
     }
 

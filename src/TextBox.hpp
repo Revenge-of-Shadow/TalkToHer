@@ -4,7 +4,7 @@
 #include "libs.hpp"
 #include "defaults.h"
 
-class TextBox{
+class TextBox: public sf::Drawable{
     std::string line;
     std::string shownString;
     short offset;
@@ -15,12 +15,13 @@ protected:
 
 public:
     sf::RectangleShape rect;
+    std::string fontName;
     sf::Font font;
     sf::Text text;
     bool centeredText;
 
     TextBox();
-    TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontname, int fontSize, bool centeredText = false);
+    TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontName, int fontSize, bool centeredText = false);
     TextBox* operator*();
 
     bool loadFont(std::string fontname);
@@ -28,28 +29,32 @@ public:
     bool scrollUp();
     bool scrollDown();
 
-    void draw(sf::RenderTarget& target);
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
+        target.draw(rect);
+        target.draw(text);
+    }
+    TextBox& operator=(const TextBox& other);
 
 
     void setString(std::string text);
-    std::string getString();
+    std::string getString() const;
     void centerText();
 
     void setFillColor(sf::Color);
-    sf::Color getFillColor();
+    sf::Color getFillColor() const;
     void setOutlineColor(sf::Color);
-    sf::Color getOutlineColor();
+    sf::Color getOutlineColor() const;
     void setOutlineThickness(float);
-    float getOutlineThickness();
+    float getOutlineThickness() const;
 
     void setTextFillColor(sf::Color);
-    sf::Color getTextFillColor();
+    sf::Color getTextFillColor() const;
     void setTextOutlineColor(sf::Color);
-    sf::Color getTextOutlineColor();
+    sf::Color getTextOutlineColor() const;
     void setTextOutlineThickness(float);
-    float getTextOutlineThickness();
+    float getTextOutlineThickness() const;
 
-    int getWidthInChars();
-    int getHeightInChars();
+    int getWidthInChars() const;
+    int getHeightInChars() const;
 };
 #endif
