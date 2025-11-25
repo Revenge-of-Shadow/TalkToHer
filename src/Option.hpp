@@ -9,14 +9,14 @@ class Option{
 public:
     Option(){}
     Option(std::string path, std::string text):text(text), path(path){}
-    std::string getText(){ return text; }
-    std::string getPath(){ return path; }
-    // Option& operator=(Option& opt){ 
-    //     if(this != &opt){
-    //         path = opt.path;
-    //         text = opt.text;
-    //     }
-    //     return *this;
-    // }
+    std::string getText()const{ return text; }
+    std::string getPath()const{ return path; }
+    Option& operator=(const Option& opt){ 
+        if(this != &opt){
+            path = opt.path;
+            text = opt.text;
+        }
+        return *this;
+    }
 };
 #endif

@@ -73,6 +73,7 @@ int main(){
                             case sf::Keyboard::Right://  Process commands and show text.
                                 if(sc.getCurrentIndex() == sc.getLines()-1){
                                     options = sc.getOptions();
+                                    std::cout<<"BECOME "<<options.getSize()<<std::endl;
                                     for(int i = 0; i<options.getSize(); ++i){
                                         optionBoxes.add(
                                             TextBox(
@@ -85,7 +86,8 @@ int main(){
                                                 (options.peek(i).getText().empty()? 
                                                 "..." : options.peek(i).getText()),
                                                 FONTNAME,
-                                                FONT_SIZE));                   
+                                                FONT_SIZE,
+                                                true));                   
                                     }
                                     state = State::Options;
                                 }
@@ -188,6 +190,6 @@ int main(){
 
         w.display();
     }
-    
+
     return EXIT_SUCCESS;
 }
