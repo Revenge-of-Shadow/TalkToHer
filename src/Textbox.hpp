@@ -9,6 +9,7 @@ class TextBox: public sf::Drawable{
     std::string shownString;
     short offset;
     int fontSize;
+    bool isChosen;
 
 protected:
     void setText();

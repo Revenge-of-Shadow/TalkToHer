@@ -24,5 +24,7 @@ const std::string background_folder_suffix = "backgrounds";
 
 const sf::Vector2f windowSize(1600, 900);
 
+
+
 #endif
 #endif

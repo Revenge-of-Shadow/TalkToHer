@@ -13,7 +13,7 @@ public:
 
     int getSize() const { return size; }
 
-    int add(T element) {
+    int add(T element) {    //  Imagine reading a file with it.
         T *newElements = new T[size + 1];
         for (int i = 0; i < size; ++i) {
             newElements[i] = elements[i];
@@ -58,7 +58,7 @@ public:
             erase();
             reserve(other.getSize());
             for(int i = 0; i < other.getSize(); ++i)
-                elements[i] = other.peek(i);
+                elements[i] = other[i];
         }
         return *this;
     }

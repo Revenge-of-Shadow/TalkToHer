@@ -1,8 +1,9 @@
 #include "libs.hpp"
 #include "defaults.h"
 #include "DrawableObject.hpp"
-#include "TextBox.hpp"
+#include "Textbox.hpp"
 #include "Scenario.hpp"
+#include <filesystem>
 
 enum class State {Script, Options, Menu, Settings};
 
@@ -25,6 +26,15 @@ void tryNextLine(Scenario *sc, SimpleList<std::string> *commandQueue){
 }
 void tryCurrLine(Scenario *sc, SimpleList<std::string> *commandQueue){
     if(!(*sc).isCurrLineDisplayable()) tryNextLine(sc, commandQueue);
+}
+
+void listScenarios(SimpleList<Option> &options){
+    for (const auto &entry: std::filesystem::directory_iterator(scenario_folder_suffix)){
+        std::string path = entry.path();
+        path = path.substr(path.find_first_of(kPathSepartor)+1);
+        std::cout<<entry.path()<<std::endl;
+        options.add(Option(path, entry.path()));
+    }
 }
 
 void listOptions(const SimpleList<Option> &options, SimpleList<TextBox> &boxes){
@@ -69,12 +79,14 @@ int main(){
     SimpleList<std::string> commandQueue;
     Scenario sc = Scenario("test");
     sf::Sprite bg;
-    State state = State::Script;
+    State state = State::Menu;
     SimpleList<Option> options;
     int chosenOption = 0;
     SimpleList<TextBox> optionBoxes;
-    tryCurrLine(&sc, &commandQueue);
-    tb.setString(sc.getCurrentLineTrunc());
+    // tryCurrLine(&sc, &commandQueue);
+    // tb.setString(sc.getCurrentLineTrunc());
+    listScenarios(options);
+    listOptions(options, optionBoxes);
 
     while(w.isOpen()){
         sf::Event event;
@@ -102,6 +114,9 @@ int main(){
                                     switch(options.getSize()){
                                         case 0:
                                             state = State::Menu;
+                                            listScenarios(options);
+                                            listOptions(options, optionBoxes);
+
                                             break;
                                         case 1:
                                             loadScenario(sc, commandQueue, tb,
@@ -149,6 +164,31 @@ int main(){
                         }
                         break;
                     case State::Menu:
+                        switch (event.key.code) {
+                            case sf::Keyboard::Up:
+                                optionBoxes[chosenOption].unchoose();
+                                chosenOption == 0? 
+                                    chosenOption = options.getSize()-1
+                                    : --chosenOption;
+                                optionBoxes[chosenOption].choose();
+                                break;
+                            case sf::Keyboard::Down:
+                                optionBoxes[chosenOption].unchoose();
+                                chosenOption == options.getSize()-1?
+                                    chosenOption = 0
+                                    : ++chosenOption;
+                                optionBoxes[chosenOption].choose();
+                                break;
+                            case sf::Keyboard::Enter:
+                            case sf::Keyboard::Right:
+                                std::cout<<"hey"<<std::endl;
+                                loadScenario(sc, commandQueue, tb,
+                                             options[chosenOption].getPath());
+                                state = State::Script;
+                                break;
+                            case sf::Keyboard::Left:
+                                break;
+                        }
                         break;
                     case State::Settings:
                         break;
@@ -184,15 +224,8 @@ int main(){
                 }
                 break;
             case State::Menu:
-                {   //  switch is evil. I am devious.
-                    TextBox placeHolder(
-                        sf::Vector2f(windowSize.x/2, windowSize.y/2),
-                        sf::Vector2f(windowSize.x/2, windowSize.y/2),
-                        "Nothing.",
-                        FONTNAME,
-                        FONT_SIZE*4,
-                        true);
-                    w.draw(placeHolder);
+                for(int i = 0; i < options.getSize(); ++i){
+                    w.draw(optionBoxes[i]);
                 }
                 break;
             case State::Settings:

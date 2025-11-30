@@ -1,4 +1,4 @@
-#include "TextBox.hpp"
+#include "Textbox.hpp"
 
 TextBox::TextBox():offset(0), line(""){}
 TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontName, int fontSize, bool centeredText){
@@ -44,10 +44,14 @@ bool TextBox::scrollDown(){
 }
 
 void TextBox::choose(){
+    if(isChosen) return;
     rect.setSize(sf::Vector2f(rect.getSize().x*1.25, rect.getSize().y));
+    isChosen = true;
 }
 void TextBox::unchoose(){
+    if(!isChosen) return;
     rect.setSize(sf::Vector2f(rect.getSize().x/1.25, rect.getSize().y));
+    isChosen = false;
 }
 
 TextBox& TextBox::operator=(const TextBox& other){

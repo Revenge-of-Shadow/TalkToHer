@@ -2,6 +2,7 @@
 #define DRAWABLEOBJECT_H
 #include "libs.hpp"
 #include "defaults.h"
+#include <SFML/System/Vector2.hpp>
 
 
 class DrawableObject: public sf::Drawable{
@@ -14,7 +15,8 @@ class DrawableObject: public sf::Drawable{
     bool loadSpriteFromPath(std::string filepath){
         if(!texture.loadFromFile(filepath)) return false;
         sprite.setTexture(texture);
-        sprite.setOrigin(texture.getSize().x/2.f, texture.getSize().y);
+        sprite.setOrigin(
+            sf::Vector2f(texture.getSize().x/2.f, texture.getSize().y));
 
         return true;
     };

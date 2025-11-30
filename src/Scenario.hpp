@@ -13,7 +13,7 @@
 #include "defaults.h"
 #include "DrawableObject.hpp"
 #include "Sound.hpp"
-#include "TextBox.hpp"
+#include "Textbox.hpp"
 #include "Option.hpp"
 
 
