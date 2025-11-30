@@ -11,10 +11,11 @@ public:
     Option(std::string path, std::string text):text(text), path(path){}
     std::string getText()const{ return text; }
     std::string getPath()const{ return path; }
-    Option& operator=(const Option& opt){ 
-        if(this != &opt){
-            path = opt.path;
-            text = opt.text;
+    Option& operator=(const Option& other){ 
+        std::cout<<path<<" := "<<other.path<<std::endl;
+        if(this != &other){
+            path = other.path;
+            text = other.text;
         }
         return *this;
     }

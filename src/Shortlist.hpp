@@ -1,4 +1,4 @@
-template <typename T> class SimpleList {
+template <typename T> class Shortlist {
     int size;
     T *elements;
 
@@ -8,8 +8,8 @@ template <typename T> class SimpleList {
         elements = new T[size];
     }
 public:
-    SimpleList() : size(0), elements(nullptr) {}
-    ~SimpleList() { delete[] elements; }
+    Shortlist() : size(0), elements(nullptr) {}
+    ~Shortlist() { delete[] elements; }
 
     int getSize() const { return size; }
 
@@ -25,7 +25,7 @@ public:
         return ++size;
     }
 
-    T operator[](int index) const {return elements[index]; }
+    T operator[](int index) {return elements[index]; }
     T peek(int index) const { return elements[index]; }
     T last() const { return elements[size-1]; }
     T* getPtr(int index){ return &elements[index]; }
@@ -52,14 +52,25 @@ public:
         size = 0;
     }
 
-    SimpleList* operator*(){ return this; }
-    SimpleList<T>& operator=(const SimpleList<T>& other){
+    Shortlist* operator*(){ return this; }
+    Shortlist<T>& operator=(const Shortlist<T>& other){
         if(this != &other){
             erase();
             reserve(other.getSize());
             for(int i = 0; i < other.getSize(); ++i)
-                elements[i] = other[i];
+                elements[i] = other.peek(i);
         }
         return *this;
+    }
+
+    void sort(){ // You know what happens when comparison is undefined.
+        for(int i = 0; i<size-1; ++i){
+            if(elements[i] > elements[i+1]){
+                T temp = elements[i];
+                elements[i] = elements[i+1];
+                elements[i+1] = temp;
+                i = -1;
+            }
+        }
     }
 };

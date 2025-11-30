@@ -6,6 +6,6 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "SimpleList.hpp"
+#include "Shortlist.hpp"
 
 #endif

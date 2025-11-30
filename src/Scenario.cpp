@@ -37,8 +37,8 @@ int Scenario::getCharsSize(){ return characters.getSize(); }
 DrawableObject Scenario::getChar(int index){ return characters.peek(index); }
 bool Scenario::isBackgroundSet(){ return backgroundSet; }
 DrawableObject Scenario::getBackground(){ return background; }
-SimpleList<Option> Scenario::getOptions(){ 
-    SimpleList<Option> options;
+Shortlist<Option> Scenario::getOptions(){ 
+    Shortlist<Option> options;
 
     filestr.open(filepath + options_suffix);
     std::string read_line;

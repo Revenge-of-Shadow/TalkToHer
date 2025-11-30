@@ -23,14 +23,14 @@ class Scenario {
     std::ifstream filestream;
     std::string title; //  Extracted from file.
     int lineindex;
-    SimpleList<std::string> lines;    //  This is... BAD. But, like, reliable.
+    Shortlist<std::string> lines;    //  This is... BAD. But, like, reliable.
     std::ifstream filestr;
 
 
     sf::Texture backgroundTexture;
     DrawableObject background;
-    SimpleList<DrawableObject> characters;
-    SimpleList<Sound> loopingSounds;
+    Shortlist<DrawableObject> characters;
+    Shortlist<Sound> loopingSounds;
     
     bool backgroundSet; //  For drawing check.
 
@@ -49,7 +49,7 @@ public:
     DrawableObject getChar(int index);   //  Read-only.
     bool isBackgroundSet();//  For drawing check.
     DrawableObject getBackground();// Read-only.
-    SimpleList<Option> getOptions();
+    Shortlist<Option> getOptions();
     //  "test" leads to opening "scenarios/test/script.txt"
     Scenario(std::string path);
     Scenario* operator*();

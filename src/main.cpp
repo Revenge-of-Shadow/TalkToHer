@@ -13,7 +13,7 @@ void tryPrevLine(Scenario* sc){
     //  But roll forth if it is the first line and a comment...
     while(!(*sc).isCurrLineDisplayable() && (*sc).toNextLine()){}
 }
-void tryNextLine(Scenario *sc, SimpleList<std::string> *commandQueue){
+void tryNextLine(Scenario *sc, Shortlist<std::string> *commandQueue){
     while((*sc).toNextLine()){
         if((*sc).isCurrLineComment())  continue;
         if((*sc).isCurrLineCommand()){
@@ -24,20 +24,24 @@ void tryNextLine(Scenario *sc, SimpleList<std::string> *commandQueue){
     //  But roll back if it is the last line and a comment...
     while(!(*sc).isCurrLineDisplayable() && (*sc).toPrevLine()){}
 }
-void tryCurrLine(Scenario *sc, SimpleList<std::string> *commandQueue){
+void tryCurrLine(Scenario *sc, Shortlist<std::string> *commandQueue){
     if(!(*sc).isCurrLineDisplayable()) tryNextLine(sc, commandQueue);
 }
 
-void listScenarios(SimpleList<Option> &options){
+void listScenarios(Shortlist<Option> &options){
+    Shortlist<std::string> paths;
     for (const auto &entry: std::filesystem::directory_iterator(scenario_folder_suffix)){
         std::string path = entry.path();
-        path = path.substr(path.find_first_of(kPathSepartor)+1);
-        std::cout<<entry.path()<<std::endl;
-        options.add(Option(path, entry.path()));
+        paths.add(path.substr(path.find_first_of(kPathSepartor)+1));
+    }
+    paths.sort();
+    options.erase();
+    for(int i = 0; i<paths.getSize(); ++i){
+        options.add(Option(paths[i], paths[i]));
     }
 }
 
-void listOptions(const SimpleList<Option> &options, SimpleList<TextBox> &boxes){
+void listOptions(const Shortlist<Option> &options, Shortlist<TextBox> &boxes){
     for(int i = 0; i<options.getSize(); ++i){
         TextBox optionBox(
             sf::Vector2f(
@@ -54,8 +58,9 @@ void listOptions(const SimpleList<Option> &options, SimpleList<TextBox> &boxes){
     }
 }
 
-void loadScenario(Scenario& sc, SimpleList<std::string> &commandQueue,
+void loadScenario(Scenario& sc, Shortlist<std::string> &commandQueue,
                   TextBox &tb, std::string path){
+    commandQueue.erase();
     sc=Scenario(path);
     tryCurrLine(&sc, &commandQueue);
     tb.setString(sc.getCurrentLineTrunc());
@@ -76,13 +81,13 @@ int main(){
         FONT_SIZE
     );
 
-    SimpleList<std::string> commandQueue;
+    Shortlist<std::string> commandQueue;
     Scenario sc = Scenario("test");
     sf::Sprite bg;
     State state = State::Menu;
-    SimpleList<Option> options;
+    Shortlist<Option> options;
     int chosenOption = 0;
-    SimpleList<TextBox> optionBoxes;
+    Shortlist<TextBox> optionBoxes;
     // tryCurrLine(&sc, &commandQueue);
     // tb.setString(sc.getCurrentLineTrunc());
     listScenarios(options);
