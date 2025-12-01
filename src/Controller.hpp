@@ -1,7 +1,6 @@
 #include "Scenario.hpp"
 #include "Textbox.hpp"
 #include "libs.hpp"
-#include <filesystem>
 
 enum class State {Script, Options, Scenarios, Settings};
 
@@ -37,8 +36,6 @@ public:
 };
 
 void Controller::initScenarios(){
-    optionIndex = 0;
-    
     loadScenarioPaths();
     listOptions();
 }
@@ -70,6 +67,7 @@ void Controller::loadScenarioPaths(){ // I should add check for script.
 }
 
 void Controller::listOptions(){
+    optionboxes.erase();
     for(int i = 0; i < options.getSize(); ++i){
         Textbox optionbox(
             sf::Vector2f(
@@ -84,7 +82,12 @@ void Controller::listOptions(){
             true);                   
         optionboxes.add(optionbox);
     }
-
+    if(options.getSize()){
+        optionIndex = 0;
+        (*optionboxes.getPtr(0)).choose();
+    }
+    else
+        optionIndex = -1;
 }
 
 
@@ -145,8 +148,10 @@ void Controller::processKey(sf::Event e){ // I should divide by states.
                         options = scenario.getOptions();
                         switch(options.getSize()){
                             case 0: //  Scenario ends.
+                                std::cout<<"Eh?"<<std::endl;
                                 initScenarios();
                                 state = State::Scenarios;
+                                std::cout<<"It begins."<<std::endl;
                                 break;
                             case 1: // Scenario provides one option.
                                 loadScenario(options.last().getPath());
@@ -169,18 +174,18 @@ void Controller::processKey(sf::Event e){ // I should divide by states.
             //  options controls
             switch (e.key.code) {
                 case sf::Keyboard::Up:
-                    optionboxes[optionIndex].unchoose();
+                    (*optionboxes.getPtr(optionIndex)).unchoose();
                     optionIndex == 0? 
                         optionIndex = options.getSize()-1
                         : --optionIndex;
-                    optionboxes[optionIndex].choose();
+                    (*optionboxes.getPtr(optionIndex)).choose();
                     break;
                 case sf::Keyboard::Down:
-                    optionboxes[optionIndex].unchoose();
+                    (*optionboxes.getPtr(optionIndex)).unchoose();
                     optionIndex == options.getSize()-1?
                         optionIndex = 0
                         : ++optionIndex;
-                    optionboxes[optionIndex].choose();
+                    (*optionboxes.getPtr(optionIndex)).choose();
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:

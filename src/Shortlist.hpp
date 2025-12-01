@@ -9,7 +9,7 @@ template <typename T> class Shortlist {
     }
 public:
     Shortlist() : size(0), elements(nullptr) {}
-    ~Shortlist() { delete[] elements; }
+    ~Shortlist() { erase(); }
 
     int getSize() const { return size; }
 
@@ -49,6 +49,7 @@ public:
 
     void erase(){
         delete[] elements;
+        elements = nullptr;
         size = 0;
     }
 
