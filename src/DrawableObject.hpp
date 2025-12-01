@@ -2,7 +2,6 @@
 #define DRAWABLEOBJECT_H
 #include "libs.hpp"
 #include "defaults.h"
-#include <SFML/System/Vector2.hpp>
 
 
 class DrawableObject: public sf::Drawable{

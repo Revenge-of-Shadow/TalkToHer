@@ -1,7 +1,7 @@
 #include "Textbox.hpp"
 
-TextBox::TextBox():offset(0), line(""){}
-TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontName, int fontSize, bool centeredText){
+Textbox::Textbox():offset(0), line(""), isChosen(false){}
+Textbox::Textbox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontName, int fontSize, bool centeredText){
     this->line = str;
     this->offset = 0;
     this->fontName = fontName;
@@ -10,6 +10,7 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::stri
     double outline_thickness = pos.x/pos.y;
     size = sf::Vector2f(size.x - outline_thickness*2, size.y - outline_thickness*2);
     this->centeredText = centeredText;
+    isChosen = false;
 
     rect = sf::RectangleShape(size);
     rect.setOrigin(size.x/2, size.y/2);
@@ -24,9 +25,9 @@ TextBox::TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::stri
 
 }
 
-TextBox* TextBox::operator*(){ return this; }
+Textbox* Textbox::operator*(){ return this; }
 
-bool TextBox::scrollUp(){
+bool Textbox::scrollUp(){
     if(offset > 0){
         --offset;
         setText();
@@ -34,7 +35,7 @@ bool TextBox::scrollUp(){
     }
     return false;
 }
-bool TextBox::scrollDown(){
+bool Textbox::scrollDown(){
     if(shownString.find('\n') != std::string::npos){
         ++offset;
         setText();
@@ -43,18 +44,18 @@ bool TextBox::scrollDown(){
     return false;
 }
 
-void TextBox::choose(){
+void Textbox::choose(){
     if(isChosen) return;
-    rect.setSize(sf::Vector2f(rect.getSize().x*1.25, rect.getSize().y));
+    rect.setSize(sf::Vector2f(rect.getSize().x*2.f, rect.getSize().y));
     isChosen = true;
 }
-void TextBox::unchoose(){
+void Textbox::unchoose(){
     if(!isChosen) return;
-    rect.setSize(sf::Vector2f(rect.getSize().x/1.25, rect.getSize().y));
+    rect.setSize(sf::Vector2f(rect.getSize().x/2.f, rect.getSize().y));
     isChosen = false;
 }
 
-TextBox& TextBox::operator=(const TextBox& other){
+Textbox& Textbox::operator=(const Textbox& other){
     if(this != &other){
         line = other.line;
         offset = other.offset;
@@ -77,7 +78,7 @@ TextBox& TextBox::operator=(const TextBox& other){
     return *this;
 }
 
-void TextBox::setText(){//  Does not change line.
+void Textbox::setText(){//  Does not change line.
     shownString = line;
     text.setString(shownString);
 
@@ -125,7 +126,7 @@ void TextBox::setText(){//  Does not change line.
     text.setString(shownString);
 
 }
-void TextBox::setString(std::string str){
+void Textbox::setString(std::string str){
     line = str;
  
     setText();
@@ -142,33 +143,33 @@ void TextBox::setString(std::string str){
     if(centeredText)
         centerText();
 }
-std::string TextBox::getString() const{   //  Give what is stored, not what is shown.
+std::string Textbox::getString() const{   //  Give what is stored, not what is shown.
     return line;
 }
-void TextBox::centerText(){
+void Textbox::centerText(){
     text.setPosition(sf::Vector2f(
         rect.getPosition().x - text.getLocalBounds().width/2,
         rect.getPosition().y - text.getLocalBounds().height/2
     ));
 }
 
-void TextBox::setFillColor(sf::Color color){rect.setFillColor(color);}
-sf::Color TextBox::getFillColor() const{ return rect.getFillColor(); }
-void TextBox::setOutlineColor(sf::Color color){rect.setOutlineColor(color);}
-sf::Color TextBox::getOutlineColor() const{ return rect.getOutlineColor(); }
-void TextBox::setOutlineThickness(float thickness){ rect.setOutlineThickness(thickness);}
-float TextBox::getOutlineThickness() const{ return rect.getOutlineThickness(); }
+void Textbox::setFillColor(sf::Color color){rect.setFillColor(color);}
+sf::Color Textbox::getFillColor() const{ return rect.getFillColor(); }
+void Textbox::setOutlineColor(sf::Color color){rect.setOutlineColor(color);}
+sf::Color Textbox::getOutlineColor() const{ return rect.getOutlineColor(); }
+void Textbox::setOutlineThickness(float thickness){ rect.setOutlineThickness(thickness);}
+float Textbox::getOutlineThickness() const{ return rect.getOutlineThickness(); }
 
-void TextBox::setTextFillColor(sf::Color color){text.setFillColor(color);}
-sf::Color TextBox::getTextFillColor() const{ return text.getFillColor(); }
-void TextBox::setTextOutlineColor(sf::Color color){text.setOutlineColor(color);}
-sf::Color TextBox::getTextOutlineColor() const{ return text.getOutlineColor(); }
-void TextBox::setTextOutlineThickness(float thickness){ text.setOutlineThickness(thickness);}
-float TextBox::getTextOutlineThickness() const{ return text.getOutlineThickness(); }
+void Textbox::setTextFillColor(sf::Color color){text.setFillColor(color);}
+sf::Color Textbox::getTextFillColor() const{ return text.getFillColor(); }
+void Textbox::setTextOutlineColor(sf::Color color){text.setOutlineColor(color);}
+sf::Color Textbox::getTextOutlineColor() const{ return text.getOutlineColor(); }
+void Textbox::setTextOutlineThickness(float thickness){ text.setOutlineThickness(thickness);}
+float Textbox::getTextOutlineThickness() const{ return text.getOutlineThickness(); }
 
-int TextBox::getWidthInChars() const{
+int Textbox::getWidthInChars() const{
     return (int)rect.getSize().x/text.getCharacterSize();
 }
-int TextBox::getHeightInChars() const{
+int Textbox::getHeightInChars() const{
     return (int)rect.getSize().y/text.getCharacterSize();
 }

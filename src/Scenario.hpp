@@ -13,7 +13,6 @@
 #include "defaults.h"
 #include "DrawableObject.hpp"
 #include "Sound.hpp"
-#include "Textbox.hpp"
 #include "Option.hpp"
 
 
@@ -51,6 +50,7 @@ public:
     DrawableObject getBackground();// Read-only.
     Shortlist<Option> getOptions();
     //  "test" leads to opening "scenarios/test/script.txt"
+    Scenario();
     Scenario(std::string path);
     Scenario* operator*();
 

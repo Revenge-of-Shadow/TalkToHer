@@ -8,6 +8,7 @@ const std::string kPathSepartor = "\\";
 
 #else
 
+#define FRAMERATE   24
 #define FONT_SIZE   24
 #define FONTNAME "dm-serif-text-latin-400-normal.ttf"
 

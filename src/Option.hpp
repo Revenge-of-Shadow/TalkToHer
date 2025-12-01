@@ -12,7 +12,6 @@ public:
     std::string getText()const{ return text; }
     std::string getPath()const{ return path; }
     Option& operator=(const Option& other){ 
-        std::cout<<path<<" := "<<other.path<<std::endl;
         if(this != &other){
             path = other.path;
             text = other.text;

@@ -4,7 +4,7 @@
 #include "libs.hpp"
 #include "defaults.h"
 
-class TextBox: public sf::Drawable{
+class Textbox: public sf::Drawable{
     std::string line;
     std::string shownString;
     short offset;
@@ -21,9 +21,9 @@ public:
     sf::Text text;
     bool centeredText;
 
-    TextBox();
-    TextBox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontName, int fontSize, bool centeredText = false);
-    TextBox* operator*();
+    Textbox();
+    Textbox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::string fontName, int fontSize, bool centeredText = false);
+    Textbox* operator*();
 
     bool loadFont(std::string fontname);
 
@@ -32,11 +32,12 @@ public:
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
         target.draw(rect);
+        std::cout<<rect.getSize().x<<" "<<rect.getSize().y<<std::endl;
         target.draw(text);
     }
     void choose();
     void unchoose();
-    TextBox& operator=(const TextBox& other);
+    Textbox& operator=(const Textbox& other);
 
 
     void setString(std::string text);

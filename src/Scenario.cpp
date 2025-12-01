@@ -1,7 +1,6 @@
 #include "Scenario.hpp"
 #include "DrawableObject.hpp"
 #include "libs.hpp"
-#include <iostream>
 
 DrawableObject Scenario::getCharByName(std::string name) {
     for (int i = 0; i < characters.getSize(); ++i){
@@ -60,14 +59,20 @@ Shortlist<Option> Scenario::getOptions(){
 }
 
 
+Scenario::Scenario(){}
 Scenario::Scenario(std::string path)
     :filepath(scenario_folder_suffix + kPathSepartor + path + kPathSepartor),
     backgroundSet(false){
 
     filestr.open(filepath + title_suffix);
-    std::getline(filestr, title);
+    if(!filestr.is_open()){
+        title = "";
+    }
+    else{
+        std::getline(filestr, title);
+    }
     filestr.close();
-    
+
     std::string line;
     filestr.open(filepath + script_suffix);
     
@@ -75,6 +80,7 @@ Scenario::Scenario(std::string path)
         lines.add(line);
     }
     filestr.close();
+
     lineindex = 0;
 }
 
