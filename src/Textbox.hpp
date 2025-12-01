@@ -32,7 +32,6 @@ public:
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
         target.draw(rect);
-        std::cout<<rect.getSize().x<<" "<<rect.getSize().y<<std::endl;
         target.draw(text);
     }
     void choose();

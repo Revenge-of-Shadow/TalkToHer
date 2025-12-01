@@ -1,13 +1,12 @@
 #include "Scenario.hpp"
 #include "Textbox.hpp"
 #include "libs.hpp"
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Window/VideoMode.hpp>
+#include <filesystem>
 
-enum class State {Script, Options, Menu, Settings};
+enum class State {Script, Options, Scenarios, Settings};
 
 class Controller{
-    void initMenu();
+    void initScenarios();
 
 public:
     sf::RenderWindow& window;
@@ -20,7 +19,7 @@ public:
     Shortlist<Textbox> optionboxes; // Filled just before showcase; drawn
     State state;
 
-    void loadMenu();
+    void loadScenarios();
     void loadOptions();
     void loadScenario(std::string scenario_path);
     void loadScenarioPaths();
@@ -37,8 +36,7 @@ public:
     void mainloop();
 };
 
-void Controller::initMenu(){
-    state = State::Menu;
+void Controller::initScenarios(){
     optionIndex = 0;
     
     loadScenarioPaths();
@@ -57,7 +55,11 @@ void Controller::loadScenarioPaths(){ // I should add check for script.
     Shortlist<std::string> paths;
     for (const auto &entry: std::filesystem::directory_iterator(scenario_folder_suffix)){
         std::string path = entry.path();
-        paths.add(path.substr(path.find_first_of(kPathSepartor)+1));
+        if(entry.is_directory() 
+            && std::filesystem::exists(path+kPathSepartor+script_suffix))
+                paths.add(
+                    path.substr(path.find_first_of(kPathSepartor)+1)
+                );
     }
     paths.sort();
 
@@ -97,7 +99,8 @@ Controller::Controller(sf::RenderWindow &w): window(w){
         FONT_SIZE
     );
     
-    initMenu();
+    initScenarios();
+    state = State::Scenarios;
 }
 
 
@@ -142,10 +145,12 @@ void Controller::processKey(sf::Event e){ // I should divide by states.
                         options = scenario.getOptions();
                         switch(options.getSize()){
                             case 0: //  Scenario ends.
-                                initMenu();
+                                initScenarios();
+                                state = State::Scenarios;
                                 break;
                             case 1: // Scenario provides one option.
                                 loadScenario(options.last().getPath());
+                                state = State::Script;
                                 break;
                             default:
                                 listOptions(); 
@@ -187,28 +192,26 @@ void Controller::processKey(sf::Event e){ // I should divide by states.
                     break;
             }
             break;
-        case State::Menu:
+        case State::Scenarios:
             switch (e.key.code) {
                 case sf::Keyboard::Up:
-                    optionboxes[optionIndex].unchoose();
+                    (*optionboxes.getPtr(optionIndex)).unchoose();
                     optionIndex == 0? 
                         optionIndex = options.getSize()-1
                         : --optionIndex;
-                    optionboxes[optionIndex].choose();
+                    (*optionboxes.getPtr(optionIndex)).choose();
                     break;
                 case sf::Keyboard::Down:
-                    optionboxes[optionIndex].unchoose();
+                    (*optionboxes.getPtr(optionIndex)).unchoose();
                     optionIndex == options.getSize()-1?
                         optionIndex = 0
                         : ++optionIndex;
-                    optionboxes[optionIndex].choose();
+                    (*optionboxes.getPtr(optionIndex)).choose();
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
                     loadScenario(options[optionIndex].getPath());
                     state = State::Script;
-                    break;
-                case sf::Keyboard::Left:
                     break;
             }
             break;
@@ -241,7 +244,7 @@ void Controller::draw(){
                     window.draw(optionboxes[i]);
                 }
                 break;
-            case State::Menu:
+            case State::Scenarios:
                 for(int i = 0; i < options.getSize(); ++i){
                     window.draw(optionboxes[i]);
                 }

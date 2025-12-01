@@ -7,7 +7,7 @@ Textbox::Textbox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::stri
     this->fontName = fontName;
     this->fontSize = fontSize;
     font.loadFromFile(font_folder_suffix + kPathSepartor + fontName);
-    double outline_thickness = pos.x/pos.y;
+    double outline_thickness = fontSize/8.f;
     size = sf::Vector2f(size.x - outline_thickness*2, size.y - outline_thickness*2);
     this->centeredText = centeredText;
     isChosen = false;
@@ -46,12 +46,18 @@ bool Textbox::scrollDown(){
 
 void Textbox::choose(){
     if(isChosen) return;
-    rect.setSize(sf::Vector2f(rect.getSize().x*2.f, rect.getSize().y));
+    rect.setSize(rect.getSize()*1.25f);
+    rect.setOrigin(rect.getSize().x/2.f, rect.getSize().y/2.f);
+    text.setCharacterSize(text.getCharacterSize()*1.25f);
+    if(centeredText) centerText();
     isChosen = true;
 }
 void Textbox::unchoose(){
     if(!isChosen) return;
-    rect.setSize(sf::Vector2f(rect.getSize().x/2.f, rect.getSize().y));
+    rect.setSize(rect.getSize()/1.25f);
+    rect.setOrigin(rect.getSize().x/2.f, rect.getSize().y/2.f);
+    text.setCharacterSize(text.getCharacterSize()/1.25f);
+    if(centeredText) centerText();
     isChosen = false;
 }
 
