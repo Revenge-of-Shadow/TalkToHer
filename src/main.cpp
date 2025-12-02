@@ -14,7 +14,7 @@ int main(){
             if(event.type == sf::Event::Closed)
                 window.close();
             if(event.type == sf::Event::KeyPressed){
-                controller.processKey(event);
+                if(controller.processKey(event)) window.close();
             }
         }
 

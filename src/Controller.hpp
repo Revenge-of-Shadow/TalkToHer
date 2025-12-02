@@ -1,10 +1,12 @@
 #include "Scenario.hpp"
 #include "Textbox.hpp"
 #include "libs.hpp"
+#include <SFML/Window/Keyboard.hpp>
 
-enum class State {Script, Options, Scenarios, Settings};
+enum class State {Menu, Script, Options, Scenarios, Settings};
 
 class Controller{
+    void initMenu();
     void initScenarios();
 
 public:
@@ -30,13 +32,19 @@ public:
     void tryNextLine();
     void tryCurrLine();
 
-    void processKey(sf::Event);
+    bool processKey(sf::Event);
     void draw();
     void mainloop();
 };
 
 void Controller::initScenarios(){
     loadScenarioPaths();
+    listOptions();
+}
+void Controller::initMenu(){
+    options.erase();
+    options.add(Option("Scenarios", "Scenario select"));
+    options.add(Option("Quit", "Quit"));
     listOptions();
 }
 
@@ -48,7 +56,7 @@ void Controller::loadScenario(std::string scenario_path){
     textbox.setString(scenario.getCurrentLineTrunc());
 }
 
-void Controller::loadScenarioPaths(){ // I should add check for script.
+void Controller::loadScenarioPaths(){
     Shortlist<std::string> paths;
     for (const auto &entry: std::filesystem::directory_iterator(scenario_folder_suffix)){
         std::string path = entry.path();
@@ -101,9 +109,9 @@ Controller::Controller(sf::RenderWindow &w): window(w){
         FONTNAME,
         FONT_SIZE
     );
-    
-    initScenarios();
-    state = State::Scenarios;
+
+    initMenu();
+    state = State::Menu;
 }
 
 
@@ -128,8 +136,36 @@ void Controller::tryCurrLine(){
     if(!scenario.isCurrLineDisplayable()) tryNextLine();
 }
 
-void Controller::processKey(sf::Event e){ // I should divide by states.
+bool Controller::processKey(sf::Event e){
     switch(state){
+        case State::Menu:
+            switch (e.key.code) {
+                case sf::Keyboard::Up:
+                    (*optionboxes.getPtr(optionIndex)).unchoose();
+                    optionIndex == 0? 
+                        optionIndex = options.getSize()-1
+                        : --optionIndex;
+                    (*optionboxes.getPtr(optionIndex)).choose();
+                    break;
+                case sf::Keyboard::Down:
+                    (*optionboxes.getPtr(optionIndex)).unchoose();
+                    optionIndex == options.getSize()-1?
+                        optionIndex = 0
+                        : ++optionIndex;
+                    (*optionboxes.getPtr(optionIndex)).choose();
+                    break;
+                case sf::Keyboard::Enter:
+                case sf::Keyboard::Right:
+                    if(options[optionIndex].getPath() == "Scenarios"){
+                        initScenarios();
+                        state = State::Scenarios;
+                    }
+                    else if(options[optionIndex].getPath() == "Quit"){
+                        return 1;
+                    }
+                    break;
+            }
+            break;
         case State::Script:
             switch (e.key.code) {
                 case sf::Keyboard::Up:
@@ -148,13 +184,11 @@ void Controller::processKey(sf::Event e){ // I should divide by states.
                         options = scenario.getOptions();
                         switch(options.getSize()){
                             case 0: //  Scenario ends.
-                                std::cout<<"Eh?"<<std::endl;
-                                initScenarios();
-                                state = State::Scenarios;
-                                std::cout<<"It begins."<<std::endl;
+                                initMenu();
+                                state = State::Menu;
                                 break;
                             case 1: // Scenario provides one option.
-                                loadScenario(options.last().getPath());
+                                loadScenario(options[0].getPath());
                                 state = State::Script;
                                 break;
                             default:
@@ -171,7 +205,6 @@ void Controller::processKey(sf::Event e){ // I should divide by states.
             }
             break;
         case State::Options:
-            //  options controls
             switch (e.key.code) {
                 case sf::Keyboard::Up:
                     (*optionboxes.getPtr(optionIndex)).unchoose();
@@ -218,16 +251,27 @@ void Controller::processKey(sf::Event e){ // I should divide by states.
                     loadScenario(options[optionIndex].getPath());
                     state = State::Script;
                     break;
+                case sf::Keyboard::Left:
+                    initMenu();
+                    state = State::Menu;
+                    break;
             }
             break;
         case State::Settings:
             break;
     }
+    return 0;
 }
 
 void Controller::draw(){
     window.clear();
     switch(state){
+            case State::Menu:
+               //   Add menu background. 
+                for(int i = 0; i < options.getSize(); ++i){
+                    window.draw(optionboxes[i]);
+                }
+                break;
             case State::Script:
                 if(scenario.isBackgroundSet()){
                     window.draw(scenario.getBackground());
