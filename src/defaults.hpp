@@ -1,0 +1,35 @@
+#ifndef DEFAULTS_H
+#define DEFAULTS_H
+#include "libs.hpp"
+#include <SFML/System/Vector2.hpp>
+
+#ifdef _WIN32
+
+const std::string kPathSepartor = "\\";
+
+#else
+
+const std::string kPathSepartor = "/";
+
+#endif
+
+const std::string settings_path = "settings.txt";
+
+
+const std::string optionsSeparator = ":";
+
+const std::string font_foldername = "fonts";
+const std::string scenario_foldername = "scenarios";
+const std::string title_filename = "title.txt";
+const std::string script_filename = "script.txt";
+const std::string options_filename = "options.txt";
+const std::string sprite_foldername = "sprites";
+const std::string background_foldername = "backgrounds";
+
+const sf::Vector2u presetsize(1600, 900);
+
+std::string forceSeparator(std::string str);
+sf::Vector2f actualVector(sf::Vector2f windowsize, sf::Vector2f v);
+
+
+#endif

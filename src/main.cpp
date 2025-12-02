@@ -1,9 +1,9 @@
-#include "defaults.h"
+#include "defaults.hpp"
 #include "Controller.hpp"
 
 int main(){
     sf::RenderWindow window = sf::RenderWindow(
-        sf::VideoMode(windowSize.x, windowSize.y), "");
+        sf::VideoMode(presetsize.x, presetsize.y), "");
 
 
     Controller controller(window);

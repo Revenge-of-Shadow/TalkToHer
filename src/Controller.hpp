@@ -1,7 +1,8 @@
 #include "Scenario.hpp"
 #include "Textbox.hpp"
+#include "defaults.hpp"
 #include "libs.hpp"
-#include <SFML/Window/Keyboard.hpp>
+#include <algorithm>
 
 enum class State {Menu, Script, Options, Scenarios, Settings};
 
@@ -20,8 +21,16 @@ public:
     Shortlist<Textbox> optionboxes; // Filled just before showcase; drawn
     State state;
 
-    void loadScenarios();
-    void loadOptions();
+    int framerate;
+    int fontsize;
+    std::string fontname;
+    sf::Vector2u windowsize;   //  SFML is freaking weird here.
+    sf::Vector2f actualCenter();// I hate it.
+    void performResize();//  It gets WORSE.
+
+    bool saveSettings();
+    bool loadSettings();
+
     void loadScenario(std::string scenario_path);
     void loadScenarioPaths();
     void listOptions();
@@ -44,10 +53,70 @@ void Controller::initScenarios(){
 void Controller::initMenu(){
     options.erase();
     options.add(Option("Scenarios", "Scenario select"));
+    options.add(Option("Settings", "Settings"));
+    options.add(Option("Extras", "Extras"));
     options.add(Option("Quit", "Quit"));
     listOptions();
 }
 
+//Make sure never to call that before loading.
+bool Controller::saveSettings(){
+    std::ofstream filestr(settings_path);
+    if(!filestr.is_open()) return false;
+
+    filestr<<framerate<<std::endl;
+    filestr<<fontsize<<std::endl;
+    filestr<<fontname<<std::endl;
+    filestr<<windowsize.x<<std::endl;
+    filestr<<windowsize.y<<std::endl;
+    filestr.close();
+    return true;
+}
+bool Controller::loadSettings(){
+    std::ifstream filestr(settings_path);
+    bool result = !filestr.is_open();
+    if(!filestr.is_open()) {
+        framerate = 60;
+        fontsize = 24;
+        fontname = "dm-serif-text-latin-400-normal.ttf";
+        windowsize = sf::Vector2u(800, 600);
+    }
+    else{
+        filestr>>framerate;
+        filestr>>fontsize;
+        filestr>>fontname;
+        filestr>>windowsize.x;
+        filestr>>windowsize.y;
+    }
+
+    window.setFramerateLimit(framerate);
+    window.setSize(windowsize);
+    performResize();   
+
+    filestr.close();
+    return result;
+}
+
+
+sf::Vector2f Controller::actualCenter(){
+    return actualVector(sf::Vector2f(windowsize), 
+                sf::Vector2f(windowsize.x/2.f, windowsize.y/2.f));
+}
+void Controller::performResize(){
+    // Ho, I hate it.
+    //  Drawable.setPosition() relies on the non-resized value.
+    //  Sending it updated size misplaces the object as if it
+    //  was drawn inside the previous window, cropped with the
+    //  new window.
+    //  Ignoring the change makes the center good, but draws 
+    //  outside of the frame.
+    //  Applying the change misplaces left-top, moving view.
+    windowsize = window.getSize();
+    sf::View view = window.getDefaultView();
+    view.setSize({static_cast<float>(windowsize.x),
+        static_cast<float>(windowsize.y)});
+    window.setView(view);
+}
 
 void Controller::loadScenario(std::string scenario_path){
     commandQueue.erase();
@@ -58,17 +127,17 @@ void Controller::loadScenario(std::string scenario_path){
 
 void Controller::loadScenarioPaths(){
     Shortlist<std::string> paths;
-    for (const auto &entry: std::filesystem::directory_iterator(scenario_folder_suffix)){
+    for (const auto &entry: std::filesystem::directory_iterator(scenario_foldername)){
         std::string path = entry.path();
         if(entry.is_directory() 
-            && std::filesystem::exists(path+kPathSepartor+script_suffix))
+            && std::filesystem::exists(path+kPathSepartor+script_filename))
                 paths.add(
                     path.substr(path.find_first_of(kPathSepartor)+1)
                 );
     }
     paths.sort();
 
-    options.erase();
+    options.erase();    
     for(int i = 0; i<paths.getSize(); ++i){
         options.add(Option(paths[i], paths[i]));
     }
@@ -77,16 +146,19 @@ void Controller::loadScenarioPaths(){
 void Controller::listOptions(){
     optionboxes.erase();
     for(int i = 0; i < options.getSize(); ++i){
+        sf::Vector2f pos = actualCenter();
+        pos.y = pos.y-windowsize.y/2.f+fontsize*8.f
+            +fontsize*4.f*
+            (-float(options.getSize()/2 + options.getSize()%2)+0.5+i);
+
         Textbox optionbox(
             sf::Vector2f(
-                windowSize.x/2.f,
-                FONT_SIZE*3),
-            sf::Vector2f(windowSize.x/2, 
-                         windowSize.y/3+(FONT_SIZE*4)*
-                         (-float(options.getSize()/2 + options.getSize()%2)+0.5+i)),
+                windowsize.x/2.f,
+                fontsize*3),
+            pos,
             options.peek(i).getText(),
-            FONTNAME,
-            FONT_SIZE,
+            fontname,
+            fontsize,
             true);                   
         optionboxes.add(optionbox);
     }
@@ -100,14 +172,15 @@ void Controller::listOptions(){
 
 
 Controller::Controller(sf::RenderWindow &w): window(w){
-    window.setFramerateLimit(FRAMERATE);
+    loadSettings();
 
     textbox = Textbox(
-        sf::Vector2f(windowSize.x/2.f, windowSize.y/8.f), 
-        sf::Vector2f(windowSize.x/2.f, windowSize.y-windowSize.y/16.f), 
+        sf::Vector2f(windowsize.x/2.f, windowsize.y/8.f), 
+        actualCenter()+
+            sf::Vector2f(0.0f, windowsize.y/2.f-windowsize.y/16.f), 
         "",
-        FONTNAME,
-        FONT_SIZE
+        fontname,
+        fontsize
     );
 
     initMenu();
@@ -288,7 +361,6 @@ void Controller::draw(){
                     window.draw(scenario.getChar(i));
                 window.draw(textbox);
 
-                //  Center the optionboxes. I refuse to elaborate.
                 for(int i = 0; i < options.getSize(); ++i){
                     window.draw(optionboxes[i]);
                 }

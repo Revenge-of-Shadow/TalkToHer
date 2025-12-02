@@ -10,7 +10,7 @@
  *
  */
 #include "libs.hpp"
-#include "defaults.h"
+#include "defaults.hpp"
 #include "DrawableObject.hpp"
 #include "Sound.hpp"
 #include "Option.hpp"
@@ -33,6 +33,7 @@ class Scenario {
     
     bool backgroundSet; //  For drawing check.
 
+    sf::Vector2f getRelativeVector(std::string);
     int getCharIndexByName(std::string name);
     DrawableObject getCharByName(std::string name);
 

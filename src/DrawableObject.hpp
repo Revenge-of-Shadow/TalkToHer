@@ -1,10 +1,9 @@
 #ifndef DRAWABLEOBJECT_H
 #define DRAWABLEOBJECT_H
-#include "defaults.h"
+#include "defaults.hpp"
 
 
 class DrawableObject: public sf::Drawable{
-
     //  DrawableObject sprite must have origin at the bottom center.
     std::string name;
     sf::Vector2f position;
@@ -35,7 +34,7 @@ public:
     };
     bool loadSprite(std::string sprite_name){
         return loadSpriteFromPath(
-                     sprite_folder_suffix + kPathSepartor 
+                     sprite_foldername + kPathSepartor 
                    + forceSeparator(name) + kPathSepartor 
                    + forceSeparator(sprite_name));
     };
@@ -50,7 +49,19 @@ public:
     //  Could probably add a boolean for not drawing hidden, but I see no need
     //  for it.
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
-        target.draw(sprite);
+        sf::Vector2f sprPos = position/100.f;
+        sprPos.x *=
+            static_cast<float>(target.getSize().x);
+        sprPos.y *=
+            static_cast<float>(target.getSize().y);
+        sf::Sprite temp = sprite;
+        temp.setPosition(actualVector(
+            sf::Vector2f(target.getSize()), sprPos));
+        float scale = std::min(
+            static_cast<float>(target.getSize().x)/presetsize.x,
+            static_cast<float>(target.getSize().y)/presetsize.y);
+        temp.setScale(scale, scale);
+        target.draw(temp);
     };
 
     DrawableObject& operator=(const DrawableObject& other){

@@ -1,4 +1,5 @@
-#include "defaults.h"
+#include "defaults.hpp"
+
 
 std::string forceSeparator(std::string str){
     Shortlist<int> positions;
@@ -16,4 +17,11 @@ std::string forceSeparator(std::string str){
     while(positions.getSize())
         str.replace(positions.pop(0), 1, kPathSepartor);
     return str;
+}
+
+//  I have learned to hate one tiny bug of SFML deeply.
+sf::Vector2f actualVector(sf::Vector2f windowsize, sf::Vector2f v){
+    sf::Vector2f offset = 
+        sf::Vector2f(presetsize)-sf::Vector2f(windowsize);
+    return v+offset/2.f;
 }

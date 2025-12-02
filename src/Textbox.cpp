@@ -6,7 +6,7 @@ Textbox::Textbox(sf::Vector2f size, sf::Vector2f pos, std::string str, std::stri
     this->offset = 0;
     this->fontName = fontName;
     this->fontSize = fontSize;
-    font.loadFromFile(font_folder_suffix + kPathSepartor + fontName);
+    font.loadFromFile(font_foldername + kPathSepartor + fontName);
     double outline_thickness = fontSize/8.f;
     size = sf::Vector2f(size.x - outline_thickness*2, size.y - outline_thickness*2);
     this->centeredText = centeredText;
@@ -46,17 +46,17 @@ bool Textbox::scrollDown(){
 
 void Textbox::choose(){
     if(isChosen) return;
-    rect.setSize(rect.getSize()*1.25f);
+    rect.setSize(rect.getSize()*1.1f);
     rect.setOrigin(rect.getSize().x/2.f, rect.getSize().y/2.f);
-    text.setCharacterSize(text.getCharacterSize()*1.25f);
+    text.setCharacterSize(text.getCharacterSize()*1.1f);
     if(centeredText) centerText();
     isChosen = true;
 }
 void Textbox::unchoose(){
     if(!isChosen) return;
-    rect.setSize(rect.getSize()/1.25f);
+    rect.setSize(rect.getSize()/1.1f);
     rect.setOrigin(rect.getSize().x/2.f, rect.getSize().y/2.f);
-    text.setCharacterSize(text.getCharacterSize()/1.25f);
+    text.setCharacterSize(text.getCharacterSize()/1.1f);
     if(centeredText) centerText();
     isChosen = false;
 }
@@ -67,7 +67,7 @@ Textbox& Textbox::operator=(const Textbox& other){
         offset = other.offset;
         fontName = other.fontName;
         fontSize = other.fontSize;
-        font.loadFromFile(font_folder_suffix + kPathSepartor + fontName);
+        font.loadFromFile(font_foldername + kPathSepartor + fontName);
         centeredText = other.centeredText;
 
         rect = other.rect;
@@ -155,7 +155,7 @@ std::string Textbox::getString() const{   //  Give what is stored, not what is s
 void Textbox::centerText(){
     text.setPosition(sf::Vector2f(
         rect.getPosition().x - text.getLocalBounds().width/2,
-        rect.getPosition().y - text.getLocalBounds().height/2
+        rect.getPosition().y - text.getLocalBounds().height/2-fontSize/3
     ));
 }
 

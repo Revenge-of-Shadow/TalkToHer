@@ -1,18 +1,27 @@
 #include "Scenario.hpp"
 #include "DrawableObject.hpp"
-#include "defaults.h"
+#include "defaults.hpp"
 
+sf::Vector2f Scenario::getRelativeVector(std::string commandArg){
+    return sf::Vector2f(
+        strtof(commandArg.substr(0, 
+            commandArg.find(',')).c_str(), NULL),
+        strtof(commandArg.substr(
+            commandArg.find(',')+1).c_str(), NULL)
+    );
+}
+
+int Scenario::getCharIndexByName(std::string name) {
+    for (int i = 0; i < characters.getSize(); ++i)
+        if (characters.peek(i).getName().compare(name) == 0)
+            return i;
+    throw;
+}
 DrawableObject Scenario::getCharByName(std::string name) {
     for (int i = 0; i < characters.getSize(); ++i){
         if (characters.peek(i).getName().compare(name) == 0)
             return characters.peek(i);
     }
-    throw;
-}
-int Scenario::getCharIndexByName(std::string name) {
-    for (int i = 0; i < characters.getSize(); ++i)
-        if (characters.peek(i).getName().compare(name) == 0)
-            return i;
     throw;
 }
 
@@ -39,7 +48,7 @@ DrawableObject Scenario::getBackground(){ return background; }
 Shortlist<Option> Scenario::getOptions(){ 
     Shortlist<Option> options;
 
-    filestr.open(filepath + options_suffix);
+    filestr.open(filepath + options_filename);
     std::string read_line;
     while(std::getline(filestr, read_line)){
         if(read_line.empty()) break;
@@ -61,11 +70,11 @@ Shortlist<Option> Scenario::getOptions(){
 
 Scenario::Scenario(){}
 Scenario::Scenario(std::string path)
-    :filepath(scenario_folder_suffix + kPathSepartor 
+    :filepath(scenario_foldername + kPathSepartor 
               + forceSeparator(path) + kPathSepartor),
     backgroundSet(false){
 
-    filestr.open(filepath + title_suffix);
+    filestr.open(filepath + title_filename);
     if(!filestr.is_open()){
         title = "";
     }
@@ -75,7 +84,7 @@ Scenario::Scenario(std::string path)
     filestr.close();
 
     std::string line;
-    filestr.open(filepath + script_suffix);
+    filestr.open(filepath + script_filename);
     
     while(filestr.is_open() && getline(filestr, line)){ //  Lags guaranteed.
         lines.add(line);
@@ -142,10 +151,7 @@ void Scenario::processCommand(std::string command) {
             loadBackground(commandArg);
         }
         else if(commandAction == "setPosition"){
-            background.setPosition(sf::Vector2f(
-                strtof(commandArg.substr(0, commandArg.find(',')).c_str(), NULL),
-                strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)
-            ));
+            background.setPosition(getRelativeVector(commandArg));
         }
         else if(commandAction == "toggle"){
             toggleBackground();
@@ -162,16 +168,10 @@ void Scenario::processCommand(std::string command) {
             (*ch).loadSprite(commandArg);
         }
         else if(commandAction == "setPosition"){
-            (*ch).setPosition(sf::Vector2f(
-                strtof(commandArg.substr(0, commandArg.find(',')).c_str(), NULL),
-                strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)
-            ));
+            (*ch).setPosition(getRelativeVector(commandArg));
         }
         else if(commandAction == "move"){
-            (*ch).move(sf::Vector2f(
-                strtof(commandArg.substr(0, commandArg.find(',')).c_str(), NULL),
-                strtof(commandArg.substr(commandArg.find(',')+1).c_str(), NULL)
-            ));
+            (*ch).move(getRelativeVector(commandArg));
         }
         else if(commandAction == "remove"){
             characters.pop(getCharIndexByName(charName));
