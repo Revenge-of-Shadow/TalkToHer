@@ -8,11 +8,15 @@ const std::string kPathSepartor = "\\";
 
 #else
 
+const std::string kPathSepartor = "/";
+
+#endif
+
+
 #define FRAMERATE   24
 #define FONT_SIZE   24
 #define FONTNAME "dm-serif-text-latin-400-normal.ttf"
 
-const std::string kPathSepartor = "/";
 const std::string optionsSeparator = ":";
 
 const std::string font_folder_suffix = "fonts";
@@ -25,7 +29,7 @@ const std::string background_folder_suffix = "backgrounds";
 
 const sf::Vector2f windowSize(1600, 900);
 
+std::string forceSeparator(std::string str);
 
 
-#endif
 #endif

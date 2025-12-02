@@ -1,6 +1,5 @@
 #ifndef DRAWABLEOBJECT_H
 #define DRAWABLEOBJECT_H
-#include "libs.hpp"
 #include "defaults.h"
 
 
@@ -37,8 +36,8 @@ public:
     bool loadSprite(std::string sprite_name){
         return loadSpriteFromPath(
                      sprite_folder_suffix + kPathSepartor 
-                   + name + kPathSepartor 
-                   + sprite_name);
+                   + forceSeparator(name) + kPathSepartor 
+                   + forceSeparator(sprite_name));
     };
 
     std::string getName(){return name;};

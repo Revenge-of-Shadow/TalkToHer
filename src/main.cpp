@@ -17,7 +17,7 @@ int main(){
                 controller.processKey(event);
             }
         }
-        
+
         controller.mainloop();
     }
 
