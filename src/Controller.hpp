@@ -1,14 +1,14 @@
+#include "Settings.hpp"
 #include "Scenario.hpp"
 #include "Textbox.hpp"
 #include "defaults.hpp"
-#include "libs.hpp"
-#include <algorithm>
 
 enum class State {Menu, Script, Options, Scenarios, Settings};
 
 class Controller{
     void initMenu();
     void initScenarios();
+    void initSettings();
 
 public:
     sf::RenderWindow& window;
@@ -21,10 +21,8 @@ public:
     Shortlist<Textbox> optionboxes; // Filled just before showcase; drawn
     State state;
 
-    int framerate;
-    int fontsize;
-    std::string fontname;
-    sf::Vector2u windowsize;   //  SFML is freaking weird here.
+    Settings settings;
+
     sf::Vector2f actualCenter();// I hate it.
     void performResize();//  It gets WORSE.
 
@@ -58,49 +56,35 @@ void Controller::initMenu(){
     options.add(Option("Quit", "Quit"));
     listOptions();
 }
+void Controller::initSettings(){
+    options.erase();
+    options.add(Option("", "Frame rate"));
+    options.add(Option("", "Font size"));
+    options.add(Option("", "Font name"));
+    options.add(Option("", "Window resolution"));
+    listOptions();
+    settings.current = Setting::Framerate;  //  It it the first one.
+}
+
 
 //Make sure never to call that before loading.
 bool Controller::saveSettings(){
-    std::ofstream filestr(settings_path);
-    if(!filestr.is_open()) return false;
-
-    filestr<<framerate<<std::endl;
-    filestr<<fontsize<<std::endl;
-    filestr<<fontname<<std::endl;
-    filestr<<windowsize.x<<std::endl;
-    filestr<<windowsize.y<<std::endl;
-    filestr.close();
-    return true;
+    return settings.save(); 
 }
 bool Controller::loadSettings(){
-    std::ifstream filestr(settings_path);
-    bool result = !filestr.is_open();
-    if(!filestr.is_open()) {
-        framerate = 60;
-        fontsize = 24;
-        fontname = "dm-serif-text-latin-400-normal.ttf";
-        windowsize = sf::Vector2u(800, 600);
-    }
-    else{
-        filestr>>framerate;
-        filestr>>fontsize;
-        filestr>>fontname;
-        filestr>>windowsize.x;
-        filestr>>windowsize.y;
-    }
+    bool result = settings.load(); 
 
-    window.setFramerateLimit(framerate);
-    window.setSize(windowsize);
+    window.setFramerateLimit(settings.framerate);
+    window.setSize(settings.windowsize);
     performResize();   
 
-    filestr.close();
     return result;
 }
 
 
 sf::Vector2f Controller::actualCenter(){
-    return actualVector(sf::Vector2f(windowsize), 
-                sf::Vector2f(windowsize.x/2.f, windowsize.y/2.f));
+    return actualVector(sf::Vector2f(settings.windowsize), 
+                sf::Vector2f(settings.windowsize.x/2.f, settings.windowsize.y/2.f));
 }
 void Controller::performResize(){
     // Ho, I hate it.
@@ -111,10 +95,10 @@ void Controller::performResize(){
     //  Ignoring the change makes the center good, but draws 
     //  outside of the frame.
     //  Applying the change misplaces left-top, moving view.
-    windowsize = window.getSize();
+    settings.windowsize = window.getSize();
     sf::View view = window.getDefaultView();
-    view.setSize({static_cast<float>(windowsize.x),
-        static_cast<float>(windowsize.y)});
+    view.setSize({static_cast<float>(settings.windowsize.x),
+        static_cast<float>(settings.windowsize.y)});
     window.setView(view);
 }
 
@@ -127,7 +111,8 @@ void Controller::loadScenario(std::string scenario_path){
 
 void Controller::loadScenarioPaths(){
     Shortlist<std::string> paths;
-    for (const auto &entry: std::filesystem::directory_iterator(scenario_foldername)){
+    for(const auto &entry: 
+            std::filesystem::directory_iterator(scenario_foldername)){
         std::string path = entry.path();
         if(entry.is_directory() 
             && std::filesystem::exists(path+kPathSepartor+script_filename))
@@ -147,18 +132,18 @@ void Controller::listOptions(){
     optionboxes.erase();
     for(int i = 0; i < options.getSize(); ++i){
         sf::Vector2f pos = actualCenter();
-        pos.y = pos.y-windowsize.y/2.f+fontsize*8.f
-            +fontsize*4.f*
+        pos.y = pos.y-settings.windowsize.y/2.f+settings.fontsize*8.f
+            +settings.fontsize*4.f*
             (-float(options.getSize()/2 + options.getSize()%2)+0.5+i);
 
         Textbox optionbox(
             sf::Vector2f(
-                windowsize.x/2.f,
-                fontsize*3),
+                settings.windowsize.x/2.f,
+                settings.fontsize*3),
             pos,
-            options.peek(i).getText(),
-            fontname,
-            fontsize,
+            options.peek(i).text,
+            settings.fontname,
+            settings.fontsize,
             true);                   
         optionboxes.add(optionbox);
     }
@@ -175,12 +160,12 @@ Controller::Controller(sf::RenderWindow &w): window(w){
     loadSettings();
 
     textbox = Textbox(
-        sf::Vector2f(windowsize.x/2.f, windowsize.y/8.f), 
+        sf::Vector2f(settings.windowsize.x/2.f, settings.windowsize.y/8.f), 
         actualCenter()+
-            sf::Vector2f(0.0f, windowsize.y/2.f-windowsize.y/16.f), 
+            sf::Vector2f(0.0f, settings.windowsize.y/2.f-settings.windowsize.y/16.f), 
         "",
-        fontname,
-        fontsize
+        settings.fontname,
+        settings.fontsize
     );
 
     initMenu();
@@ -229,11 +214,15 @@ bool Controller::processKey(sf::Event e){
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
-                    if(options[optionIndex].getPath() == "Scenarios"){
+                    if(options[optionIndex].val == "Scenarios"){
                         initScenarios();
                         state = State::Scenarios;
                     }
-                    else if(options[optionIndex].getPath() == "Quit"){
+                    else if(options[optionIndex].val == "Settings"){
+                        initSettings();
+                        state = State::Settings;
+                    }
+                    else if(options[optionIndex].val == "Quit"){
                         return 1;
                     }
                     break;
@@ -260,8 +249,9 @@ bool Controller::processKey(sf::Event e){
                                 initMenu();
                                 state = State::Menu;
                                 break;
+                                void initSettings();
                             case 1: // Scenario provides one option.
-                                loadScenario(options[0].getPath());
+                                loadScenario(options[0].val);
                                 state = State::Script;
                                 break;
                             default:
@@ -295,7 +285,7 @@ bool Controller::processKey(sf::Event e){
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
-                    loadScenario(options[optionIndex].getPath());
+                    loadScenario(options[optionIndex].val);
                     state = State::Script;
                     break;
                 case sf::Keyboard::Left:
@@ -321,7 +311,7 @@ bool Controller::processKey(sf::Event e){
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
-                    loadScenario(options[optionIndex].getPath());
+                    loadScenario(options[optionIndex].val);
                     state = State::Script;
                     break;
                 case sf::Keyboard::Left:
@@ -331,6 +321,48 @@ bool Controller::processKey(sf::Event e){
             }
             break;
         case State::Settings:
+            switch (e.key.code) {
+                case sf::Keyboard::Up:
+                    if(settings.chosen){
+                        settings.turnUp();
+                    }
+                    else{
+                        settings.prev();
+                        (*optionboxes.getPtr(optionIndex)).unchoose();
+                        optionIndex == 0? 
+                            optionIndex = options.getSize()-1
+                            : --optionIndex;
+                        (*optionboxes.getPtr(optionIndex)).choose();
+                    }
+                                        break;
+                case sf::Keyboard::Down:
+                    if(settings.chosen){
+                        settings.turnDown();
+                    }
+                    else{
+                        settings.next();
+                        (*optionboxes.getPtr(optionIndex)).unchoose();
+                        optionIndex == options.getSize()-1?
+                            optionIndex = 0
+                            : ++optionIndex;
+                        (*optionboxes.getPtr(optionIndex)).choose();
+                    }
+                    break;
+                case sf::Keyboard::Enter:
+                case sf::Keyboard::Right:
+                    if(settings.chosen)
+                        (*optionboxes.getPtr(optionIndex)).unchoose();
+                    else
+                        (*optionboxes.getPtr(optionIndex)).choose();
+                    settings.chosen = !settings.chosen;
+                    break;
+                case sf::Keyboard::Left:
+                    saveSettings();
+                    loadSettings();
+                    initMenu();
+                    state = State::Menu;
+                    break;
+            }
             break;
     }
     return 0;
@@ -339,40 +371,60 @@ bool Controller::processKey(sf::Event e){
 void Controller::draw(){
     window.clear();
     switch(state){
-            case State::Menu:
-               //   Add menu background. 
-                for(int i = 0; i < options.getSize(); ++i){
-                    window.draw(optionboxes[i]);
-                }
-                break;
-            case State::Script:
-                if(scenario.isBackgroundSet()){
-                    window.draw(scenario.getBackground());
-                }
-                for(int i = 0; i<scenario.getCharsSize(); ++i)
-                    window.draw(scenario.getChar(i));
-                window.draw(textbox); 
-                break;
-            case State::Options:    //  Keep the script; draw over it.
-                if(scenario.isBackgroundSet()){
-                    window.draw(scenario.getBackground());
-                }
-                for(int i = 0; i<scenario.getCharsSize(); ++i)
-                    window.draw(scenario.getChar(i));
-                window.draw(textbox);
+        case State::Menu:
+            //   Add menu background. 
+            for(int i = 0; i < options.getSize(); ++i){
+                window.draw(optionboxes[i]);
+            }
+            break;
+        case State::Script:
+            if(scenario.isBackgroundSet()){
+                window.draw(scenario.getBackground());
+            }
+            for(int i = 0; i<scenario.getCharsSize(); ++i)
+                window.draw(scenario.getChar(i));
+            window.draw(textbox); 
+            break;
+        case State::Options:    //  Keep the script; draw over it.
+            if(scenario.isBackgroundSet()){
+                window.draw(scenario.getBackground());
+            }
+            for(int i = 0; i<scenario.getCharsSize(); ++i)
+                window.draw(scenario.getChar(i));
+            window.draw(textbox);
 
-                for(int i = 0; i < options.getSize(); ++i){
-                    window.draw(optionboxes[i]);
+            for(int i = 0; i < options.getSize(); ++i){
+                window.draw(optionboxes[i]);
+            }
+            break;
+        case State::Scenarios:
+            for(int i = 0; i < options.getSize(); ++i){
+                window.draw(optionboxes[i]);
+            }
+            break;
+        case State::Settings:
+            for(int i = 0; i < options.getSize(); ++i){
+                std::string temp = options[i].text+":    ";
+                switch(i){
+                    case 0:
+                        temp+=std::to_string(settings.framerate);
+                        break;
+                    case 1:
+                        temp+=std::to_string(settings.fontsize);
+                        break;
+                    case 2:
+                        temp+=settings.fontname;
+                        break;
+                    case 3:
+                        temp+=std::to_string(settings.windowsize.x)+
+                            "x"+std::to_string(settings.windowsize.y);
+                        break;
                 }
-                break;
-            case State::Scenarios:
-                for(int i = 0; i < options.getSize(); ++i){
-                    window.draw(optionboxes[i]);
-                }
-                break;
-            case State::Settings:
-                break;
-        }
+                (*optionboxes.getPtr(i)).setString(temp);
+                window.draw(optionboxes[i]);
+            }
+            break;
+    }
     window.display();
 }
 

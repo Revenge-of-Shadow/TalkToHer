@@ -4,19 +4,18 @@
 #include "libs.hpp"
 
 class Option{
-    std::string text;
-    std::string path;
 public:
+    std::string text;
+    std::string val;
+
     Option(){}
-    Option(std::string path, std::string text):text(text), path(path){}
-    std::string getText()const{ return text; }
-    std::string getPath()const{ return path; }
-    Option& operator=(const Option& other){ 
-        if(this != &other){
-            path = other.path;
-            text = other.text;
-        }
-        return *this;
-    }
+    Option(std::string val, std::string text):text(text), val(val){}
+    // Option& operator=(const Option& other){ 
+    //     if(this != &other){
+    //         val = other.val;
+    //         text = other.text;
+    //     }
+    //     return *this;
+    // }
 };
 #endif

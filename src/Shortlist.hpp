@@ -74,4 +74,11 @@ public:
             }
         }
     }
+
+    int find(T sought) const{
+        for(int i = 0; i<size; ++i)
+            if(elements[i] == sought)
+                return i;
+        return -1;
+    }
 };
