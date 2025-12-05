@@ -48,9 +48,9 @@ DrawableObject Scenario::getBackground(){ return background; }
 Shortlist<Option> Scenario::getOptions(){ 
     Shortlist<Option> options;
 
-    filestr.open(filepath + options_filename);
+    fstr.open(filepath + options_filename);
     std::string read_line;
-    while(std::getline(filestr, read_line)){
+    while(std::getline(fstr, read_line)){
         if(read_line.empty()) break;
         int found = read_line.find(optionsSeparator);
         if(found == read_line.npos){
@@ -58,11 +58,11 @@ Shortlist<Option> Scenario::getOptions(){
         }
         else{
             options.add(Option(
-                read_line.substr(found), 
+                read_line.substr(0,found), 
                 read_line.substr(found+1, read_line.length()-found)));
         }
     }
-    filestr.close();
+    fstr.close();
 
     return options;
 }
@@ -73,23 +73,27 @@ Scenario::Scenario(std::string path)
     :filepath(scenario_foldername + kPathSepartor 
               + forceSeparator(path) + kPathSepartor),
     backgroundSet(false){
+    std::cout<<"Constructing scenario: "<<path<<std::endl;
 
-    filestr.open(filepath + title_filename);
-    if(!filestr.is_open()){
+    fstr.open(filepath + title_filename);
+    if(!fstr.is_open()){
         title = "";
     }
     else{
-        std::getline(filestr, title);
+        std::getline(fstr, title);
     }
-    filestr.close();
+    fstr.close();
 
     std::string line;
-    filestr.open(filepath + script_filename);
+    fstr.open(filepath + script_filename);
     
-    while(filestr.is_open() && getline(filestr, line)){ //  Lags guaranteed.
-        lines.add(line);
+    while(fstr.is_open() && getline(fstr, line)){ //  Lags guaranteed.
+        if(!line.empty())
+            lines.add(line);
+        else
+            lines.add("...");
     }
-    filestr.close();
+    fstr.close();
 
     lineindex = 0;
 }
@@ -209,3 +213,4 @@ bool Scenario::isCurrLineDisplayable(){
         && !isCurrLineComment();
 }
 
+std::string Scenario::getTitle(){return title;}

@@ -1,0 +1,2 @@
+Talk to her/pet:Pet her.
+Talk to her/ask:Ask her what she wants.

@@ -103,29 +103,48 @@ void Controller::performResize(){
 }
 
 void Controller::loadScenario(std::string scenario_path){
+    textbox = Textbox(
+        sf::Vector2f(settings.windowsize.x/1.25f, settings.windowsize.y/5.f), 
+        actualCenter()+
+            sf::Vector2f(0.0f, settings.windowsize.y/2.f-settings.windowsize.y/10.f), 
+        "",
+        settings.fontname,
+        settings.fontsize
+    );
     commandQueue.erase();
     scenario = Scenario(scenario_path);
+    window.setTitle(scenario.getTitle());
     tryCurrLine();
     textbox.setString(scenario.getCurrentLineTrunc());
 }
 
 void Controller::loadScenarioPaths(){
-    Shortlist<std::string> paths;
-    for(const auto &entry: 
-            std::filesystem::directory_iterator(scenario_foldername)){
-        std::string path = entry.path();
-        if(entry.is_directory() 
-            && std::filesystem::exists(path+kPathSepartor+script_filename))
-                paths.add(
-                    path.substr(path.find_first_of(kPathSepartor)+1)
-                );
-    }
-    paths.sort();
-
     options.erase();    
-    for(int i = 0; i<paths.getSize(); ++i){
-        options.add(Option(paths[i], paths[i]));
+    for(const auto &entry:fsys::directory_iterator(scenario_foldername))
+    {
+        std::string path = entry.path();
+        path = path.substr(path.find_first_of(kPathSepartor)+1);
+
+        if(entry.is_directory() 
+            && fsys::exists(scenario_foldername+kPathSepartor
+                            +path+kPathSepartor+script_filename))
+        {
+            std::string title = "Empty title";
+            if(fsys::exists(scenario_foldername+kPathSepartor
+                            +path+kPathSepartor+title_filename)){
+                std::ifstream fstr(scenario_foldername+kPathSepartor
+                            +path+kPathSepartor+title_filename);
+                if(fstr.is_open())
+                    std::getline(fstr, title);
+                fstr.close();
+            }
+            else{
+                title = path.substr(path.find_first_of(kPathSepartor)+1);
+            }
+            options.add(Option(path, title));
+        }
     }
+    // options.sort(); // Let us see...
 }
 
 void Controller::listOptions(){
@@ -158,16 +177,6 @@ void Controller::listOptions(){
 
 Controller::Controller(sf::RenderWindow &w): window(w){
     loadSettings();
-
-    textbox = Textbox(
-        sf::Vector2f(settings.windowsize.x/2.f, settings.windowsize.y/8.f), 
-        actualCenter()+
-            sf::Vector2f(0.0f, settings.windowsize.y/2.f-settings.windowsize.y/16.f), 
-        "",
-        settings.fontname,
-        settings.fontsize
-    );
-
     initMenu();
     state = State::Menu;
 }
@@ -212,6 +221,13 @@ bool Controller::processKey(sf::Event e){
                         : ++optionIndex;
                     (*optionboxes.getPtr(optionIndex)).choose();
                     break;
+                case sf::Keyboard::Left: 
+                case sf::Keyboard::BackSpace:
+                case sf::Keyboard::Escape:
+                    (*optionboxes.getPtr(optionIndex)).unchoose();
+                    optionIndex = options.getSize()-1;  //  To quit.
+                    (*optionboxes.getPtr(optionIndex)).choose();
+                    break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
                     if(options[optionIndex].val == "Scenarios"){
@@ -237,6 +253,7 @@ bool Controller::processKey(sf::Event e){
                     textbox.scrollDown();
                     break;
                 case sf::Keyboard::Left: 
+                case sf::Keyboard::BackSpace:
                     tryPrevLine();
                     textbox.setString(scenario.getCurrentLineTrunc());
                     break;
@@ -249,7 +266,6 @@ bool Controller::processKey(sf::Event e){
                                 initMenu();
                                 state = State::Menu;
                                 break;
-                                void initSettings();
                             case 1: // Scenario provides one option.
                                 loadScenario(options[0].val);
                                 state = State::Script;
@@ -264,6 +280,10 @@ bool Controller::processKey(sf::Event e){
                         tryNextLine();
                         textbox.setString(scenario.getCurrentLineTrunc());
                     }
+                    break;
+                case sf::Keyboard::Escape:
+                    initMenu();
+                    state=State::Menu;
                     break;
             }
             break;
@@ -289,6 +309,8 @@ bool Controller::processKey(sf::Event e){
                     state = State::Script;
                     break;
                 case sf::Keyboard::Left:
+                case sf::Keyboard::BackSpace:
+                case sf::Keyboard::Escape:
                     state = State::Script;
                     break;
             }
@@ -315,6 +337,8 @@ bool Controller::processKey(sf::Event e){
                     state = State::Script;
                     break;
                 case sf::Keyboard::Left:
+                case sf::Keyboard::BackSpace:
+                case sf::Keyboard::Escape:
                     initMenu();
                     state = State::Menu;
                     break;
@@ -357,6 +381,8 @@ bool Controller::processKey(sf::Event e){
                     settings.chosen = !settings.chosen;
                     break;
                 case sf::Keyboard::Left:
+                case sf::Keyboard::BackSpace:
+                case sf::Keyboard::Escape:
                     saveSettings();
                     loadSettings();
                     initMenu();

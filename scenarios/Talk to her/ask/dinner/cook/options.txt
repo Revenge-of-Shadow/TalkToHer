@@ -1,0 +1,4 @@
+Talk to her/ask/dinner/cook/look:Look at her instead.
+Talk to her/ask/dinner/cook/food:Dumplings.
+Talk to her/ask/dinner/cook/food:Potatoes.
+Talk to her/ask/dinner/cook/food:Something else.

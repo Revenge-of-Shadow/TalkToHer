@@ -25,3 +25,5 @@ sf::Vector2f actualVector(sf::Vector2f windowsize, sf::Vector2f v){
         sf::Vector2f(presetsize)-sf::Vector2f(windowsize);
     return v+offset/2.f;
 }
+
+

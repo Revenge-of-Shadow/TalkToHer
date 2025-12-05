@@ -26,48 +26,50 @@ public:
 };
 Settings::Settings(){
     for(const auto &entry: 
-            std::filesystem::directory_iterator(font_foldername)){
+            fsys::directory_iterator(font_foldername)){
         std::string path = entry.path();
-        std::cout<<path<<std::endl;
         if(path.substr(path.length()-4) == ".ttf")
             fontnames.add(
                     path.substr(path.find_first_of(kPathSepartor)+1)
                 );
     }
+    presetsizes.add(sf::Vector2u(1920, 1080));
     presetsizes.add(sf::Vector2u(1600, 900));
     presetsizes.add(sf::Vector2u(800, 600));
     current = Setting::Framerate;
     chosen = false;
 }
 bool Settings::save(){
-    std::ofstream filestr(settings_path);
-    if(!filestr.is_open()) return false;
+    std::ofstream fstr(
+        storage_foldername+kPathSepartor+settings_filename);
+    if(!fstr.is_open()) return false;
 
-    filestr<<framerate<<std::endl;
-    filestr<<fontsize<<std::endl;
-    filestr<<fontname<<std::endl;
-    filestr<<windowsize.x<<std::endl;
-    filestr<<windowsize.y<<std::endl;
-    filestr.close();
+    fstr<<framerate<<std::endl;
+    fstr<<fontsize<<std::endl;
+    fstr<<fontname<<std::endl;
+    fstr<<windowsize.x<<std::endl;
+    fstr<<windowsize.y<<std::endl;
+    fstr.close();
     return true;
 }
 bool Settings::load(){
-    std::ifstream filestr(settings_path);
-    bool result = !filestr.is_open();
-    if(!filestr.is_open()) {
+    std::ifstream fstr(
+        storage_foldername+kPathSepartor+settings_filename);
+    bool result = !fstr.is_open();
+    if(!fstr.is_open()) {
         framerate = 60;
         fontsize = 24;
         fontname = "dm-serif-text-latin-400-normal.ttf";
         windowsize = sf::Vector2u(1600, 900);
     }
     else{
-        filestr>>framerate;
-        filestr>>fontsize;
-        filestr>>fontname;
-        filestr>>windowsize.x;
-        filestr>>windowsize.y;
+        fstr>>framerate;
+        fstr>>fontsize;
+        fstr>>fontname;
+        fstr>>windowsize.x;
+        fstr>>windowsize.y;
     }
-    filestr.close();
+    fstr.close();
 
     fontindex = fontnames.find(fontname);
     sizeindex = presetsizes.find(windowsize);

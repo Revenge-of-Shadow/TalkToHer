@@ -88,7 +88,8 @@ void Textbox::setText(){//  Does not change line.
     shownString = line;
     text.setString(shownString);
 
-    float strOffLimits = text.getLocalBounds().width/rect.getLocalBounds().width;
+    float strOffLimits = text.getLocalBounds().width
+        /(rect.getLocalBounds().width-fontSize*2.f);
 
     if(strOffLimits <= 1.f) return; //  No checks needed.
 
@@ -141,8 +142,8 @@ void Textbox::setString(std::string str){
     text.setOrigin(0,0);
     //  Position it at the top left of the rectangle.
     text.setPosition(sf::Vector2f(
-        rect.getPosition().x-rect.getSize().x/2,
-        rect.getPosition().y-rect.getSize().y/2
+        rect.getPosition().x-rect.getSize().x/2.f+fontSize/2.f,
+        rect.getPosition().y-rect.getSize().y/2.f
     ));
     text.setFillColor(sf::Color::White);
 

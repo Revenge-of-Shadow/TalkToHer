@@ -19,11 +19,11 @@
 
 class Scenario {
     std::string filepath;
-    std::ifstream filestream;
+    std::ifstream fstream;
     std::string title; //  Extracted from file.
     int lineindex;
     Shortlist<std::string> lines;    //  This is... BAD. But, like, reliable.
-    std::ifstream filestr;
+    std::ifstream fstr;
 
 
     sf::Texture backgroundTexture;
@@ -71,5 +71,7 @@ public:
     bool isCurrLineCommand();
     bool isCurrLineComment();
     bool isCurrLineDisplayable();
+
+    std::string getTitle();
 };
 #endif

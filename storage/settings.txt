@@ -1,5 +1,5 @@
 60
-24
+32
 dm-serif-text-latin-400-normal.ttf
-1600
-900
+1920
+1080
