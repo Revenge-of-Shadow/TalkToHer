@@ -48,7 +48,7 @@ DrawableObject Scenario::getBackground(){ return background; }
 Shortlist<Option> Scenario::getOptions(){ 
     Shortlist<Option> options;
 
-    fstr.open(filepath + options_filename);
+    fstr.open(filepath + kPathSepartor + options_filename);
     std::string read_line;
     while(std::getline(fstr, read_line)){
         if(read_line.empty()) break;
@@ -71,11 +71,11 @@ Shortlist<Option> Scenario::getOptions(){
 Scenario::Scenario(){}
 Scenario::Scenario(std::string path)
     :filepath(scenario_foldername + kPathSepartor 
-              + forceSeparator(path) + kPathSepartor),
+              + forceSeparator(path)),
     backgroundSet(false){
-    std::cout<<"Constructing scenario: "<<path<<std::endl;
+    std::cout<<"Constructing scenario: "<<filepath<<"!"<<std::endl;
 
-    fstr.open(filepath + title_filename);
+    fstr.open(filepath + kPathSepartor + title_filename);
     if(!fstr.is_open()){
         title = "";
     }
@@ -85,7 +85,7 @@ Scenario::Scenario(std::string path)
     fstr.close();
 
     std::string line;
-    fstr.open(filepath + script_filename);
+    fstr.open(filepath + kPathSepartor + script_filename);
     
     while(fstr.is_open() && getline(fstr, line)){ //  Lags guaranteed.
         if(!line.empty())
@@ -98,9 +98,6 @@ Scenario::Scenario(std::string path)
     lineindex = 0;
 }
 
-Scenario* Scenario::operator*(){
-    return this;
-}
 
 int Scenario::getCurrentIndex() { return lineindex; }
 int Scenario::getLines() { return lines.getSize(); }
@@ -213,4 +210,8 @@ bool Scenario::isCurrLineDisplayable(){
         && !isCurrLineComment();
 }
 
+std::string Scenario::getPath(){
+    //  I think it is right to return semi-relative path. Bite me!
+    return filepath.substr(filepath.find_first_of(kPathSepartor)+1);
+}
 std::string Scenario::getTitle(){return title;}

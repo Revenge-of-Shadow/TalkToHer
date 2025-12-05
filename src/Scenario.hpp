@@ -53,7 +53,6 @@ public:
     //  "test" leads to opening "scenarios/test/script.txt"
     Scenario();
     Scenario(std::string path);
-    Scenario* operator*();
 
     int getCurrentIndex();
     int getLines();
@@ -72,6 +71,7 @@ public:
     bool isCurrLineComment();
     bool isCurrLineDisplayable();
 
+    std::string getPath();
     std::string getTitle();
 };
 #endif

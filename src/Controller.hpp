@@ -28,6 +28,8 @@ public:
 
     bool saveSettings();
     bool loadSettings();
+    bool saveState(std::string filename);
+    bool loadState(std::string filename);
 
     void loadScenario(std::string scenario_path);
     void loadScenarioPaths();
@@ -50,6 +52,8 @@ void Controller::initScenarios(){
 }
 void Controller::initMenu(){
     options.erase();
+    if(fsys::exists(save_foldername+kPathSepartor+last_filename))
+        options.add(Option("Continue", "Continue"));
     options.add(Option("Scenarios", "Scenario select"));
     options.add(Option("Settings", "Settings"));
     options.add(Option("Extras", "Extras"));
@@ -63,7 +67,7 @@ void Controller::initSettings(){
     options.add(Option("", "Font name"));
     options.add(Option("", "Window resolution"));
     listOptions();
-    settings.current = Setting::Framerate;  //  It it the first one.
+    settings.current = Setting::Framerate;  //  It is the first one.
 }
 
 
@@ -80,11 +84,37 @@ bool Controller::loadSettings(){
 
     return result;
 }
+bool Controller::saveState(std::string filename){
+    std::ofstream fstr(save_foldername+kPathSepartor+filename);
+    if(!fstr.is_open()) return false;
+    fstr<<scenario.getPath()<<std::endl;
+    fstr<<scenario.getCurrentIndex()<<std::endl;
+    fstr.close();
+    return true;
+}
+bool Controller::loadState(std::string filename){
+    std::ifstream fstr(save_foldername+kPathSepartor+filename);
+    if(!fstr.is_open()) return false;
+    std::string path;
+    int index;
+    std::getline(fstr, path);
+    fstr>>index;
+    fstr.close();
+    
+    loadScenario(path);
+    while(scenario.getCurrentIndex() < index)
+    {
+        tryNextLine();
+        textbox.setString(scenario.getCurrentLineTrunc());
+    }
+    return true;
+}
 
 
 sf::Vector2f Controller::actualCenter(){
     return actualVector(sf::Vector2f(settings.windowsize), 
-                sf::Vector2f(settings.windowsize.x/2.f, settings.windowsize.y/2.f));
+                sf::Vector2f(settings.windowsize.x/2.f, 
+                             settings.windowsize.y/2.f));
 }
 void Controller::performResize(){
     // Ho, I hate it.
@@ -104,9 +134,11 @@ void Controller::performResize(){
 
 void Controller::loadScenario(std::string scenario_path){
     textbox = Textbox(
-        sf::Vector2f(settings.windowsize.x/1.25f, settings.windowsize.y/5.f), 
+        sf::Vector2f(
+            settings.windowsize.x/1.25f, settings.windowsize.y/5.f), 
         actualCenter()+
-            sf::Vector2f(0.0f, settings.windowsize.y/2.f-settings.windowsize.y/10.f), 
+        sf::Vector2f(
+            0.0f, settings.windowsize.y/2.f-settings.windowsize.y/10.f), 
         "",
         settings.fontname,
         settings.fontsize
@@ -133,7 +165,7 @@ void Controller::loadScenarioPaths(){
             if(fsys::exists(scenario_foldername+kPathSepartor
                             +path+kPathSepartor+title_filename)){
                 std::ifstream fstr(scenario_foldername+kPathSepartor
-                            +path+kPathSepartor+title_filename);
+                                   +path+kPathSepartor+title_filename);
                 if(fstr.is_open())
                     std::getline(fstr, title);
                 fstr.close();
@@ -151,7 +183,7 @@ void Controller::listOptions(){
     optionboxes.erase();
     for(int i = 0; i < options.getSize(); ++i){
         sf::Vector2f pos = actualCenter();
-        pos.y = pos.y-settings.windowsize.y/2.f+settings.fontsize*8.f
+        pos.y = pos.y
             +settings.fontsize*4.f*
             (-float(options.getSize()/2 + options.getSize()%2)+0.5+i);
 
@@ -171,7 +203,7 @@ void Controller::listOptions(){
         (*optionboxes.getPtr(0)).choose();
     }
     else
-        optionIndex = -1;
+    optionIndex = -1;
 }
 
 
@@ -230,7 +262,11 @@ bool Controller::processKey(sf::Event e){
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
-                    if(options[optionIndex].val == "Scenarios"){
+                    if (options[optionIndex].val == "Continue"){
+                        loadState(last_filename);
+                        state = State::Script;
+                    }
+                    else if(options[optionIndex].val == "Scenarios"){
                         initScenarios();
                         state = State::Scenarios;
                     }
@@ -245,6 +281,7 @@ bool Controller::processKey(sf::Event e){
             }
             break;
         case State::Script:
+            saveState(last_filename);
             switch (e.key.code) {
                 case sf::Keyboard::Up:
                     textbox.scrollUp();
@@ -358,7 +395,7 @@ bool Controller::processKey(sf::Event e){
                             : --optionIndex;
                         (*optionboxes.getPtr(optionIndex)).choose();
                     }
-                                        break;
+                    break;
                 case sf::Keyboard::Down:
                     if(settings.chosen){
                         settings.turnDown();

@@ -21,8 +21,9 @@ const std::string options_filename = "options.txt";
 const std::string sprite_foldername = "sprites";
 const std::string background_foldername = "backgrounds";
 const std::string storage_foldername = "storage";
-
 const std::string settings_filename = "settings.txt";
+const std::string save_foldername = "saves";
+const std::string last_filename = "lastsave.txt";
 
 const sf::Vector2u presetsize(1600, 900);
 // Window loading is the first thing that the program does, sadly.
