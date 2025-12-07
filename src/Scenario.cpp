@@ -11,16 +11,16 @@ sf::Vector2f Scenario::getRelativeVector(std::string commandArg){
     );
 }
 
-int Scenario::getCharIndexByName(std::string name) {
-    for (int i = 0; i < characters.getSize(); ++i)
-        if (characters.peek(i).getName().compare(name) == 0)
+int Scenario::getObjIndexByName(std::string name) {
+    for (int i = 0; i < objects.getSize(); ++i)
+        if (objects.peek(i).getName().compare(name) == 0)
             return i;
     throw;
 }
-DrawableObject Scenario::getCharByName(std::string name) {
-    for (int i = 0; i < characters.getSize(); ++i){
-        if (characters.peek(i).getName().compare(name) == 0)
-            return characters.peek(i);
+DrawableObject Scenario::getObjByName(std::string name) {
+    for (int i = 0; i < objects.getSize(); ++i){
+        if (objects.peek(i).getName().compare(name) == 0)
+            return objects.peek(i);
     }
     throw;
 }
@@ -32,19 +32,10 @@ std::string Scenario::truncComment(std::string text){   //  For text with //comm
     return text.substr(0, text.find("//"));
 }
 
-void Scenario::loadBackground(std::string spritename) {
-    background.setName("background");
-    background.loadSprite(spritename);
-    backgroundSet = true;
-}
-void Scenario::toggleBackground() { backgroundSet = !backgroundSet; }
+DrawableObject* Scenario::getObjPtr(int index){ return objects.getPtr(index);}
 
-DrawableObject* Scenario::getCharPtr(int index){ return characters.getPtr(index);}
-
-int Scenario::getCharsSize(){ return characters.getSize(); }
-DrawableObject Scenario::getChar(int index){ return characters.peek(index); }
-bool Scenario::isBackgroundSet(){ return backgroundSet; }
-DrawableObject Scenario::getBackground(){ return background; }
+int Scenario::getObjsSize(){ return objects.getSize(); }
+DrawableObject Scenario::getObj(int index){ return objects.peek(index); }
 Shortlist<Option> Scenario::getOptions(){ 
     Shortlist<Option> options;
 
@@ -71,9 +62,8 @@ Shortlist<Option> Scenario::getOptions(){
 Scenario::Scenario(){}
 Scenario::Scenario(std::string path)
     :filepath(scenario_foldername + kPathSepartor 
-              + forceSeparator(path)),
-    backgroundSet(false){
-    std::cout<<"Constructing scenario: "<<filepath<<"!"<<std::endl;
+              + forceSeparator(path)){
+    std::cout<<"Constructing scenario: <"<<filepath<<">"<<std::endl;
 
     fstr.open(filepath + kPathSepartor + title_filename);
     if(!fstr.is_open()){
@@ -147,35 +137,28 @@ void Scenario::processCommand(std::string command) {
     if(commandAction == "sleep")
         sf::sleep(sf::milliseconds(strtof(commandArg.c_str(), NULL)));
 
-    if(commandObject == "background"){
+    
+    ////  object(objectName)
+    else if(commandAction == "object"){// Initialization only.
+        objects.add(DrawableObject(commandArg));
+    }
+    else if(commandObject.substr(0, commandObject.find('(')) == "object"){
+        std::string objectName = getArgumentOut(commandObject);
+        DrawableObject* obj = getObjPtr(getObjIndexByName(objectName));
         if(commandAction == "loadSprite"){
-            loadBackground(commandArg);
+            (*obj).loadSprite(commandArg);
+        }
+        else if(commandAction == "setScale"){
+            (*obj).setScale(getRelativeVector(commandArg));
         }
         else if(commandAction == "setPosition"){
-            background.setPosition(getRelativeVector(commandArg));
-        }
-        else if(commandAction == "toggle"){
-            toggleBackground();
-        }
-    }
-    ////  char(charName)
-    else if(commandAction == "char"){// Initialization only.
-        characters.add(DrawableObject(commandArg));
-    }
-    else if(commandObject.substr(0, commandObject.find('(')) == "char"){
-        std::string charName = getArgumentOut(commandObject);
-        DrawableObject* ch = getCharPtr(getCharIndexByName(charName));
-        if(commandAction == "loadSprite"){
-            (*ch).loadSprite(commandArg);
-        }
-        else if(commandAction == "setPosition"){
-            (*ch).setPosition(getRelativeVector(commandArg));
+            (*obj).setPosition(getRelativeVector(commandArg));
         }
         else if(commandAction == "move"){
-            (*ch).move(getRelativeVector(commandArg));
+            (*obj).move(getRelativeVector(commandArg));
         }
         else if(commandAction == "remove"){
-            characters.pop(getCharIndexByName(charName));
+            objects.pop(getObjIndexByName(objectName));
         }
     }
     //  Parsing end.

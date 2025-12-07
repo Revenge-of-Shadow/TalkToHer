@@ -1,4 +1,11 @@
 I put the pasta in the microwave oven and yawned.
+/object(background)
+/object(background).loadSprite(table.png)
+/object(background).setPosition(50, 100)
+/object(cat)
+/object(cat).loadSprite(sitting.png)
+/object(cat).setScale(1.2, 1.2)
+/object(cat).setPosition(50, 90)
 She sat on the table and watched the dish rotate with attention. Her tail swung in a large arc, stopping for a moment before changing direction. She slid her legs off the table and waved them in the air.
 I was fighting the sleep and looking at her.
 The oven rang. She flopped her ears and smiled.

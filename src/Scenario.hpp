@@ -5,7 +5,7 @@
  *  Must:
  *      return the title string
  *      parse the script (execute commands and return text)
- *          (including managing character sprites and music)
+ *          (including managing object sprites and music)
  *      read the options and allow the choice.
  *
  */
@@ -25,30 +25,21 @@ class Scenario {
     Shortlist<std::string> lines;    //  This is... BAD. But, like, reliable.
     std::ifstream fstr;
 
-
-    sf::Texture backgroundTexture;
-    DrawableObject background;
-    Shortlist<DrawableObject> characters;
+    Shortlist<DrawableObject> objects;
     Shortlist<Sound> loopingSounds;
     
-    bool backgroundSet; //  For drawing check.
-
     sf::Vector2f getRelativeVector(std::string);
-    int getCharIndexByName(std::string name);
-    DrawableObject getCharByName(std::string name);
+    int getObjIndexByName(std::string name);
+    DrawableObject getObjByName(std::string name);
 
     std::string truncCommand(std::string command);  //  Remove / from front.
     std::string truncComment(std::string text);     //  Remove // from back.
 
-    void loadBackground(std::string spritename);
-    void toggleBackground();    //  Just disable via bool.
-    DrawableObject* getCharPtr(int index); // For altering from inside of Scenario.
 
 public:
-    int getCharsSize();   //  For drawing.
-    DrawableObject getChar(int index);   //  Read-only.
-    bool isBackgroundSet();//  For drawing check.
-    DrawableObject getBackground();// Read-only.
+    int getObjsSize();   //  For drawing.
+    DrawableObject getObj(int index);   //  Read-only.
+    DrawableObject* getObjPtr(int index); // For altering from inside of Scenario.
     Shortlist<Option> getOptions();
     //  "test" leads to opening "scenarios/test/script.txt"
     Scenario();

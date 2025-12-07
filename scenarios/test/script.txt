@@ -1,17 +1,18 @@
-//  Just... please. Let it be a commentary line. For code's sake.
-/background.loadSprite(bg.png)
-/background.setPosition(50,100)
-/char(Unyu)
-/char(Unyu).loadSprite(Unyu.png)
-/char(Unyu).setPosition(50,100)
+//e
+/object(background)
+/object(background).loadSprite(bg.png)
+/object(background).setPosition(50,100)
+/object(Unyu)
+/object(Unyu).loadSprite(Unyu.png)
+/object(Unyu).setPosition(50,100)
 Text.
 Line of text.
-//char(Unyu).darken()
+//object(Unyu).darken()
 /sleep(100)
-/char(Unyu).move(25, 0)
+/object(Unyu).move(25, 0)
 /sleep(100)
-/char(Unyu).move(-50, 0)
+/object(Unyu).move(-50, 0)
 /sleep(100)
-/char(Unyu).move(25, 0)
+/object(Unyu).move(25, 0)
 /sleep(100)
 Second line of Unyu.//  This shall be seen after the first line is forced away.

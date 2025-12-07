@@ -9,13 +9,6 @@ public:
     std::string val;
 
     Option(){}
-    Option(std::string val, std::string text):text(text), val(val){}
-    // Option& operator=(const Option& other){ 
-    //     if(this != &other){
-    //         val = other.val;
-    //         text = other.text;
-    //     }
-    //     return *this;
-    // }
+    Option(std::string val, std::string text):val(val), text(text){}
 };
 #endif
