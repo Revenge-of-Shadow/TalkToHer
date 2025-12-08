@@ -1,14 +1,16 @@
+#include "Extras.hpp"
 #include "Settings.hpp"
 #include "Scenario.hpp"
 #include "Textbox.hpp"
 #include "defaults.hpp"
 
-enum class State {Menu, Script, Options, Scenarios, Settings};
+enum class State {Menu, Script, Options, Scenarios, Settings, Extras};
 
 class Controller{
     void initMenu();
     void initScenarios();
     void initSettings();
+    void initExtras();
 
 public:
     sf::RenderWindow& window;
@@ -22,6 +24,7 @@ public:
     State state;
 
     Settings settings;
+    Extras extras;
 
     sf::Vector2f actualCenter();// I hate it.
     void performResize();//  It gets WORSE.

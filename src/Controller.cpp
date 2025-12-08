@@ -24,6 +24,11 @@ void Controller::initSettings(){
     listOptions();
     settings.current = Setting::Framerate;  //  It is the first one.
 }
+void Controller::initExtras(){
+    // Extras are more complicated than settings and their options
+    // are managed internally.
+     
+}
 
 
 //Make sure never to call that before loading.
@@ -229,6 +234,9 @@ bool Controller::processKey(sf::Event e){
                         initSettings();
                         state = State::Settings;
                     }
+                    else if(options[optionIndex].val == "Extras"){
+                        state = State::Extras;
+                    }
                     else if(options[optionIndex].val == "Quit"){
                         return 1;
                     }
@@ -375,10 +383,35 @@ bool Controller::processKey(sf::Event e){
                 case sf::Keyboard::Left:
                 case sf::Keyboard::BackSpace:
                 case sf::Keyboard::Escape:
+                    settings.chosen = false;
                     saveSettings();
                     loadSettings();
                     initMenu();
                     state = State::Menu;
+                    break;
+            }
+            break;
+        case State::Extras:
+            switch(e.key.code){
+                case sf::Keyboard::Up:
+                    extras.prev();
+                    break;
+                case sf::Keyboard::Down:
+                    extras.next(); 
+                    break;
+                case sf::Keyboard::Left:
+                case sf::Keyboard::BackSpace:
+                case sf::Keyboard::Escape:
+                    if(extras.state == Extra::Extras){
+                        initMenu();
+                        state = State::Menu;
+                    }
+                    else 
+                        extras.back();
+                    break;
+                case sf::Keyboard::Right:
+                case sf::Keyboard::Enter:
+                    extras.open();
                     break;
             }
             break;
@@ -438,6 +471,31 @@ void Controller::draw(){
                 window.draw(optionboxes[i]);
             }
             break;
+        case State::Extras:
+            switch(extras.state){
+                case Extra::Extras:
+                case Extra::Sprites:
+                    optionboxes.erase();
+                    for(int i = 0; i < extras.options.getSize(); ++i)
+                        optionboxes.add(Textbox(
+                            sf::Vector2f(settings.windowsize.x*0.75f, 
+                                         settings.fontsize*2.f),
+                            sf::Vector2f(actualCenter().x,
+                                         settings.fontsize*2.f*i),
+                            extras.options[i].text,
+                            settings.fontname,
+                            settings.fontsize));
+
+                    (*optionboxes.getPtr(extras.index)).choose();
+                    for(int i = 0; i< optionboxes.getSize(); ++i)
+                        window.draw(optionboxes[i]);
+                    break;
+                case Extra::Sprite:
+                    window.draw(extras.getObj().update(window));
+                    break;
+            }
+            break;
+
     }
     window.display();
 }

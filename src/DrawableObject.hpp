@@ -34,6 +34,8 @@ public:
         position = pos;  
         sprite.setPosition(position);
     };
+    sf::Vector2f getPosition()const{return position;};
+    void move(sf::Vector2f mov){ position+=mov; sprite.setPosition(position); };
     bool loadSprite(std::string sprite_name){
         spritename = sprite_name;
         return loadSpriteFromPath(
@@ -44,9 +46,7 @@ public:
 
     std::string getName(){return name;};
     sf::Sprite getSprite(){return sprite;};
-    sf::Vector2f getPosition()const{return position;};
 
-    void move(sf::Vector2f mov){ position+=mov; sprite.setPosition(position); };
     void brightness(float val){};
 
     //  Could probably add a boolean for not drawing hidden, but I see no need
