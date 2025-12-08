@@ -13,6 +13,8 @@ int main(){
         while(window.pollEvent(event)){
             if(event.type == sf::Event::Closed)
                 window.close();
+            if(event.type == sf::Event::Resized)
+                controller.performResize();
             if(event.type == sf::Event::KeyPressed){
                 if(controller.processKey(event)) window.close();
             }

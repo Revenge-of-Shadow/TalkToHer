@@ -10,7 +10,6 @@ class Controller{
     void initMenu();
     void initScenarios();
     void initSettings();
-    void initExtras();
 
 public:
     sf::RenderWindow& window;

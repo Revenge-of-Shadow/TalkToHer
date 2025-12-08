@@ -24,12 +24,6 @@ void Controller::initSettings(){
     listOptions();
     settings.current = Setting::Framerate;  //  It is the first one.
 }
-void Controller::initExtras(){
-    // Extras are more complicated than settings and their options
-    // are managed internally.
-     
-}
-
 
 //Make sure never to call that before loading.
 bool Controller::saveSettings(){
@@ -437,7 +431,7 @@ void Controller::draw(){
             break;
         case State::Options:    //  Keep the script; draw over it.
             for(int i = 0; i<scenario.getObjsSize(); ++i)
-                window.draw(scenario.getObj(i));
+                window.draw(scenario.getObj(i).update(window));
             window.draw(textbox);
 
             for(int i = 0; i < options.getSize(); ++i){

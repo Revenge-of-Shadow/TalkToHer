@@ -59,7 +59,7 @@ public:
             static_cast<float>(target.getSize().y);
         sprite.setPosition(actualVector(
             sf::Vector2f(target.getSize()), sprPos));
-        float scale = std::min(
+        float scale = std::max(
             static_cast<float>(target.getSize().x)/presetsize.x,
             static_cast<float>(target.getSize().y)/presetsize.y);
         sprite.setScale(sprite.getScale()*scale);
