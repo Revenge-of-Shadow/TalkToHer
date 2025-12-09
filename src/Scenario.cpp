@@ -15,7 +15,7 @@ int Scenario::getObjIndexByName(std::string name) {
     for (int i = 0; i < objects.getSize(); ++i)
         if (objects.peek(i).getName().compare(name) == 0)
             return i;
-    throw;
+    return -1; 
 }
 DrawableObject Scenario::getObjByName(std::string name) {
     for (int i = 0; i < objects.getSize(); ++i){
@@ -140,7 +140,8 @@ void Scenario::processCommand(std::string command) {
     
     ////  object(objectName)
     else if(commandAction == "object"){// Initialization only.
-        objects.add(DrawableObject(commandArg));
+            if(getObjIndexByName(commandArg) == -1) // Only if does not exist yet.
+            objects.add(DrawableObject(commandArg));
     }
     else if(commandObject.substr(0, commandObject.find('(')) == "object"){
         std::string objectName = getArgumentOut(commandObject);
