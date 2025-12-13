@@ -1,9 +1,9 @@
 //e
 /object(background)
-/object(background).loadSprite(bg.png)
+/object(background).loadSprite(background/bg.png)
 /object(background).setPosition(50,100)
 /object(Unyu)
-/object(Unyu).loadSprite(Unyu.png)
+/object(Unyu).loadSprite(Unyu/Unyu.png)
 /object(Unyu).setPosition(50,100)
 Text.
 Line of text.

@@ -6,7 +6,7 @@
 class DrawableObject: public sf::Drawable{
     //  DrawableObject sprite must have origin at the bottom center.
     std::string name;
-    std::string spritename;
+    std::string spritepath;
     sf::Vector2f position;
     sf::Sprite sprite;    
     sf::Texture texture;
@@ -36,12 +36,11 @@ public:
     };
     sf::Vector2f getPosition()const{return position;};
     void move(sf::Vector2f mov){ position+=mov; sprite.setPosition(position); };
-    bool loadSprite(std::string sprite_name){
-        spritename = sprite_name;
+    bool loadSprite(std::string sprite_path){
+        spritepath = sprite_path;
         return loadSpriteFromPath(
                      sprite_foldername + kPathSepartor 
-                   + forceSeparator(name) + kPathSepartor 
-                   + forceSeparator(spritename));
+                   + forceSeparator(spritepath));
     };
 
     std::string getName(){return name;};
@@ -73,8 +72,8 @@ public:
         if(this != &other){
             name = other.name;
             position = other.position;
-            if(!other.spritename.empty())
-                loadSprite(other.spritename);
+            if(!other.spritepath.empty())
+                loadSprite(other.spritepath);
         }
         return *this;
     }
