@@ -1,5 +1,7 @@
 build/
 storage/
+saves/
 TalkToHer
 **/*.kra
 **/*.kra~
+**/*.png~

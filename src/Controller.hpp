@@ -4,10 +4,12 @@
 #include "Textbox.hpp"
 #include "defaults.hpp"
 
-enum class State {Menu, Script, Options, Scenarios, Settings, Extras};
+enum class State {Menu, Save, Load, Script, Options, Scenarios, Settings, Extras};
 
 class Controller{
     void initMenu();
+    void initSave();
+    void initLoad();
     void initScenarios();
     void initSettings();
 

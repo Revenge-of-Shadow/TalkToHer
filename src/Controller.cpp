@@ -1,5 +1,5 @@
 #include "Controller.hpp"
-#include "DrawableObject.hpp"
+#include "defaults.hpp"
 
 void Controller::initScenarios(){
     loadScenarioPaths();
@@ -7,12 +7,42 @@ void Controller::initScenarios(){
 }
 void Controller::initMenu(){
     options.erase();
-    if(fsys::exists(save_foldername+kPathSepartor+last_filename))
+    if(fsys::exists(save_foldername+kPathSepartor+last_filename)){
         options.add(Option("Continue", "Continue"));
+    }
+    int saves = 0;
+    for(const auto &entry:fsys::directory_iterator(save_foldername))
+        if(++saves > 1){
+            options.add(Option("Load", "Load"));
+            break;
+        }
+
+    options.add(Option("Save", "Save"));
     options.add(Option("Scenarios", "Scenario select"));
     options.add(Option("Settings", "Settings"));
     options.add(Option("Extras", "Extras"));
     options.add(Option("Quit", "Quit"));
+    listOptions();
+}
+void Controller::initLoad(){
+    options.erase();
+    for(const auto &entry:fsys::directory_iterator(save_foldername)){
+        std::string path = entry.path();
+        path = path.substr(save_foldername.length()+1);
+        loadState(path);
+        options.add(Option(path, 
+            (scenario.getTitle().empty()?"":scenario.getTitle()+": ")
+                           +scenario.getCurrentLineTrunc()));
+        
+    }
+    options.pop(0); //  Quicksave is first.
+    loadState(last_filename);
+    listOptions();
+}
+void Controller::initSave(){
+    initLoad();
+    options.add(
+        Option("save"+std::to_string(options.getSize())+".txt", "New"));
     listOptions();
 }
 void Controller::initSettings(){
@@ -220,6 +250,14 @@ bool Controller::processKey(sf::Event e){
                         loadState(last_filename);
                         state = State::Script;
                     }
+                    else if(options[optionIndex].val == "Save"){
+                        initSave();
+                        state = State::Save;
+                    }
+                    else if(options[optionIndex].val == "Load"){
+                        initLoad();
+                        state = State::Load;
+                    }
                     else if(options[optionIndex].val == "Scenarios"){
                         initScenarios();
                         state = State::Scenarios;
@@ -234,6 +272,42 @@ bool Controller::processKey(sf::Event e){
                     else if(options[optionIndex].val == "Quit"){
                         return 1;
                     }
+                    break;
+            }
+            break;
+        case State::Save:
+        case State::Load:
+            switch (e.key.code) {
+                case sf::Keyboard::Up:
+                    (*optionboxes.getPtr(optionIndex)).unchoose();
+                    optionIndex == 0? 
+                        optionIndex = options.getSize()-1
+                        : --optionIndex;
+                    (*optionboxes.getPtr(optionIndex)).choose();
+                    break;
+                case sf::Keyboard::Down:
+                    (*optionboxes.getPtr(optionIndex)).unchoose();
+                    optionIndex == options.getSize()-1?
+                        optionIndex = 0
+                        : ++optionIndex;
+                    (*optionboxes.getPtr(optionIndex)).choose();
+                    break;
+                case sf::Keyboard::Enter:
+                case sf::Keyboard::Right:
+                    if(state == State::Save){
+                        saveState(options[optionIndex].val);
+                        initSave();
+                    }
+                    else{
+                        loadState(options[optionIndex].val);
+                        state = State::Script;
+                    }
+                    break;
+                case sf::Keyboard::Left:
+                case sf::Keyboard::BackSpace:
+                case sf::Keyboard::Escape:
+                    initMenu();
+                    state = State::Menu;
                     break;
             }
             break;
@@ -439,6 +513,8 @@ void Controller::draw(){
             }
             break;
         case State::Scenarios:
+        case State::Save:
+        case State::Load:
             for(int i = 0; i < options.getSize(); ++i){
                 window.draw(optionboxes[i]);
             }
