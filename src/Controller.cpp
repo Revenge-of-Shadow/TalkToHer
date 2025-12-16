@@ -24,7 +24,7 @@ void Controller::initMenu(){
     options.add(Option("Quit", "Quit"));
     listOptions();
 }
-void Controller::initLoad(){
+void Controller::initSaves(){
     options.erase();
     for(const auto &entry:fsys::directory_iterator(save_foldername)){
         std::string path = entry.path();
@@ -37,10 +37,13 @@ void Controller::initLoad(){
     }
     options.pop(0); //  Quicksave is first.
     loadState(last_filename);
+}
+void Controller::initLoad(){
+    initSaves();
     listOptions();
 }
 void Controller::initSave(){
-    initLoad();
+    initSaves();
     options.add(
         Option("save"+std::to_string(options.getSize())+".txt", "New"));
     listOptions();
@@ -53,6 +56,21 @@ void Controller::initSettings(){
     options.add(Option("", "Window resolution"));
     listOptions();
     settings.current = Setting::Framerate;  //  It is the first one.
+}
+
+void Controller::optionUp(){
+    (*optionboxes.getPtr(optionIndex)).unchoose();
+    optionIndex == 0? 
+        optionIndex = options.getSize()-1
+        : --optionIndex;
+    (*optionboxes.getPtr(optionIndex)).choose();
+}
+void Controller::optionDown(){
+    (*optionboxes.getPtr(optionIndex)).unchoose();
+    optionIndex == options.getSize()-1?
+        optionIndex = 0
+        : ++optionIndex;
+    (*optionboxes.getPtr(optionIndex)).choose();
 }
 
 //Make sure never to call that before loading.
@@ -224,18 +242,10 @@ bool Controller::processKey(sf::Event e){
         case State::Menu:
             switch (e.key.code) {
                 case sf::Keyboard::Up:
-                    (*optionboxes.getPtr(optionIndex)).unchoose();
-                    optionIndex == 0? 
-                        optionIndex = options.getSize()-1
-                        : --optionIndex;
-                    (*optionboxes.getPtr(optionIndex)).choose();
+                    optionUp();
                     break;
                 case sf::Keyboard::Down:
-                    (*optionboxes.getPtr(optionIndex)).unchoose();
-                    optionIndex == options.getSize()-1?
-                        optionIndex = 0
-                        : ++optionIndex;
-                    (*optionboxes.getPtr(optionIndex)).choose();
+                    optionDown();
                     break;
                 case sf::Keyboard::Left: 
                 case sf::Keyboard::BackSpace:
@@ -279,18 +289,10 @@ bool Controller::processKey(sf::Event e){
         case State::Load:
             switch (e.key.code) {
                 case sf::Keyboard::Up:
-                    (*optionboxes.getPtr(optionIndex)).unchoose();
-                    optionIndex == 0? 
-                        optionIndex = options.getSize()-1
-                        : --optionIndex;
-                    (*optionboxes.getPtr(optionIndex)).choose();
+                    optionUp();
                     break;
                 case sf::Keyboard::Down:
-                    (*optionboxes.getPtr(optionIndex)).unchoose();
-                    optionIndex == options.getSize()-1?
-                        optionIndex = 0
-                        : ++optionIndex;
-                    (*optionboxes.getPtr(optionIndex)).choose();
+                    optionDown();
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
@@ -356,20 +358,12 @@ bool Controller::processKey(sf::Event e){
             }
             break;
         case State::Options:
-            switch (e.key.code) {
+            switch (e.key.code) { 
                 case sf::Keyboard::Up:
-                    (*optionboxes.getPtr(optionIndex)).unchoose();
-                    optionIndex == 0? 
-                        optionIndex = options.getSize()-1
-                        : --optionIndex;
-                    (*optionboxes.getPtr(optionIndex)).choose();
+                    optionUp();
                     break;
                 case sf::Keyboard::Down:
-                    (*optionboxes.getPtr(optionIndex)).unchoose();
-                    optionIndex == options.getSize()-1?
-                        optionIndex = 0
-                        : ++optionIndex;
-                    (*optionboxes.getPtr(optionIndex)).choose();
+                    optionDown();
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
@@ -384,20 +378,12 @@ bool Controller::processKey(sf::Event e){
             }
             break;
         case State::Scenarios:
-            switch (e.key.code) {
+            switch (e.key.code) { 
                 case sf::Keyboard::Up:
-                    (*optionboxes.getPtr(optionIndex)).unchoose();
-                    optionIndex == 0? 
-                        optionIndex = options.getSize()-1
-                        : --optionIndex;
-                    (*optionboxes.getPtr(optionIndex)).choose();
+                    optionUp();
                     break;
                 case sf::Keyboard::Down:
-                    (*optionboxes.getPtr(optionIndex)).unchoose();
-                    optionIndex == options.getSize()-1?
-                        optionIndex = 0
-                        : ++optionIndex;
-                    (*optionboxes.getPtr(optionIndex)).choose();
+                    optionDown();
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
@@ -420,11 +406,7 @@ bool Controller::processKey(sf::Event e){
                     }
                     else{
                         settings.prev();
-                        (*optionboxes.getPtr(optionIndex)).unchoose();
-                        optionIndex == 0? 
-                            optionIndex = options.getSize()-1
-                            : --optionIndex;
-                        (*optionboxes.getPtr(optionIndex)).choose();
+                        optionUp();
                     }
                     break;
                 case sf::Keyboard::Down:
@@ -433,11 +415,7 @@ bool Controller::processKey(sf::Event e){
                     }
                     else{
                         settings.next();
-                        (*optionboxes.getPtr(optionIndex)).unchoose();
-                        optionIndex == options.getSize()-1?
-                            optionIndex = 0
-                            : ++optionIndex;
-                        (*optionboxes.getPtr(optionIndex)).choose();
+                        optionDown();
                     }
                     break;
                 case sf::Keyboard::Enter:

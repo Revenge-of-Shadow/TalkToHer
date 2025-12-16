@@ -8,10 +8,13 @@ enum class State {Menu, Save, Load, Script, Options, Scenarios, Settings, Extras
 
 class Controller{
     void initMenu();
-    void initSave();
+    void initSaves();
     void initLoad();
+    void initSave();
     void initScenarios();
     void initSettings();
+    void optionUp();
+    void optionDown();
 
 public:
     sf::RenderWindow& window;
