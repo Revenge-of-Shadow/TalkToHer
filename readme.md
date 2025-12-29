@@ -145,15 +145,15 @@ object.
 
 To play sounds and music.
 
-**Will stop** as the scenario (script) ends.
+**Will** probably **not stop** as the scenario (script) ends.
 
 
 
-- sound(filename).play() - load and play the sound file "sounds/filename".
+- play(filename) - load and play the sound file "sounds/filename".
 
-- sound(filename).loop() - load and loop the sound file "sounds/filename".
+- loop(filename) - load and loop the sound file "sounds/filename".
 
-- sound(filename).stop() - stops the sound file "sounds/filename". 
+- stop(filename) - stops the sound file "sounds/filename". 
 
 
 
