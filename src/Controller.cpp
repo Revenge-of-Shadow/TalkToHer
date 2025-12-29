@@ -26,6 +26,7 @@ void Controller::initMenu(){
 }
 void Controller::initSaves(){
     options.erase();
+
     for(const auto &entry:fsys::directory_iterator(save_foldername)){
         std::string path = entry.path();
         path = path.substr(save_foldername.length()+1);
@@ -37,6 +38,7 @@ void Controller::initSaves(){
     }
     options.pop(0); //  Quicksave is first.
     loadState(last_filename);
+
 }
 void Controller::initLoad(){
     initSaves();
@@ -352,6 +354,7 @@ bool Controller::processKey(sf::Event e){
                     }
                     break;
                 case sf::Keyboard::Escape:
+                    scenario = Scenario();
                     initMenu();
                     state=State::Menu;
                     break;
@@ -549,7 +552,7 @@ void Controller::draw(){
 }
 
 void Controller::mainloop(){
-    if(commandQueue.getSize()) 
+    if(commandQueue.getSize() && state == State::Script) 
         scenario.processCommand(commandQueue.pop(0));
     draw();
 }

@@ -58,6 +58,7 @@ This program allows for creating custom scenarios and working with them without 
 
 Those two terms can be synonymous. I tend to think that **script** must have executable lines unlike **scenario**.
 
+It seems I still had not fixed the issue that **the first line of the script can not be a command** because it shall **not be executed**.
 
 
 
@@ -118,7 +119,7 @@ Any other line is processed to be shown on screen with comments and spaces and t
 
 
 
-Object commands: executed for objects. Syntax: object.command(argument)
+##### Object commands: executed for objects. Syntax: object.command(argument)
 
 
 
@@ -126,7 +127,7 @@ object.
 
 
 
-- (name) - load the object (or just an object). Has to be called before any other object commands.
+- (name) - load the character (or just an object). Has to be called before any other object commands.
 
 - (name).loadSprite(filename) - loads the sprite from an image file "sprites/filename".
 
@@ -137,6 +138,22 @@ object.
 - (name).move(xpos, ypos) - moves the position according to aforementioned rules.
 
 - (name).remove() - unloads the object. Effectively, it just makes it disappear.
+
+
+
+##### Sounds
+
+To play sounds and music.
+
+**Will stop** as the scenario (script) ends.
+
+
+
+- sound(filename).play() - load and play the sound file "sounds/filename".
+
+- sound(filename).loop() - load and loop the sound file "sounds/filename".
+
+- sound(filename).stop() - stops the sound file "sounds/filename". 
 
 
 
@@ -210,11 +227,17 @@ Management of sprites is handled via **script.txt**.
 
 ## Storage
 
-Directory to store settings and save files.
+Directory to store settings and extra generated files.
 
 It is safe to delete any of these files.
 
 Not the directory itself, though.
+
+## Saves
+
+A directory to store save files which are safe to delete.
+
+With obvious consequences.
 
 ## Crimes
 

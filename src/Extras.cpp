@@ -1,7 +1,6 @@
 #include "Extras.hpp"
 #include "DrawableObject.hpp"
 #include "defaults.hpp"
-#include <filesystem>
 
 Extras::Extras():index(0), path(""), state(Extra::Extras){
     obj.setPosition(sf::Vector2f(50.f, 100.f));

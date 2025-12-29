@@ -12,8 +12,8 @@
 #include "libs.hpp"
 #include "defaults.hpp"
 #include "DrawableObject.hpp"
-#include "Sound.hpp"
 #include "Option.hpp"
+#include "Sound.hpp"
 
 
 
@@ -26,7 +26,7 @@ class Scenario {
     std::ifstream fstr;
 
     Shortlist<DrawableObject> objects;
-    Shortlist<Sound> loopingSounds;
+    Shortlist<Sound> sounds;
     
     sf::Vector2f getRelativeVector(std::string);
     int getObjIndexByName(std::string name);
@@ -52,10 +52,8 @@ public:
     bool toNextLine();
     bool toPrevLine();
     void processCommand(std::string command);
-    void playSound(std::string filename);
-    void loopSound(std::string filename);
-    int getLoopingSoundIndexByFilename(std::string filename); //  Do I need this?
-    void stopSound(int index = 0);
+    void playSound(std::string filename, bool looping = false);
+    void stopSound(std::string filename);
 
     //  Simple string checks.
     bool isCurrLineCommand();
@@ -64,5 +62,6 @@ public:
 
     std::string getPath();
     std::string getTitle();
+
 };
 #endif

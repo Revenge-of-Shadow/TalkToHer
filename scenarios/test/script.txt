@@ -1,4 +1,4 @@
-//e
+//Probably necessary to not to start the script from a command.
 /object(background)
 /object(background).loadSprite(background/bg.png)
 /object(background).setPosition(50,100)

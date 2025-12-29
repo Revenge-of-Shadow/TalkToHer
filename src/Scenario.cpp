@@ -1,11 +1,12 @@
 #include "Scenario.hpp"
 #include "DrawableObject.hpp"
+#include "Sound.hpp"
 #include "defaults.hpp"
 
 sf::Vector2f Scenario::getRelativeVector(std::string commandArg){
     return sf::Vector2f(
         strtof(commandArg.substr(0, 
-            commandArg.find(',')).c_str(), NULL),
+                                 commandArg.find(',')).c_str(), NULL),
         strtof(commandArg.substr(
             commandArg.find(',')+1).c_str(), NULL)
     );
@@ -58,11 +59,11 @@ Shortlist<Option> Scenario::getOptions(){
     return options;
 }
 
-
 Scenario::Scenario(){}
-Scenario::Scenario(std::string path)
-    :filepath(scenario_foldername + kPathSepartor 
-              + forceSeparator(path)){
+Scenario::Scenario(std::string path){     //  Stupid damned assigmnent forcing.
+    filepath = (scenario_foldername + kPathSepartor 
+              + forceSeparator(path));
+
     std::cout<<"Constructing scenario: <"<<filepath<<">"<<std::endl;
 
     fstr.open(filepath + kPathSepartor + title_filename);
@@ -76,7 +77,7 @@ Scenario::Scenario(std::string path)
 
     std::string line;
     fstr.open(filepath + kPathSepartor + script_filename);
-    
+
     while(fstr.is_open() && getline(fstr, line)){ //  Lags guaranteed.
         if(!line.empty())
             lines.add(line);
@@ -86,6 +87,7 @@ Scenario::Scenario(std::string path)
     fstr.close();
 
     lineindex = 0;
+
 }
 
 
@@ -113,7 +115,7 @@ std::string getArgumentOut(std::string source){
         source.substr(source.find_last_of('(')+1);
     commandArg = commandArg.substr(0, commandArg.find_last_of(')'));
     if(commandArg[0] == '\"' && commandArg[commandArg.length()-1] == '\"')
-        commandArg = commandArg.substr(1, commandArg.length()-1);
+        commandArg = commandArg.substr(1, commandArg.length()-2);
     return commandArg;
 }
 
@@ -134,13 +136,21 @@ void Scenario::processCommand(std::string command) {
     //  Formatting end.
 
     //  Parsing.
-    if(commandAction == "sleep")
+    if(commandAction == "play"){
+        playSound(commandArg, false);
+    }
+    else if(commandAction == "loop"){
+        playSound(commandArg, true);
+    }
+    else if(commandAction == "stop"){
+        stopSound(commandArg);
+    }
+    else if(commandAction == "sleep")
         sf::sleep(sf::milliseconds(strtof(commandArg.c_str(), NULL)));
 
-    
-    ////  object(objectName)
+        ////  object(objectName)
     else if(commandAction == "object"){// Initialization only.
-            if(getObjIndexByName(commandArg) == -1) // Only if does not exist yet.
+        if(getObjIndexByName(commandArg) == -1) // Only if does not exist yet.
             objects.add(DrawableObject(commandArg));
     }
     else if(commandObject.substr(0, commandObject.find('(')) == "object"){
@@ -165,33 +175,31 @@ void Scenario::processCommand(std::string command) {
     //  Parsing end.
 }
 
-void Scenario::playSound(std::string filename) {
-    Sound(filename).play(); //  I wonder if it shall break if I just never store it.
+void Scenario::playSound(std::string filename, bool looping) {
+    sounds.add(Sound(filename, looping));
+    (*sounds.getPtr(sounds.getSize()-1)).play();
 }
-void Scenario::loopSound(std::string filename) {
-    int ind = loopingSounds.add(Sound(filename, true));
-    loopingSounds.peek(ind).play();
-}
-void Scenario::stopSound(int index) {
-    if (index < 0 || index >= loopingSounds.getSize())
+void Scenario::stopSound(std::string filename) {
+    int index = sounds.find(Sound(filename));
+    if (index < 0 || index >= sounds.getSize())
         throw;
-    loopingSounds.pop(index).stop();
+    sounds.pop(index);
 }
 
 bool Scenario::isCurrLineCommand() {
     return getCurrentLine().length() > 2 
-        && getCurrentLine().at(0) == '/' 
-        && getCurrentLine().at(1) != '/';
+    && getCurrentLine().at(0) == '/' 
+    && getCurrentLine().at(1) != '/';
 }
 bool Scenario::isCurrLineComment() {
     return getCurrentLine().length() > 2 
-        && getCurrentLine().at(0) == '/' 
-        && getCurrentLine().at(1) == '/';
+    && getCurrentLine().at(0) == '/' 
+    && getCurrentLine().at(1) == '/';
 }
 bool Scenario::isCurrLineDisplayable(){
     return !getCurrentLineTrunc().empty()
-        && !isCurrLineCommand() 
-        && !isCurrLineComment();
+    && !isCurrLineCommand() 
+    && !isCurrLineComment();
 }
 
 std::string Scenario::getPath(){
@@ -199,3 +207,4 @@ std::string Scenario::getPath(){
     return filepath.substr(filepath.find_first_of(kPathSepartor)+1);
 }
 std::string Scenario::getTitle(){return title;}
+
