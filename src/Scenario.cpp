@@ -87,7 +87,6 @@ Scenario::Scenario(std::string path){     //  Stupid damned assigmnent forcing.
     fstr.close();
 
     lineindex = 0;
-
 }
 
 

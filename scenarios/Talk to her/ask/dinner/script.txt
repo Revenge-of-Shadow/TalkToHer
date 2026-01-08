@@ -1,3 +1,4 @@
+/loop(music/night_at_home.ogg)
 I put the pasta in the microwave oven and yawned.
 /object(background)
 /object(background).loadSprite(background/table.png)

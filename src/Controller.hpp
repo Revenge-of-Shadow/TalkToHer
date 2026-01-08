@@ -47,7 +47,6 @@ public:
 
     void tryPrevLine();
     void tryNextLine();
-    void tryCurrLine();
 
     bool processKey(sf::Event);
     void draw();

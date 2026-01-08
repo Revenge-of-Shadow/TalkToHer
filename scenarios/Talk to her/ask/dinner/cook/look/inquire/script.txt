@@ -1,3 +1,4 @@
+/loop(music/games.ogg)
 I asked her.
 "I want to play."
 That was not unusual. Now, however, I did not have much to choose from.

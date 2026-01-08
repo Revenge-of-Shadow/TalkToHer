@@ -140,7 +140,6 @@ void Controller::performResize(){
 }
 
 void Controller::loadScenario(std::string scenario_path){
-    menumusic.stop();
     textbox = Textbox(
         sf::Vector2f(
             settings.windowsize.x/1.25f, settings.windowsize.y/5.f), 
@@ -154,7 +153,11 @@ void Controller::loadScenario(std::string scenario_path){
     commandQueue.erase();
     scenario = Scenario(scenario_path);
     window.setTitle(scenario.getTitle());
-    tryCurrLine();
+    while(!scenario.isCurrLineDisplayable()){
+        if(scenario.isCurrLineCommand())
+            commandQueue.add(scenario.getCurrentLineTrunc());
+        scenario.toNextLine();
+    }
     textbox.setString(scenario.getCurrentLineTrunc());
 }
 
@@ -237,13 +240,7 @@ void Controller::tryNextLine(){
         }
         else break;
     }
-    //  But roll back if it is the last line and a comment...
-    while(!scenario.isCurrLineDisplayable() && scenario.toPrevLine()){}
 }
-void Controller::tryCurrLine(){
-    // if(!scenario.isCurrLineDisplayable()) tryNextLine();
-}
-
 bool Controller::processKey(sf::Event e){
     switch(state){
         case State::Menu:
@@ -264,6 +261,7 @@ bool Controller::processKey(sf::Event e){
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
                     if (options[optionIndex].val == "Continue"){
+                        menumusic.stop();
                         loadState(last_filename);
                         state = State::Script;
                     }
@@ -308,6 +306,7 @@ bool Controller::processKey(sf::Event e){
                         initSave();
                     }
                     else{
+                        menumusic.stop();
                         loadState(options[optionIndex].val);
                         state = State::Script;
                     }
@@ -395,6 +394,7 @@ bool Controller::processKey(sf::Event e){
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
+                    menumusic.stop();
                     loadScenario(options[optionIndex].val);
                     state = State::Script;
                     break;
@@ -563,7 +563,14 @@ void Controller::draw(){
 }
 
 void Controller::mainloop(){
-    if(commandQueue.getSize() && state == State::Script) 
-        scenario.processCommand(commandQueue.pop(0));
+    if(state == State::Script) {
+        if(commandQueue.getSize())
+            scenario.processCommand(commandQueue.pop(0));
+        else if(scenario.getCurrentIndex() == scenario.getLines()-1
+            && !scenario.getOptions().getSize()){
+            initMenu();
+            state = State::Menu;
+        }
+    }
     draw();
 }
