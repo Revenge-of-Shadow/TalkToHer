@@ -22,9 +22,12 @@ Sound::~Sound(){
     stop(); 
 }
 void Sound::play(){
+    if(filename.empty()) return;
+    if(music.getStatus()==sf::Music::Playing) return;
     music.play();
 };
 void Sound::stop(){
+    if(filename.empty()) return;
     music.stop();
 };
 Sound& Sound::operator=(const Sound& other){

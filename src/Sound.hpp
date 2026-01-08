@@ -3,10 +3,10 @@
 #define SOUND_H
 
 class Sound{
-    std::string filename;
     sf::Music music;
 
 public:
+    std::string filename;
     Sound();
     Sound(const Sound& other);
     Sound(std::string filename, bool isLooping = false);

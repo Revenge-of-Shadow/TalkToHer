@@ -1,4 +1,5 @@
 #include "Settings.hpp"
+#include "defaults.hpp"
 
 Settings::Settings(){
     for(const auto &entry: 
@@ -9,8 +10,10 @@ Settings::Settings(){
                     path.substr(path.find_first_of(kPathSepartor)+1)
                 );
     }
+    musicnames.add("");
     for(const auto &entry: 
-            fsys::directory_iterator(music_foldername)){
+            fsys::directory_iterator(
+                sound_foldername+kPathSepartor+music_foldername)){
         std::string path = entry.path();
         musicnames.add(
             path.substr(path.find_first_of(kPathSepartor)+1)

@@ -26,6 +26,7 @@ public:
     int optionIndex;
     Shortlist<Textbox> optionboxes; // Filled just before showcase; drawn
     State state;
+    Sound menumusic;
 
     Settings settings;
     Extras extras;

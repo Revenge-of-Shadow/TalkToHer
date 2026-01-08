@@ -24,6 +24,7 @@ void Controller::initMenu(){
     options.add(Option("Extras", "Extras"));
     options.add(Option("Quit", "Quit"));
     listOptions();
+    menumusic.play();
 }
 void Controller::initSaves(){
     options.erase();
@@ -139,6 +140,7 @@ void Controller::performResize(){
 }
 
 void Controller::loadScenario(std::string scenario_path){
+    menumusic.stop();
     textbox = Textbox(
         sf::Vector2f(
             settings.windowsize.x/1.25f, settings.windowsize.y/5.f), 
@@ -215,6 +217,7 @@ void Controller::listOptions(){
 
 Controller::Controller(sf::RenderWindow &w): window(w){
     loadSettings();
+    menumusic = Sound(settings.menumusicpath, true);
     initMenu();
     state = State::Menu;
 }
@@ -238,7 +241,7 @@ void Controller::tryNextLine(){
     while(!scenario.isCurrLineDisplayable() && scenario.toPrevLine()){}
 }
 void Controller::tryCurrLine(){
-    if(!scenario.isCurrLineDisplayable()) tryNextLine();
+    // if(!scenario.isCurrLineDisplayable()) tryNextLine();
 }
 
 bool Controller::processKey(sf::Event e){
@@ -425,9 +428,6 @@ bool Controller::processKey(sf::Event e){
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
-                    if(settings.current == Setting::Fontname
-                        && !settings.fontnames.getSize())
-                        break;
                     if(settings.current == Setting::Menumusic
                         && !settings.musicnames.getSize())
                         break;

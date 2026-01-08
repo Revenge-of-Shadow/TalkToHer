@@ -1,6 +1,6 @@
 60
-32
-dm-serif-text-latin-400-italic.ttf
+30
+dm-serif-text-latin-400-normal.ttf
 1920
 1080
-menu.ogg
+music/menu.ogg
