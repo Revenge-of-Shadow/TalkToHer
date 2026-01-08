@@ -1,4 +1,5 @@
 #include "Controller.hpp"
+#include "Settings.hpp"
 #include "defaults.hpp"
 
 void Controller::initScenarios(){
@@ -56,6 +57,7 @@ void Controller::initSettings(){
     options.add(Option("", "Font size"));
     options.add(Option("", "Font name"));
     options.add(Option("", "Window resolution"));
+    options.add(Option("", "Menu music"));
     listOptions();
     settings.current = Setting::Framerate;  //  It is the first one.
 }
@@ -423,6 +425,12 @@ bool Controller::processKey(sf::Event e){
                     break;
                 case sf::Keyboard::Enter:
                 case sf::Keyboard::Right:
+                    if(settings.current == Setting::Fontname
+                        && !settings.fontnames.getSize())
+                        break;
+                    if(settings.current == Setting::Menumusic
+                        && !settings.musicnames.getSize())
+                        break;
                     if(settings.chosen)
                         (*optionboxes.getPtr(optionIndex)).unchoose();
                     else
@@ -516,6 +524,9 @@ void Controller::draw(){
                     case 3:
                         temp+=std::to_string(settings.windowsize.x)+
                             "x"+std::to_string(settings.windowsize.y);
+                        break;
+                    case 4:
+                        temp+=settings.menumusicpath;
                         break;
                 }
                 (*optionboxes.getPtr(i)).setString(temp);

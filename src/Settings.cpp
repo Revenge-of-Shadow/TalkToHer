@@ -9,6 +9,13 @@ Settings::Settings(){
                     path.substr(path.find_first_of(kPathSepartor)+1)
                 );
     }
+    for(const auto &entry: 
+            fsys::directory_iterator(music_foldername)){
+        std::string path = entry.path();
+        musicnames.add(
+            path.substr(path.find_first_of(kPathSepartor)+1)
+        );
+    }
     presetsizes.add(sf::Vector2u(1920, 1080));
     presetsizes.add(sf::Vector2u(1600, 900));
     presetsizes.add(sf::Vector2u(800, 600));
@@ -25,6 +32,7 @@ bool Settings::save(){
     fstr<<fontname<<std::endl;
     fstr<<windowsize.x<<std::endl;
     fstr<<windowsize.y<<std::endl;
+    fstr<<menumusicpath<<std::endl;
     fstr.close();
     return true;
 }
@@ -44,18 +52,20 @@ bool Settings::load(){
         fstr>>fontname;
         fstr>>windowsize.x;
         fstr>>windowsize.y;
+        fstr>>menumusicpath;
     }
     fstr.close();
 
     fontindex = fontnames.find(fontname);
     sizeindex = presetsizes.find(windowsize);
+    musicindex = musicnames.find(menumusicpath);
 
     return result;
 }
 void Settings::prev(){
     switch(current){
         case Setting::Framerate:
-            current = Setting::Windowsize;
+            current = Setting::Menumusic;
         break;
         case Setting::Fontsize:
             current = Setting::Framerate;
@@ -65,6 +75,9 @@ void Settings::prev(){
         break;
         case Setting::Windowsize:
             current = Setting::Fontname;
+        break;
+        case Setting::Menumusic:
+            current = Setting::Windowsize;
         break;
     }
 }
@@ -80,6 +93,9 @@ void Settings::next(){
             current = Setting::Windowsize;
         break;
         case Setting::Windowsize:
+            current = Setting::Menumusic;
+        break;
+        case Setting::Menumusic:
             current = Setting::Framerate;
         break;
     }
@@ -102,6 +118,11 @@ void Settings::turnUp(){
                 sizeindex = presetsizes.getSize()-1 : --sizeindex;
             windowsize = presetsizes[sizeindex];
         break;
+        case Setting::Menumusic:
+            musicindex == 0?
+                musicindex = musicnames.getSize()-1 : --musicindex;
+            menumusicpath = musicnames[musicindex];
+        break;
     }
 }
 void Settings::turnDown(){
@@ -121,6 +142,11 @@ void Settings::turnDown(){
             sizeindex == presetsizes.getSize()-1? 
                 sizeindex = 0 : ++sizeindex;
             windowsize = presetsizes[sizeindex];
+        break;
+        case Setting::Menumusic:
+            musicindex == musicnames.getSize()-1?
+                musicindex =  0: ++musicindex;
+            menumusicpath = musicnames[musicindex];
         break;
     }
 }
