@@ -1,3 +1,0 @@
-This must mark the beginning of the new scenario.
-Background must be nil.
-All sprites must be gone.
