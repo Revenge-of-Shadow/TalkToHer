@@ -121,11 +121,15 @@ Any other line is processed to be shown on screen with comments and spaces and t
 
 ##### Object commands: executed for objects. Syntax: object.command(argument)
 
+Just like sounds, objects **will not** be removed as scenario ends... however it does not really matter, since objects are only shown in scenarios. It is recommended but not necessary to manually remove them at the end of the script.
+
+
+
+Syntax:
+
 
 
 object.
-
-
 
 - (name) - load the character (or just an object). Has to be called before any other object commands.
 
@@ -145,7 +149,7 @@ object.
 
 To play sounds and music.
 
-**Will** probably **not stop** as the scenario (script) ends.
+**Will not stop** as the scenario (script) ends. Music is reset on scenario **load**, not scenario **closing**, so it is necessary to manually end the playback at the end of the script.
 
 
 
