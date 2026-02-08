@@ -1,30 +1,45 @@
 /loop(music/action.ogg)
-The ground cracks open suddenly. We fall inside a deep underground cave. 
+The ground cracks open suddenly. We fall inside a deep underground cave.
+
+/object(background)
+/object(background).setPosition(50, 100)
+/object(background).loadSprite(background/the_fall.png)
 "Miu lady," I hold on onto my glasses, "what are we to do?"
 She swipes her hand and her irises flash yellow. "I gotchya!" Now we gently descend.
+/object(background).loadSprite(background/throne.png)
 We set our feet in an ancient throne room. The dark walls glow ominous scarlet. Cracks are here and there, but the polished stone still shines. I can see reflections.
 A ruby shines from the wall right above the throne. Its radiant shine attracts her and she simply grabs it.
+/object(background).loadSprite(background/throne_cat.png)
 I feel like I know what is going to happen.
+/object(background).loadSprite(background/cat_and_golem.png)
 Unsurprisingly, a warrior statue comes alive, sending vibrations during the process.
 "Miau," she cries in surprise, holding the gem firmly. 
 This ain't good.
 "We've gotta do something," I shout. 
 She smirks, puts the ruby in one hand and casts a fireball with another one.
+/object(background).loadSprite(background/cat_and_golem_attack.png)
 The fireball collides with the stone statue harmlessly and the latter keeps progressing on us.
 She points her finger away "Look, sword!"
-Indeed, there is a sword on the wall. A huge sword. There is no way I can lift it, but I have no choice. I come forth and grab its handle. I feel power overflowing me. I snatch it off the wall and objectge at the statue. Easily blocking its attack, I swing my cleaver and crush the golem to pieces.
+/object(background).loadSprite(background/sword.png)
+Indeed, there is a sword on the wall. A huge sword. There is no way I can lift it, but I have no choice. I come forth and grab its handle. I feel power overflowing me. I snatch it off the wall and charge at the statue. Easily blocking its attack, I swing my broadsword and crush the golem to pieces.
+/object(background).loadSprite(background/run.png)
 A massive earthquake starts. I grab her with the free hand and run to the exit.
 We rush through the frightening corridors, but come across a huge stone gate. I swing my sword at it and it breaks. We run inside.
-Here the firm walls of iron hold the metal ceiling stable as the path behind us collapses. I put her down and look around. But she dashes forward and I follow her. As I rush, my arm goes weak and the cleaver falls down and breaks to pieces.
+Here the firm walls of iron hold the metal ceiling stable as the path behind us collapses. I put her down and look around. But she dashes forward and I follow her. As I rush, my arm goes weak and the broadsword falls down and breaks to pieces.
 /stop(music/action.ogg)
+/object(background).loadSprite(background/ruby_room_dark.png)
 She gets into a room and puts the ruby on a pedestal.
 /loop(music/games.ogg)
+/object(background).loadSprite(background/ruby_room_lit.png)
 "Nya..." she says, as she looks around the flickering blue lights all around the place.
 I am amazed. "An underground laboratory, with nyapocalyptic design, all to ourselves?" I catch her in my arms and press her close. She does not resist. "We're mowing in!"
 
+/object(background).loadSprite(background/tree.png)
 We eat pancakes under the tree. It is still day, sunny and warm. I smile calmly and my gray tail slowly moves. "It was fun."
 She giggles.
 I lean against the tree. She curls and rests her head on my lap. I close my eyes and enjoy the bliss.
 
 The end.
+
+/object(background).remove()
 /stop(music/games.ogg)

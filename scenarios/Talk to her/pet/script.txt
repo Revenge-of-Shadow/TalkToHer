@@ -1,3 +1,18 @@
 /loop(music/menu.ogg)
 I decided to pet her.
+/object(background)
+/object(background).setPosition(50, 100)
+/object(background).loadSprite(background/pet_0.png)
+/sleep(500)
+/object(background).loadSprite(background/pet_1.png)
+/sleep(500)
+/object(background).loadSprite(background/pet_2.png)
+/sleep(500)
+/object(background).loadSprite(background/pet_3.png)
+/sleep(500)
+/object(background).loadSprite(background/pet_4.png)
+/sleep(500)
+/object(background).loadSprite(background/pet_5.png)
+/sleep(500)
+/object(background).loadSprite(background/pet_6.png)
 She tried to evade at first, but then gave up and I gently pet her. I brushed her soft hair with my hand. She was blushing slightly, though her face expression looked sour.

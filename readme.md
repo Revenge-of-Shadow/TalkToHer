@@ -1,16 +1,25 @@
 # Dependencies:
 
+A lot of compatibility issues might arise.
+I frankly do not remember how many things I ended up dealing with.
+I had to fight libFLAC.so.12 issue... I frankly just communicated with Claude Sonnet and walked off with a PKGBUILD.
+
 ## SFML-2.6.2. 
 
-I installed it into "/usr/local/", so that compiler links to the default path. It is the only way it worked for me.
-
-But this is not all – I had to append "/usr/local/lib" to my "/etc/ld.so.conf.d/lib32-glibc.conf". And then run "sudo ldconfig". Only then it could launch.
+Get it from https://www.sfml-dev.org/download/sfml/2.6.2/ and paste "SFML-2.6.2" into this directory.
+Or remap it to your installation location in "compile.sh".
 
 Otherwise there are instructions on https://www.sfml-dev.org/tutorials/2.6/start-linux.php for Linux and also for other platforms.
 
+
 ## C++ 17 or newer
 
-Build: run compile.sh.
+To prepare for **first launch**, run 
+**precomp.sh**
+**compile.sh.**
+Then, run 
+**run.sh**
+for each and any launch. FROM TERMINAL.
 
 
 

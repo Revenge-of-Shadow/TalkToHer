@@ -1,4 +1,2 @@
-./compile.sh > storage/comp_log.txt
-cat storage/comp_log.txt
-./TalkToHer > storage/run_log.txt
-cat storage/run_log.txt
+export LD_LIBRARY_PATH=SFML-2.6.2/lib
+./TalkToHer
