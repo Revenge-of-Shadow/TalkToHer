@@ -1,2 +1,0 @@
-Talk to her/ask/dinner:Warm up what was left of dinner.
-Talk to her/ask/drink:Get something to drink first.

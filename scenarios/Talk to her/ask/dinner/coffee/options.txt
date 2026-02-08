@@ -1,2 +1,0 @@
-Talk to her/ask/dinner/cook:Cook food.
-Talk to her/ask/dinner/cook/look:Look at her.

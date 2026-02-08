@@ -1,3 +1,0 @@
-Talk to her/ask/dinner/coffee:Make coffee.
-Talk to her/ask/dinner/cook:Cook food.
-Talk to her/ask/dinner/bed:Return to the bed.
