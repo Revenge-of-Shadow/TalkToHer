@@ -37,9 +37,9 @@ I am amazed. "An underground laboratory, with nyapocalyptic design, all to ourse
 /object(background).loadSprite(background/tree.png)
 We eat pancakes under the tree. It is still day, sunny and warm. I smile calmly and my gray tail slowly moves. "It was fun."
 She giggles.
+/object(background).remove()
 I lean against the tree. She curls and rests her head on my lap. I close my eyes and enjoy the bliss.
 
 The end.
 
-/object(background).remove()
 /stop(music/games.ogg)

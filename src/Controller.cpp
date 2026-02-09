@@ -342,10 +342,10 @@ bool Controller::processKey(sf::Event e){
                                 initMenu();
                                 state = State::Menu;
                                 break;
-                            case 1: // Scenario provides one option.
-                                loadScenario(options[0].val);
-                                state = State::Script;
-                                break;
+                            // case 1: // Scenario provides one option.
+                            //     loadScenario(options[0].val);
+                            //     state = State::Script;
+                            //     break;
                             default:
                                 listOptions(); 
                                 state = State::Options;
