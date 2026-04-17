@@ -25,6 +25,8 @@ for each and any launch. FROM TERMINAL.
 
 # Introduction
 
+![Screenshot](crimes/Eight_years_of_drawing_experience.png)
+
 ## What's this?
 
 A visual novel engine on C++ and SFML. It integrates the most vivid part of the story from my interactive novel game Awakening, being, in a way, an upgrade to it.
